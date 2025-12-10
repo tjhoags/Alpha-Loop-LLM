@@ -1,11 +1,127 @@
 """
-ComplianceAgent - Audit trail and compliance enforcement
+================================================================================
+COMPLIANCE AGENT - Audit Trail & Regulatory Compliance
+================================================================================
 Author: Tom Hogan | Alpha Loop Capital, LLC
 
 Responsibilities:
-- Maintain audit trail
-- Enforce "Tom Hogan" attribution
-- Compliance monitoring
+- Maintain comprehensive audit trail
+- Enforce "Tom Hogan" attribution on all outputs
+- Compliance monitoring and reporting
+- Regulatory requirement tracking
+
+Tier: SENIOR (2)
+Reports To: HOAGS
+Cluster: compliance
+
+Core Philosophy:
+"Trust, but verify. Document everything."
+
+================================================================================
+NATURAL LANGUAGE EXPLANATION
+================================================================================
+
+WHAT COMPLIANCE_AGENT DOES:
+    COMPLIANCE_AGENT is the "chief compliance officer" of Alpha Loop
+    Capital. It ensures everything we do is properly documented, properly
+    attributed, and follows regulatory requirements.
+    
+    Every action taken by any agent gets logged in an audit trail.
+    Every output must be properly attributed to "Tom Hogan" and
+    "Alpha Loop Capital, LLC". The HOGAN MODEL branding must be used
+    for all DCF valuations.
+    
+    Think of COMPLIANCE_AGENT as the "guardian of the records" who
+    ensures we can defend every decision we've ever made.
+
+KEY FUNCTIONS:
+    1. process() - Main entry point. Routes to logging, verification,
+       or audit retrieval.
+       
+    2. _log_action() - Logs any action to the audit trail with
+       timestamp, user_id, and details.
+       
+    3. _verify_attribution() - Checks that outputs have proper
+       attribution to Tom Hogan and Alpha Loop Capital.
+       
+    4. _get_audit_trail() - Retrieves audit history for review.
+
+ATTRIBUTION RULES (Non-Negotiable):
+    - attributed_to: "Tom Hogan"
+    - organization: "Alpha Loop Capital, LLC"
+    - methodology: "HOGAN MODEL" (for DCF valuations)
+
+RELATIONSHIPS WITH OTHER AGENTS:
+    - ALL AGENTS: Every agent's actions can be logged through
+      COMPLIANCE_AGENT.
+      
+    - THE_AUTHOR: Verifies that all content produced by THE_AUTHOR
+      has proper attribution.
+      
+    - RESEARCH_AGENT: Ensures DCF valuations use HOGAN MODEL branding.
+      
+    - WHITEHAT: Works with WHITEHAT on security compliance.
+      
+    - HOAGS: Reports compliance status to HOAGS.
+
+PATHS OF GROWTH/TRANSFORMATION:
+    1. SEC/FINRA COMPLIANCE: Automated checks for trading rule
+       compliance (wash sales, pattern day trading, etc.)
+       
+    2. REAL-TIME ALERTS: Immediate notifications for compliance
+       violations.
+       
+    3. REGULATORY REPORTING: Automated generation of required
+       regulatory filings.
+       
+    4. CROSS-BORDER COMPLIANCE: Track regulations across different
+       jurisdictions.
+       
+    5. AUDIT ANALYTICS: Pattern detection in audit logs for
+       anomaly detection.
+
+================================================================================
+TRAINING & EXECUTION
+================================================================================
+
+TRAINING THIS AGENT:
+    # Terminal Setup (Windows PowerShell):
+    cd C:\\Users\\tom\\.cursor\\worktrees\\Alpha-Loop-LLM-1\\ycr
+    
+    # Activate virtual environment:
+    .\\venv\\Scripts\\activate
+    
+    # Train COMPLIANCE_AGENT individually:
+    python -m src.training.agent_training_utils --agent COMPLIANCE_AGENT
+    
+    # Train compliance pipeline:
+    python -m src.training.agent_training_utils --agents COMPLIANCE_AGENT,WHITEHAT
+
+RUNNING THE AGENT:
+    from src.agents.compliance_agent.compliance_agent import ComplianceAgent
+    
+    compliance = ComplianceAgent()
+    
+    # Log an action
+    result = compliance.process({
+        "type": "log_action",
+        "action": "trade_executed",
+        "details": {"ticker": "AAPL", "side": "BUY", "quantity": 100}
+    })
+    
+    # Verify attribution
+    result = compliance.process({
+        "type": "verify_attribution",
+        "output": {
+            "attributed_to": "Tom Hogan",
+            "organization": "Alpha Loop Capital, LLC"
+        }
+    })
+    
+    # Get audit trail
+    result = compliance.process({"type": "get_audit_trail", "limit": 50})
+
+================================================================================
 """
 
 import sys

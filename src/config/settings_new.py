@@ -6,7 +6,6 @@ from dotenv import load_dotenv
 from pydantic import Field, validator
 from pydantic_settings import BaseSettings
 
-
 # Ensure .env is loaded early
 load_dotenv()
 
@@ -16,7 +15,7 @@ class Settings(BaseSettings):
     # DATABASE - Azure SQL Server
     # ==========================================================================
     database_url: Optional[str] = Field(
-        default=None, description="Full SQLAlchemy URL. If set, overrides components below."
+        default=None, description="Full SQLAlchemy URL. If set, overrides components below.",
     )
     # Maps to your .env: SQL_SERVER=alc-sql-server, SQL_DB=alc-sql-server/alc_market_data
     sql_server: str = Field(default="alc-sql-server.database.windows.net", env="SQL_SERVER")
@@ -24,7 +23,7 @@ class Settings(BaseSettings):
     db_username: str = Field(default="", env="DB_USERNAME")
     db_password: str = Field(default="", env="DB_PASSWORD")
     db_odbc_driver: str = Field(
-        default="ODBC Driver 17 for SQL Server", env="DB_ODBC_DRIVER"
+        default="ODBC Driver 17 for SQL Server", env="DB_ODBC_DRIVER",
     )
 
     # ==========================================================================
@@ -67,8 +66,8 @@ class Settings(BaseSettings):
         default_factory=lambda: [
             "SPY", "QQQ", "IWM", "DIA",
             "AAPL", "MSFT", "NVDA", "AMD", "GOOGL", "META", "TSLA", "AMZN",
-            "BTC-USD", "ETH-USD"
-        ]
+            "BTC-USD", "ETH-USD",
+        ],
     )
     use_full_universe: bool = Field(default=True, env="USE_FULL_UNIVERSE")
 
@@ -78,7 +77,7 @@ class Settings(BaseSettings):
     polygon_lookback_hours: int = Field(default=240)
     coinbase_lookback_hours: int = Field(default=240)
     alpha_vantage_outputsize: str = Field(default="full")
-    
+
     # Research ingestion
     research_paths: List[str] = Field(
         default_factory=lambda: [
@@ -124,7 +123,7 @@ class Settings(BaseSettings):
                 pwd=self.db_password,
                 server=self.sql_server,
                 db=db_name,
-                driver=self.db_odbc_driver.replace(' ', '+'),
+                driver=self.db_odbc_driver.replace(" ", "+"),
             )
         )
 
@@ -134,7 +133,7 @@ class Settings(BaseSettings):
         extra = "ignore" # Critical fix
 
 
-@lru_cache()
+@lru_cache
 def get_settings() -> Settings:
     settings = Settings()
     # Ensure critical directories exist

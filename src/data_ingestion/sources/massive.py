@@ -1,11 +1,10 @@
 import io
-from datetime import datetime
-from typing import Optional, List
+from typing import Optional
 
 import boto3
 import pandas as pd
-from loguru import logger
 from botocore.config import Config
+from loguru import logger
 
 from src.config.settings import get_settings
 
@@ -28,17 +27,16 @@ class MassiveClient:
         self.bucket = "flatfiles"
 
     def list_files(self, prefix: str = "equity/minute/"):
-        """
-        List available files in the bucket.
+        """List available files in the bucket.
         Example prefix: 'equity/minute/' or 'crypto/trades/'
         """
         if not self.s3:
             return []
-        
+
         try:
             # Handle pagination for large lists (Massive has thousands of files)
             files = []
-            paginator = self.s3.get_paginator('list_objects_v2')
+            paginator = self.s3.get_paginator("list_objects_v2")
             for page in paginator.paginate(Bucket=self.bucket, Prefix=prefix):
                 if "Contents" in page:
                     files.extend([content["Key"] for content in page["Contents"]])
@@ -48,26 +46,25 @@ class MassiveClient:
             return []
 
     def fetch_file(self, key: str) -> Optional[pd.DataFrame]:
-        """
-        Download and parse a CSV file from Massive S3.
+        """Download and parse a CSV file from Massive S3.
         """
         if not self.s3:
             return None
-            
+
         try:
             logger.info(f"Downloading {key} from Massive S3...")
             obj = self.s3.get_object(Bucket=self.bucket, Key=key)
             df = pd.read_csv(io.BytesIO(obj["Body"].read()))
-            
+
             # Massive CSV format standardizer
             # ticker,volume,open,close,high,low,window_start,transactions
             if "window_start" in df.columns:
                 # Convert nanoseconds to datetime
                 df["timestamp"] = pd.to_datetime(df["window_start"], unit="ns")
-            
+
             df["source"] = "massive"
             return df
-            
+
         except Exception as e:
             logger.error(f"Failed to download/parse {key}: {e}")
             return None

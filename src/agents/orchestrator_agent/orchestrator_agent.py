@@ -22,6 +22,118 @@ CREATIVE THINKING MANDATE:
 
 Core Philosophy:
 "Think different. Improve constantly. Orchestrate brilliantly."
+
+================================================================================
+NATURAL LANGUAGE EXPLANATION
+================================================================================
+
+WHAT ORCHESTRATOR DOES:
+    ORCHESTRATOR is the creative coordinator of Alpha Loop Capital. While
+    GHOST handles autonomous operations and HOAGS makes final decisions,
+    ORCHESTRATOR focuses on creative problem-solving and continuous
+    improvement of all agents.
+    
+    It draws on psychology, sociology, game theory, military strategy,
+    and other disciplines to find novel approaches that competitors
+    aren't using. It's the "innovation lab" of the ecosystem.
+    
+    Think of ORCHESTRATOR as the "chief strategy officer" who ensures
+    every agent is working on the right thing and continuously improving.
+
+KEY FUNCTIONS:
+    1. orchestrate() - Routes tasks to optimal agents. Considers
+       capabilities, workload, and creative synergies.
+       
+    2. improve_agent() - Proposes improvements to any agent using
+       creative frameworks. "What if SCOUT applied game theory?"
+       
+    3. apply_creative_framework() - Applies specific frameworks
+       (psychology, sociology, etc.) to generate novel solutions.
+       
+    4. coordinate_resources() - Allocates resources across agents
+       for complex multi-agent tasks.
+       
+    5. brief_author() - Prepares documentation for THE_AUTHOR on
+       all improvements and creative approaches.
+
+RELATIONSHIPS WITH OTHER AGENTS:
+    - HOAGS: Reports to HOAGS. Creative improvements need HOAGS
+      approval before implementation.
+      
+    - GHOST: Works with GHOST on workflow coordination. ORCHESTRATOR
+      handles creative routing, GHOST handles autonomous execution.
+      
+    - THE_AUTHOR: Close collaboration. ORCHESTRATOR generates ideas,
+      THE_AUTHOR documents them in human-readable format.
+      
+    - ALL AGENTS: ORCHESTRATOR can propose improvements to any agent.
+      It's the continuous improvement engine.
+
+CREATIVE FRAMEWORKS USED:
+    - PSYCHOLOGY: Cognitive biases, anchoring, confirmation bias
+    - SOCIOLOGY: Crowd behavior, social proof, herding
+    - BEHAVIORAL ECONOMICS: Mental accounting, loss aversion
+    - GAME THEORY: Nash equilibrium, signaling, mechanism design
+    - MILITARY STRATEGY: OODA loop, flanking, concentration of force
+    - INVERSION: Charlie Munger approach - avoid failure
+
+PATHS OF GROWTH/TRANSFORMATION:
+    1. AUTO-IMPROVEMENT: Automatically detect when agents need
+       improvement based on performance metrics.
+       
+    2. CROSS-POLLINATION: Transfer successful approaches from one
+       agent to another automatically.
+       
+    3. A/B TESTING: Run controlled experiments on agent improvements
+       to measure actual impact.
+       
+    4. EXTERNAL LEARNING: Learn from external sources (papers, news)
+       to bring new ideas into the ecosystem.
+       
+    5. MULTI-AGENT CREATIVITY: Facilitate brainstorming sessions
+       between multiple agents for novel solutions.
+
+================================================================================
+TRAINING & EXECUTION
+================================================================================
+
+TRAINING THIS AGENT:
+    # Terminal Setup (Windows PowerShell):
+    cd C:\\Users\\tom\\.cursor\\worktrees\\Alpha-Loop-LLM-1\\ycr
+    
+    # Activate virtual environment:
+    .\\venv\\Scripts\\activate
+    
+    # Train ORCHESTRATOR individually:
+    python -m src.training.agent_training_utils --agent ORCHESTRATOR
+    
+    # Train with coordination agents:
+    python -m src.training.agent_training_utils --agents ORCHESTRATOR,GHOST,SKILLS
+    
+    # Cross-train: ORCHESTRATOR coordinates, AUTHOR documents:
+    python -m src.training.agent_training_utils --cross-train "ORCHESTRATOR,GHOST:AUTHOR:agent_trainer"
+
+RUNNING THE AGENT:
+    from src.agents.orchestrator_agent.orchestrator_agent import get_orchestrator
+    
+    orchestrator = get_orchestrator()
+    
+    # Orchestrate a task to the best agent
+    result = orchestrator.process({
+        "action": "orchestrate",
+        "task": {"type": "alpha_generation", "priority": 1}
+    })
+    
+    # Propose improvement for an agent
+    result = orchestrator.process({
+        "action": "improve_agent",
+        "target_agent": "SCOUT",
+        "framework": "game_theory"
+    })
+    
+    # Get creative ideas
+    result = orchestrator.process({"action": "get_creative_ideas"})
+
 ================================================================================
 """
 

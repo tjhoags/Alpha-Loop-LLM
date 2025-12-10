@@ -1,5 +1,7 @@
 """
+================================================================================
 WHITE HAT AGENT - THE GUARDIAN
+================================================================================
 Author: Tom Hogan | Alpha Loop Capital, LLC
 
 ROLE:
@@ -14,6 +16,105 @@ PHILOSOPHY:
 - Compliance verification
 
 WE DROWN THEM BY BEING UNBREAKABLE.
+
+================================================================================
+NATURAL LANGUAGE EXPLANATION
+================================================================================
+
+WHAT WHITEHAT DOES:
+    WHITEHAT is the guardian - the "blue team" that defends against
+    BLACKHAT's attacks and hardens the system. When BLACKHAT finds a
+    vulnerability, WHITEHAT patches it.
+    
+    Beyond reactive defense, WHITEHAT proactively audits code, enforces
+    guardrails, and verifies compliance. It's the immune system of the
+    trading ecosystem.
+    
+    The goal is simple: make the system unbreakable. If we can't be
+    broken, we survive any market condition.
+
+KEY FUNCTIONS:
+    1. process() - Main defense function. Takes an attack report from
+       BLACKHAT and creates patches and mitigations.
+       
+    2. _create_patch() - Formulates a fix for each vulnerability.
+       Generates code changes, parameter adjustments, or guardrails.
+       
+    3. _mitigate_exploit() - Deploys countermeasures against known
+       exploit vectors even before full patches are ready.
+       
+    4. _verify_system_integrity() - Comprehensive check that all
+       systems are functioning correctly and securely.
+
+RELATIONSHIPS WITH OTHER AGENTS:
+    - BLACKHAT: Primary partner. BLACKHAT attacks, WHITEHAT defends.
+      The constant adversarial loop strengthens the system.
+      
+    - HOAGS: Reports security status to HOAGS. Critical patches require
+      HOAGS approval before deployment.
+      
+    - KILLJOY: Coordinates on risk guardrails. KILLJOY sets risk limits,
+      WHITEHAT enforces them at the system level.
+      
+    - NOBUS: Uses NOBUS for fault injection testing to verify patches
+      work under stress.
+
+PATHS OF GROWTH/TRANSFORMATION:
+    1. AUTO-PATCH: Automatically generate and deploy patches for
+       common vulnerability patterns without human review.
+       
+    2. ZERO-DAY DEFENSE: Predictive defense against attacks that
+       haven't been seen yet.
+       
+    3. COMPLIANCE AUTOMATION: Automatic verification of regulatory
+       compliance across all trading activities.
+       
+    4. INTRUSION DETECTION: Real-time detection of external attacks
+       on trading infrastructure.
+       
+    5. RECOVERY AUTOMATION: Automatic recovery procedures when
+       attacks succeed despite defenses.
+       
+    6. AUDIT TRAIL: Comprehensive logging of all security events
+       for forensic analysis.
+
+================================================================================
+TRAINING & EXECUTION
+================================================================================
+
+TRAINING THIS AGENT:
+    # Terminal Setup (Windows PowerShell):
+    cd C:\\Users\\tom\\.cursor\\worktrees\\Alpha-Loop-LLM-1\\ycr
+    
+    # Activate virtual environment:
+    .\\venv\\Scripts\\activate
+    
+    # Train WHITEHAT individually:
+    python -m src.training.agent_training_utils --agent WHITEHAT
+    
+    # Train security pair together:
+    python -m src.training.agent_training_utils --agents WHITEHAT,BLACKHAT
+    
+    # Cross-train with risk agent:
+    python -m src.training.agent_training_utils --agents WHITEHAT,BLACKHAT,KILLJOY
+
+RUNNING THE AGENT:
+    from src.agents.hackers.white_hat import WhiteHatAgent
+    
+    whitehat = WhiteHatAgent()
+    
+    # Defend against BLACKHAT attack report
+    result = whitehat.process({
+        "attack_report": {
+            "vulnerabilities": ["logic_flaw_1"],
+            "exploit_vectors": [{"type": "param_exploit"}]
+        }
+    })
+    
+    # Verify system integrity
+    result = whitehat.process({"action": "verify_integrity"})
+
+================================================================================
 """
 
 from typing import Dict, Any, List

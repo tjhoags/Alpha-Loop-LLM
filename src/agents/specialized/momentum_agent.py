@@ -1,5 +1,7 @@
 """
-Momentum Agent - SPECIALIZED Creative Momentum Strategies
+================================================================================
+MOMENTUM AGENT - Creative Momentum Strategies
+================================================================================
 Author: Tom Hogan | Alpha Loop Capital, LLC
 
 PHILOSOPHY: Basic price momentum DOESN'T WORK anymore - too crowded.
@@ -16,6 +18,57 @@ This agent implements CREATIVE momentum approaches:
 
 Basic momentum = Following price trends
 Creative momentum = Understanding WHY prices are moving
+
+Tier: STRATEGY (3)
+Reports To: STRINGS, HOAGS
+Cluster: strategy
+
+================================================================================
+TRAINING & EXECUTION
+================================================================================
+
+TRAINING THIS AGENT:
+    # Terminal Setup (Windows PowerShell):
+    cd C:\\Users\\tom\\.cursor\\worktrees\\Alpha-Loop-LLM-1\\ycr
+    
+    # Activate virtual environment:
+    .\\venv\\Scripts\\activate
+    
+    # Train MOMENTUM individually:
+    python -m src.training.agent_training_utils --agent MOMENTUM
+    
+    # Train with related strategy agents:
+    python -m src.training.agent_training_utils --agents MOMENTUM,VALUE,MEAN_REVERSION
+    
+    # Cross-train: MOMENTUM observes, AUTHOR articulates:
+    python -m src.training.agent_training_utils --cross-train "MOMENTUM,SCOUT:AUTHOR:agent_trainer"
+
+RUNNING THE AGENT:
+    from src.agents.specialized.momentum_agent import MomentumAgent
+    
+    momentum = MomentumAgent()
+    
+    # Analyze earnings momentum
+    result = momentum.process({
+        "type": "earnings_momentum",
+        "ticker": "NVDA",
+        "data": {"eps_revisions": {"up": 15, "down": 2}}
+    })
+    
+    # Generate creative momentum signal
+    result = momentum.process({
+        "type": "generate_signal",
+        "ticker": "AAPL",
+        "data": {...}
+    })
+    
+    # Check regime-adapted approach
+    result = momentum.process({
+        "type": "regime_momentum",
+        "data": {"market_data": {...}}
+    })
+
+================================================================================
 """
 
 import sys

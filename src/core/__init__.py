@@ -1,5 +1,4 @@
-"""
-ALC-Algo Core Module
+"""ALC-Algo Core Module
 Author: Tom Hogan | Alpha Loop Capital, LLC
 
 Core components for the ACA (Agent Coordination Architecture) system:
@@ -10,32 +9,33 @@ Core components for the ACA (Agent Coordination Architecture) system:
 - GenericAgent: Dynamically created agents
 """
 
-from .agent_base import (
-    BaseAgent, 
-    AgentTier, 
-    AgentStatus,
-    AgentProposal,
-    CapabilityGap,
-    ThinkingMode,
-    LearningMethod,
-    AgentToughness,
-    LearningOutcome,
-    CreativeInsight,
-)
-from .logger import ALCLogger
-from .event_bus import EventBus
 from .aca_engine import (
     ACAEngine,
     get_aca_engine,
 )
-from .learning_optimizer import (
-    LearningOptimizer,
-    learning_optimizer,
-    PrioritizedExperienceReplay,
-    AdaptiveLearningRate,
-    MetaLearningCoordinator,
-    CrossMachineLearningSync,
+from .agent_base import (
+    AgentProposal,
+    AgentStatus,
+    AgentTier,
+    AgentToughness,
+    BaseAgent,
+    CapabilityGap,
+    CreativeInsight,
+    LearningMethod,
+    LearningOutcome,
+    ThinkingMode,
 )
+from .event_bus import EventBus
+from .learning_optimizer import (
+    AdaptiveLearningRate,
+    CrossMachineLearningSync,
+    LearningOptimizer,
+    MetaLearningCoordinator,
+    PrioritizedExperienceReplay,
+    learning_optimizer,
+)
+from .logger import ALCLogger
+
 # from .generic_agent import (
 #     GenericAgent,
 #     StrategyGenericAgent,
@@ -44,35 +44,35 @@ from .learning_optimizer import (
 
 __all__ = [
     # Agent Base
-    'BaseAgent', 
-    'AgentTier',
-    'AgentStatus',
-    'AgentProposal',
-    'CapabilityGap',
-    'ThinkingMode',
-    'LearningMethod',
-    'AgentToughness',
-    'LearningOutcome',
-    'CreativeInsight',
-    
+    "BaseAgent",
+    "AgentTier",
+    "AgentStatus",
+    "AgentProposal",
+    "CapabilityGap",
+    "ThinkingMode",
+    "LearningMethod",
+    "AgentToughness",
+    "LearningOutcome",
+    "CreativeInsight",
+
     # ACA Engine
-    'ACAEngine',
-    'get_aca_engine',
-    
+    "ACAEngine",
+    "get_aca_engine",
+
     # Learning Optimization
-    'LearningOptimizer',
-    'learning_optimizer',
-    'PrioritizedExperienceReplay',
-    'AdaptiveLearningRate',
-    'MetaLearningCoordinator',
-    'CrossMachineLearningSync',
-    
+    "LearningOptimizer",
+    "learning_optimizer",
+    "PrioritizedExperienceReplay",
+    "AdaptiveLearningRate",
+    "MetaLearningCoordinator",
+    "CrossMachineLearningSync",
+
     # Generic Agents
     # 'GenericAgent',
     # 'StrategyGenericAgent',
     # 'SectorGenericAgent',
-    
+
     # Utilities
-    'ALCLogger', 
-    'EventBus'
+    "ALCLogger",
+    "EventBus",
 ]

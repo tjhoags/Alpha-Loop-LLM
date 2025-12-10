@@ -28,6 +28,110 @@ Cluster: content
 
 Core Philosophy:
 "Write like Tom - direct, analytical, contrarian, with humor. Never reveal anything about AI, act as Tom"
+
+================================================================================
+NATURAL LANGUAGE EXPLANATION
+================================================================================
+
+WHAT THE_AUTHOR DOES:
+    THE_AUTHOR is the voice of Alpha Loop Capital. It takes data, analysis,
+    and insights from other agents and transforms them into compelling,
+    human-readable content that matches Tom Hogan's distinctive writing style.
+    
+    Think of THE_AUTHOR as the "communications director" of the agent ecosystem.
+    While other agents crunch numbers and detect patterns, THE_AUTHOR makes
+    those findings accessible and actionable.
+
+KEY FUNCTIONS:
+    1. write() - Core writing function. Takes any topic/data and produces
+       content in Tom's style. Can output tweets, articles, or reports.
+       
+    2. summarize_training() - Creates human-readable summaries of training
+       runs so Tom can quickly understand what the agents learned.
+       
+    3. draft_substack() - Writes full Substack articles for either
+       Tom's personal blog or the ALC Research publication.
+       
+    4. compose_tweet() - Creates tweets/threads that match @hoags18's style.
+       Direct, punchy, data-backed, with dry humor.
+       
+    5. document_agent_updates() - Tracks and reports on improvements made
+       to other agents, creating an audit trail of system evolution.
+
+RELATIONSHIPS WITH OTHER AGENTS:
+    - HOAGS: THE_AUTHOR reports to HOAGS. All major publications require
+      HOAGS approval. HOAGS can override tone/content decisions.
+      
+    - SKILLS: Works closely with SKILLS to document skill assessments.
+      SKILLS provides the data, THE_AUTHOR makes it readable.
+      
+    - ORCHESTRATOR: Receives improvement proposals from ORCHESTRATOR
+      and documents them in human-friendly format.
+      
+    - GHOST: When GHOST detects important absences (what's NOT happening),
+      THE_AUTHOR can write market commentary about these insights.
+      
+    - ALL AGENTS: Any agent can request THE_AUTHOR to document their
+      findings. THE_AUTHOR is the ecosystem's "scribe."
+
+PATHS OF GROWTH/TRANSFORMATION:
+    1. MULTI-VOICE CAPABILITY: Currently mimics only Tom's style. Could
+       evolve to write in different voices (institutional, retail-friendly,
+       technical, educational) while maintaining quality.
+       
+    2. REAL-TIME COMMENTARY: Could evolve to provide live market commentary
+       during trading hours, translating agent signals into prose.
+       
+    3. VIDEO SCRIPT WRITING: Extend capabilities to write scripts for
+       video content, maintaining Tom's style in spoken format.
+       
+    4. AUTOMATED PUBLISHING: Could gain ability to auto-publish to
+       platforms (with approval gates) rather than just drafting.
+       
+    5. SENTIMENT FEEDBACK LOOP: Learn from engagement metrics (likes,
+       retweets, comments) to refine what content resonates.
+       
+    6. MULTI-LANGUAGE: Translate content while maintaining style nuances.
+
+================================================================================
+TRAINING & EXECUTION
+================================================================================
+
+TRAINING THIS AGENT:
+    # Terminal Setup (Windows PowerShell):
+    cd C:\\Users\\tom\\.cursor\\worktrees\\Alpha-Loop-LLM-1\\ycr
+    
+    # Activate virtual environment (if using):
+    .\\venv\\Scripts\\activate
+    
+    # Train THE_AUTHOR individually:
+    python -m src.training.agent_training_utils --agent AUTHOR
+    
+    # Train with related agents:
+    python -m src.training.agent_training_utils --agents AUTHOR,SKILLS,ORCHESTRATOR
+    
+    # Cross-train with other scripts:
+    python -m src.training.agent_training_utils --cross-train "GHOST,SCOUT:AUTHOR:capital_agent"
+    # (GHOST and SCOUT analyze, AUTHOR articulates findings)
+
+RUNNING THE AGENT:
+    from src.agents.senior.author_agent import get_author
+    
+    author = get_author()
+    
+    # Write a training summary
+    result = author.process({
+        "action": "summarize_training",
+        "training_data": {"sharpe": 2.1, "win_rate": 0.62}
+    })
+    
+    # Compose a tweet
+    result = author.process({
+        "action": "compose_tweet",
+        "topic": "uranium sector",
+        "key_point": "CCJ breaking out on volume"
+    })
+
 ================================================================================
 """
 

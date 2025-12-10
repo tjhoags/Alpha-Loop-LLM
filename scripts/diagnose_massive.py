@@ -1,9 +1,11 @@
 from loguru import logger
+
 from src.data_ingestion.sources.massive import massive_client
+
 
 def diagnose():
     logger.info("Listing root folders in Massive S3...")
-    
+
     # Try listing root
     try:
         files = massive_client.s3.list_objects_v2(Bucket="flatfiles", Delimiter="/")
@@ -16,7 +18,7 @@ def diagnose():
             files = massive_client.s3.list_objects_v2(Bucket="flatfiles", MaxKeys=10)
             for obj in files.get("Contents", []):
                 logger.info(f" - {obj['Key']}")
-                
+
     except Exception as e:
         logger.error(f"Error listing bucket: {e}")
 

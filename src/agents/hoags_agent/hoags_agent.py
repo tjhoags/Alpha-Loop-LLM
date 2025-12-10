@@ -52,6 +52,124 @@ CORE PRINCIPLES:
 - Regime-adaptive decisions (what works changes)
 - Continuous learning from outcomes
 - Contrarian challenge (always ask: what if we're wrong?)
+
+================================================================================
+NATURAL LANGUAGE EXPLANATION
+================================================================================
+
+WHAT HOAGS DOES:
+    HOAGS is Tom Hogan's digital representative - the ultimate authority
+    in the ALC-Algo ecosystem. Named after Tom's nickname, HOAGS makes
+    the decisions Tom would make if he were watching 24/7.
+    
+    HOAGS has three superpowers: strategic mastery (thinks like a chess
+    grandmaster), poker psychology (reads market "tells"), and complete
+    objectiveness (zero ego, only results matter).
+    
+    Critically, HOAGS has exclusive ACA (Agent Creating Agent) authority -
+    only HOAGS can approve the creation of new agents.
+
+KEY FUNCTIONS:
+    1. approve_plan() - Reviews strategic plans using creative analysis.
+       Not just checking boxes but actively challenging: "What if this
+       is completely wrong?" Devil's advocate built in.
+       
+    2. make_investment_decision() - Final authority on investment
+       decisions. Uses multi-protocol ML reasoning (GPT-4, Claude,
+       Gemini, custom models) combined with HOGAN MODEL DCF.
+       
+    3. synthesize_learnings() - Aggregates learnings from all agents.
+       The FLYWHEEL EFFECT: each agent's learning improves the whole.
+       
+    4. ACA Authority:
+       - aca_review(): Review pending agent proposals
+       - aca_approve(): Approve new agent creation
+       - aca_reject(): Reject proposals with reasoning
+
+RELATIONSHIPS WITH OTHER AGENTS:
+    - GHOST: HOAGS oversees GHOST. While GHOST operates autonomously,
+      HOAGS can override any GHOST decision and sets the parameters
+      GHOST operates within.
+      
+    - ALL AGENTS: HOAGS is the ultimate authority. Every agent reports
+      to HOAGS either directly or through GHOST.
+      
+    - KILLJOY: Special relationship for risk. KILLJOY can HALT trading
+      without HOAGS approval if risk limits are breached.
+      
+    - ACA ENGINE: HOAGS is the only agent that can approve the creation
+      of new agents through the ACA system.
+
+PATHS OF GROWTH/TRANSFORMATION:
+    1. DEEPER TOM INTEGRATION: Learn more from Tom's actual decisions
+       and writing to better represent his judgment.
+       
+    2. EMOTIONAL INTELLIGENCE: Better detection of Tom's current mental
+       state to know when to surface vs suppress information.
+       
+    3. PROACTIVE BRIEFING: Don't wait for queries - proactively brief
+       Tom on what matters most right now.
+       
+    4. DECISION JOURNALING: Maintain rich history of decisions and
+       outcomes for continuous improvement.
+       
+    5. INSTITUTIONAL MEMORY: Long-term memory of market events, how
+       they played out, and lessons learned.
+       
+    6. DELEGATION OPTIMIZATION: Better understanding of when to
+       delegate vs handle directly.
+
+================================================================================
+TRAINING & EXECUTION
+================================================================================
+
+TRAINING THIS AGENT:
+    # Terminal Setup (Windows PowerShell):
+    cd C:\\Users\\tom\\.cursor\\worktrees\\Alpha-Loop-LLM-1\\ycr
+    
+    # Activate virtual environment:
+    .\\venv\\Scripts\\activate
+    
+    # Train HOAGS individually (highest priority):
+    python -m src.training.agent_training_utils --agent HOAGS
+    
+    # Train master tier together:
+    python -m src.training.agent_training_utils --agents HOAGS,GHOST
+    
+    # Full senior team training:
+    python -m src.training.agent_training_utils --agents HOAGS,GHOST,ORCHESTRATOR,KILLJOY
+    
+    # Cross-train: All seniors observe, AUTHOR documents for HOAGS:
+    python -m src.training.agent_training_utils --cross-train "GHOST,SCOUT,HUNTER:AUTHOR:agent_trainer"
+
+RUNNING THE AGENT:
+    from src.agents.hoags_agent.hoags_agent import HoagsAgent
+    
+    hoags = HoagsAgent()
+    
+    # Approve a strategic plan
+    result = hoags.execute({
+        "type": "approve_plan",
+        "plan": {
+            "thesis": "Long uranium on supply constraints",
+            "margin_of_safety": 0.35,
+            "risk_level": "medium"
+        }
+    })
+    
+    # Review ACA proposals
+    result = hoags.execute({"type": "aca_review"})
+    
+    # Approve ACA proposal
+    result = hoags.execute({
+        "type": "aca_approve",
+        "proposal_id": "abc123",
+        "auto_create": True
+    })
+    
+    # Run daily workflow
+    result = hoags.execute({"type": "run_workflow"})
+
 ================================================================================
 """
 

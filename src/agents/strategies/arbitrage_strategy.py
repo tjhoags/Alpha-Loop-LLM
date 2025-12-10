@@ -1,8 +1,6 @@
 
+"""ArbitrageStrategyAgent - strategy specialization.
 """
-ArbitrageStrategyAgent - strategy specialization.
-"""
-from typing import Any, Dict, List
 from src.agents.strategies.base_strategy import BaseStrategyAgent
 
 

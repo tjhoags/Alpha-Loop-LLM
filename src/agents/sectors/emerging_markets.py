@@ -1,8 +1,6 @@
 
+"""EmergingMarketsAgent - sector specialization.
 """
-EmergingMarketsAgent - sector specialization.
-"""
-from typing import Any, Dict, List
 from src.agents.sectors.base_sector import BaseSectorAgent
 
 

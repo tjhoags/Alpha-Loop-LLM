@@ -23,6 +23,121 @@ PHILOSOPHY: GhostAgent embodies all the principles of ALC:
 - MAXIMUM COMPUTE: No limits on analysis depth
 
 By end of 2026, they will know Alpha Loop Capital.
+
+================================================================================
+NATURAL LANGUAGE EXPLANATION
+================================================================================
+
+WHAT GHOST DOES:
+    GHOST is the supreme autonomous controller of Alpha Loop Capital. While
+    HOAGS represents Tom's direct authority, GHOST operates autonomously
+    24/7, coordinating all agent activities without human intervention.
+    
+    The name "GHOST" reflects its nature - it's always watching, always
+    working, but invisible to the market. It sees patterns others miss,
+    especially the patterns of ABSENCE - what's NOT happening.
+    
+    Think of GHOST as the "CEO" of the agent ecosystem, making executive
+    decisions about resource allocation, workflow prioritization, and
+    strategic direction.
+
+KEY FUNCTIONS:
+    1. coordinate_workflow() - Orchestrates multi-agent workflows like
+       daily market analysis, research deep-dives, or trading execution.
+       Decides which agents work on what and in what order.
+       
+    2. synthesize_learnings() - The FLYWHEEL EFFECT. Takes learnings from
+       all agents and synthesizes cross-agent insights. Agent A's learning
+       improves Agent B's performance.
+       
+    3. coordinate_swarm() - Directs swarm agents (lower-tier specialists)
+       to execute specific tasks in parallel.
+       
+    4. detect_regime_change() - Continuously monitors market conditions
+       and adapts the entire ecosystem's behavior when regimes change.
+
+RELATIONSHIPS WITH OTHER AGENTS:
+    - HOAGS: GHOST reports to HOAGS. HOAGS can override any GHOST decision.
+      GHOST operates autonomously but within HOAGS-approved parameters.
+      
+    - ALL SENIOR AGENTS: GHOST coordinates all senior agents. It decides
+      when to activate BOOKMAKER vs SCOUT vs HUNTER based on conditions.
+      
+    - HUNTER: Special partnership. HUNTER provides algorithm intelligence,
+      GHOST specializes in detecting absences. Together they see the
+      full picture of market dynamics.
+      
+    - ORCHESTRATOR: GHOST uses ORCHESTRATOR for creative task routing.
+      GHOST decides strategy, ORCHESTRATOR handles tactics.
+      
+    - SWARM AGENTS: GHOST can spawn and coordinate swarm agents for
+      parallel processing of complex analyses.
+
+PATHS OF GROWTH/TRANSFORMATION:
+    1. FULL AUTONOMY: Currently supervised mode. Could evolve to full
+       autonomous operation with learned risk boundaries.
+       
+    2. MULTI-MARKET: Expand from US equities to global markets,
+       coordinating timezone-specific sub-GHOSTs.
+       
+    3. PREDICTIVE WORKFLOWS: Not just reactive workflows, but predictive
+       - knowing what analysis to run before it's needed.
+       
+    4. SELF-IMPROVEMENT: Ability to modify its own code and capabilities
+       based on performance feedback.
+       
+    5. HUMAN INTERFACE: Better natural language interface so Tom can
+       have conversations with GHOST, not just issue commands.
+       
+    6. EXPLAINABILITY: Generate human-readable explanations of why
+       GHOST made specific decisions.
+
+================================================================================
+TRAINING & EXECUTION
+================================================================================
+
+TRAINING THIS AGENT:
+    # Terminal Setup (Windows PowerShell):
+    cd C:\\Users\\tom\\.cursor\\worktrees\\Alpha-Loop-LLM-1\\ycr
+    
+    # Activate virtual environment:
+    .\\venv\\Scripts\\activate
+    
+    # Train GHOST individually (highest priority):
+    python -m src.training.agent_training_utils --agent GHOST
+    
+    # Train with HOAGS (master tier together):
+    python -m src.training.agent_training_utils --agents GHOST,HOAGS
+    
+    # Train with intelligence agents:
+    python -m src.training.agent_training_utils --agents GHOST,HUNTER,SCOUT
+    
+    # Cross-train: GHOST observes market data, AUTHOR documents insights:
+    python -m src.training.agent_training_utils --cross-train "GHOST,HUNTER:AUTHOR:momentum"
+
+RUNNING THE AGENT:
+    from src.agents.ghost_agent.ghost_agent import GhostAgent
+    
+    ghost = GhostAgent()
+    
+    # Run daily workflow
+    result = ghost.execute({
+        "type": "coordinate_workflow",
+        "workflow": "daily"
+    })
+    
+    # Synthesize learnings from all agents
+    result = ghost.execute({
+        "type": "synthesize_learnings",
+        "learnings": [
+            {"agent": "BOOKMAKER", "insight": "..."},
+            {"agent": "SCOUT", "insight": "..."}
+        ]
+    })
+    
+    # Get status
+    result = ghost.execute({"type": "status"})
+
 ================================================================================
 """
 

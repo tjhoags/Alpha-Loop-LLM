@@ -1,5 +1,4 @@
-"""
-================================================================================
+"""================================================================================
 MACRO AGENT
 ================================================================================
 Economic indicator-based trading agent:
@@ -13,17 +12,18 @@ Economic indicator-based trading agent:
 ================================================================================
 """
 
+from typing import Optional, Tuple
+
 import numpy as np
 import pandas as pd
-from typing import Optional, Tuple
 from loguru import logger
 
-from .base_agent import BaseAgent, AgentConfig
+from .base_agent import AgentConfig, BaseAgent
 
 
 class MacroAgent(BaseAgent):
     """Macro-based trading agent."""
-    
+
     def __init__(self, config: Optional[AgentConfig] = None):
         if config is None:
             config = AgentConfig()
@@ -31,17 +31,17 @@ class MacroAgent(BaseAgent):
         config.use_macro_features = True
         super().__init__(config)
         logger.info("MacroAgent initialized")
-    
+
     def generate_features(self, df: pd.DataFrame) -> pd.DataFrame:
         """Generate macro features."""
         features = self._base_features(df)
-        
+
         # Macro proxies from price data
-        features['trend_strength'] = df['close'].rolling(50).mean() / df['close'].rolling(200).mean()
-        features['regime'] = np.where(features['trend_strength'] > 1, 1, -1)
-        
+        features["trend_strength"] = df["close"].rolling(50).mean() / df["close"].rolling(200).mean()
+        features["regime"] = np.where(features["trend_strength"] > 1, 1, -1)
+
         return features
-    
+
     def predict(self, features: pd.DataFrame) -> Tuple[str, float]:
         if self.model is not None:
             try:
@@ -50,13 +50,13 @@ class MacroAgent(BaseAgent):
                 X_scaled = self.scaler.transform(X)
                 proba = self.model.predict_proba(X_scaled)[0]
                 up_prob = proba[1]
-                
+
                 if up_prob > self.config.confidence_threshold:
-                    return ('BUY', up_prob)
+                    return ("BUY", up_prob)
                 elif up_prob < 1 - self.config.confidence_threshold:
-                    return ('SELL', 1 - up_prob)
+                    return ("SELL", 1 - up_prob)
             except:
                 pass
-        return ('HOLD', 0.5)
+        return ("HOLD", 0.5)
 
 

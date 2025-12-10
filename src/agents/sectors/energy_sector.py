@@ -1,8 +1,6 @@
 
+"""EnergySectorAgent - sector specialization.
 """
-EnergySectorAgent - sector specialization.
-"""
-from typing import Any, Dict, List
 from src.agents.sectors.base_sector import BaseSectorAgent
 
 

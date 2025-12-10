@@ -1,8 +1,6 @@
 
+"""MomentumStrategyAgent - strategy specialization.
 """
-MomentumStrategyAgent - strategy specialization.
-"""
-from typing import Any, Dict, List
 from src.agents.strategies.base_strategy import BaseStrategyAgent
 
 

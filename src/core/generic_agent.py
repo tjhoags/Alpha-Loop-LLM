@@ -1,1 +1,1 @@
-"""Placeholder implementation for generic agent module."""\n
+"""Placeholder implementation for generic agent module."""

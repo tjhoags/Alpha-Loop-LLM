@@ -10,10 +10,10 @@ REM   - Top 200 ETFs
 REM   - Top 20 crypto
 REM
 REM HOW TO RUN:
-REM   1. Double-click this file, OR
-REM   2. Open PowerShell/Terminal and run:
-REM      cd "C:\Users\tom\.cursor\worktrees\Alpha-Loop-LLM-1\dfu"
-REM      .\scripts\HYDRATE_QUICK.bat
+REM   Option 1: Double-click this file
+REM   Option 2: Open PowerShell/Terminal and run:
+REM      cd C:\Users\tom\Alpha-Loop-LLM\Alpha-Loop-LLM-1
+REM      scripts\HYDRATE_QUICK.bat
 REM
 REM TIME: 10-20 minutes
 REM ============================================
@@ -33,16 +33,36 @@ echo TIME: 10-20 minutes
 echo.
 pause
 
-REM Step 1: Navigate to project folder
-cd /d "C:\Users\tom\.cursor\worktrees\Alpha-Loop-LLM-1\dfu"
+REM Step 1: Navigate to project folder (relative to script location)
+cd /d "%~dp0.."
 
 REM Step 2: Activate Python virtual environment
-call venv\Scripts\activate.bat
+if exist "venv\Scripts\activate.bat" (
+    call venv\Scripts\activate.bat
+) else (
+    echo.
+    echo ERROR: Virtual environment not found!
+    echo.
+    echo Run these commands first:
+    echo   python -m venv venv
+    echo   venv\Scripts\activate.bat
+    echo   pip install -r requirements.txt
+    echo.
+    pause
+    exit /b 1
+)
 
 REM Step 3: Load API keys from .env file
 set DOTENV_PATH=C:\Users\tom\OneDrive\Alpha Loop LLM\API - Dec 2025.env
-for /f "usebackq tokens=1,* delims==" %%a in ("%DOTENV_PATH%") do (
-    set "%%a=%%b"
+if exist "%DOTENV_PATH%" (
+    for /f "usebackq tokens=1,* delims==" %%a in ("%DOTENV_PATH%") do (
+        set "%%a=%%b"
+    )
+) else (
+    echo.
+    echo WARNING: .env file not found at %DOTENV_PATH%
+    echo Continuing with existing environment variables...
+    echo.
 )
 
 REM Step 4: Run the hydration script
@@ -58,5 +78,3 @@ echo   1. Run TRAIN_MASSIVE.bat to train models
 echo   2. Or run CHECK_MODEL_GRADES.bat to see results
 echo.
 pause
-
-

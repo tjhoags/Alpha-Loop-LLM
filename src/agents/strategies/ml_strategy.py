@@ -1,5 +1,4 @@
-"""
-Machine Learning-Based Trading Strategy
+"""Machine Learning-Based Trading Strategy
 Author: Tom Hogan | Alpha Loop Capital, LLC
 
 Advanced ML trading strategy that uses trained models to generate signals.
@@ -23,14 +22,12 @@ from typing import Any, Dict, List, Optional, Tuple
 
 import numpy as np
 import pandas as pd
-from scipy import stats
 
 logger = logging.getLogger(__name__)
 
 
 class MLTradingStrategy:
-    """
-    Machine Learning-based trading strategy.
+    """Machine Learning-based trading strategy.
 
     Uses trained ML models to generate trading signals with confidence-based sizing.
     """
@@ -42,12 +39,12 @@ class MLTradingStrategy:
         max_position_size: float = 0.15,
         stop_loss_pct: float = 0.05,
         take_profit_pct: float = 0.10,
-        use_ensemble: bool = True
+        use_ensemble: bool = True,
     ):
-        """
-        Initialize ML trading strategy.
+        """Initialize ML trading strategy.
 
         Args:
+        ----
             model_dir: Directory containing trained models
             min_confidence: Minimum prediction confidence to trade (0-1)
             max_position_size: Maximum position size as fraction of portfolio
@@ -69,18 +66,19 @@ class MLTradingStrategy:
         logger.info("ML Trading Strategy initialized")
 
     def load_models(self, ticker: str, algorithm: Optional[str] = None) -> bool:
-        """
-        Load trained models for a ticker.
+        """Load trained models for a ticker.
 
         Args:
+        ----
             ticker: Stock ticker
             algorithm: Specific algorithm to load (None = load all)
 
         Returns:
+        -------
             True if models loaded successfully
         """
-        import pickle
         import json
+        import pickle
 
         # Find model files for this ticker
         pattern = f"{ticker}_*.pkl"
@@ -99,14 +97,14 @@ class MLTradingStrategy:
         for model_file in model_files:
             try:
                 # Load model
-                with open(model_file, 'rb') as f:
+                with open(model_file, "rb") as f:
                     model = pickle.load(f)
 
                 # Load metadata if exists
-                metadata_file = model_file.with_suffix('.json')
+                metadata_file = model_file.with_suffix(".json")
                 metadata = {}
                 if metadata_file.exists():
-                    with open(metadata_file, 'r') as f:
+                    with open(metadata_file) as f:
                         metadata = json.load(f)
 
                 model_key = f"{ticker}_{model_file.stem}"
@@ -123,13 +121,14 @@ class MLTradingStrategy:
         return loaded_count > 0
 
     def engineer_features_for_prediction(self, df: pd.DataFrame) -> pd.DataFrame:
-        """
-        Engineer features for prediction (same as training).
+        """Engineer features for prediction (same as training).
 
         Args:
+        ----
             df: DataFrame with OHLCV data
 
         Returns:
+        -------
             DataFrame with engineered features
         """
         from src.models.train import MLTrainingPipeline
@@ -142,16 +141,17 @@ class MLTradingStrategy:
     def predict(
         self,
         ticker: str,
-        current_data: pd.DataFrame
+        current_data: pd.DataFrame,
     ) -> Tuple[str, float, Dict]:
-        """
-        Generate prediction for a ticker.
+        """Generate prediction for a ticker.
 
         Args:
+        ----
             ticker: Stock ticker
             current_data: Recent OHLCV data
 
         Returns:
+        -------
             Tuple of (signal, confidence, details)
             signal: 'BUY', 'SELL', or 'HOLD'
             confidence: Prediction confidence (0-1)
@@ -162,11 +162,11 @@ class MLTradingStrategy:
             features_df = self.engineer_features_for_prediction(current_data)
         except Exception as e:
             logger.error(f"Feature engineering failed for {ticker}: {e}")
-            return 'HOLD', 0.0, {'error': str(e)}
+            return "HOLD", 0.0, {"error": str(e)}
 
         # Get latest features for prediction
         if features_df.empty:
-            return 'HOLD', 0.0, {'error': 'No features available'}
+            return "HOLD", 0.0, {"error": "No features available"}
 
         latest_features = features_df.iloc[-1:]
 
@@ -175,7 +175,7 @@ class MLTradingStrategy:
 
         if not ticker_models:
             logger.warning(f"No models loaded for {ticker}")
-            return 'HOLD', 0.0, {'error': 'No models loaded'}
+            return "HOLD", 0.0, {"error": "No models loaded"}
 
         # Get feature columns from metadata
         predictions = []
@@ -183,7 +183,7 @@ class MLTradingStrategy:
 
         for model_key, model in ticker_models.items():
             metadata = self.model_metadata.get(model_key, {})
-            feature_cols = metadata.get('features', [])
+            feature_cols = metadata.get("features", [])
 
             if not feature_cols:
                 logger.warning(f"No feature columns in metadata for {model_key}")
@@ -198,7 +198,7 @@ class MLTradingStrategy:
                 predictions.append(pred)
 
                 # Get probability if available
-                if hasattr(model, 'predict_proba'):
+                if hasattr(model, "predict_proba"):
                     proba = model.predict_proba(X)[0]
                     probabilities.append(proba)
 
@@ -207,7 +207,7 @@ class MLTradingStrategy:
                 continue
 
         if not predictions:
-            return 'HOLD', 0.0, {'error': 'All predictions failed'}
+            return "HOLD", 0.0, {"error": "All predictions failed"}
 
         # Aggregate predictions
         if self.use_ensemble:
@@ -228,14 +228,14 @@ class MLTradingStrategy:
             confidence = float(probabilities[0][pred_value]) if probabilities else 0.5
 
         # Convert prediction to signal
-        signal = 'BUY' if pred_value == 1 else 'HOLD'
+        signal = "BUY" if pred_value == 1 else "HOLD"
 
         # Additional details
         details = {
-            'num_models': len(predictions),
-            'raw_predictions': predictions,
-            'ensemble_prediction': pred_value,
-            'timestamp': datetime.now().isoformat()
+            "num_models": len(predictions),
+            "raw_predictions": predictions,
+            "ensemble_prediction": pred_value,
+            "timestamp": datetime.now().isoformat(),
         }
 
         logger.info(f"{ticker} Prediction: {signal} (confidence={confidence:.2f})")
@@ -249,14 +249,14 @@ class MLTradingStrategy:
         confidence: float,
         current_price: float,
         portfolio_value: float,
-        current_volatility: float = 0.02
+        current_volatility: float = 0.02,
     ) -> float:
-        """
-        Calculate position size based on confidence and risk.
+        """Calculate position size based on confidence and risk.
 
         Uses Kelly Criterion modified for ML confidence.
 
         Args:
+        ----
             ticker: Stock ticker
             signal: 'BUY' or 'SELL'
             confidence: Prediction confidence (0-1)
@@ -265,9 +265,10 @@ class MLTradingStrategy:
             current_volatility: Current price volatility
 
         Returns:
+        -------
             Position size in dollars
         """
-        if signal == 'HOLD' or confidence < self.min_confidence:
+        if signal == "HOLD" or confidence < self.min_confidence:
             return 0.0
 
         # Base position size on confidence
@@ -294,7 +295,7 @@ class MLTradingStrategy:
 
         logger.info(
             f"{ticker} Position Size: ${position_size:,.2f} "
-            f"({position_fraction*100:.1f}% of portfolio, confidence={confidence:.2f})"
+            f"({position_fraction*100:.1f}% of portfolio, confidence={confidence:.2f})",
         )
 
         return position_size
@@ -303,17 +304,18 @@ class MLTradingStrategy:
         self,
         tickers: List[str],
         market_data: Dict[str, pd.DataFrame],
-        portfolio_value: float
+        portfolio_value: float,
     ) -> List[Dict]:
-        """
-        Generate trading signals for multiple tickers.
+        """Generate trading signals for multiple tickers.
 
         Args:
+        ----
             tickers: List of stock tickers
             market_data: Dictionary mapping tickers to OHLCV DataFrames
             portfolio_value: Current portfolio value
 
         Returns:
+        -------
             List of trading signals
         """
         signals = []
@@ -324,10 +326,10 @@ class MLTradingStrategy:
                 continue
 
             df = market_data[ticker]
-            current_price = float(df['close'].iloc[-1])
+            current_price = float(df["close"].iloc[-1])
 
             # Calculate current volatility
-            returns = df['close'].pct_change()
+            returns = df["close"].pct_change()
             current_volatility = float(returns.tail(20).std())
 
             # Generate prediction
@@ -340,7 +342,7 @@ class MLTradingStrategy:
                 confidence=confidence,
                 current_price=current_price,
                 portfolio_value=portfolio_value,
-                current_volatility=current_volatility
+                current_volatility=current_volatility,
             )
 
             # Calculate number of shares
@@ -348,21 +350,21 @@ class MLTradingStrategy:
 
             if shares > 0:
                 signals.append({
-                    'ticker': ticker,
-                    'signal': signal,
-                    'confidence': confidence,
-                    'price': current_price,
-                    'shares': shares,
-                    'position_value': shares * current_price,
-                    'stop_loss': current_price * (1 - self.stop_loss_pct),
-                    'take_profit': current_price * (1 + self.take_profit_pct),
-                    'timestamp': datetime.now(),
-                    'details': details
+                    "ticker": ticker,
+                    "signal": signal,
+                    "confidence": confidence,
+                    "price": current_price,
+                    "shares": shares,
+                    "position_value": shares * current_price,
+                    "stop_loss": current_price * (1 - self.stop_loss_pct),
+                    "take_profit": current_price * (1 + self.take_profit_pct),
+                    "timestamp": datetime.now(),
+                    "details": details,
                 })
 
                 logger.info(
                     f"Signal: {signal} {shares} shares of {ticker} @ ${current_price:.2f} "
-                    f"(confidence={confidence:.2f})"
+                    f"(confidence={confidence:.2f})",
                 )
 
         return signals
@@ -371,28 +373,29 @@ class MLTradingStrategy:
         self,
         ticker: str,
         entry_price: float,
-        current_price: float
+        current_price: float,
     ) -> Optional[str]:
-        """
-        Check if stop-loss or take-profit triggered.
+        """Check if stop-loss or take-profit triggered.
 
         Args:
+        ----
             ticker: Stock ticker
             entry_price: Entry price
             current_price: Current price
 
         Returns:
+        -------
             'STOP_LOSS', 'TAKE_PROFIT', or None
         """
         pnl_pct = (current_price - entry_price) / entry_price
 
         if pnl_pct <= -self.stop_loss_pct:
             logger.warning(f"{ticker} STOP LOSS triggered: {pnl_pct*100:.2f}%")
-            return 'STOP_LOSS'
+            return "STOP_LOSS"
 
         if pnl_pct >= self.take_profit_pct:
             logger.info(f"{ticker} TAKE PROFIT triggered: {pnl_pct*100:.2f}%")
-            return 'TAKE_PROFIT'
+            return "TAKE_PROFIT"
 
         return None
 
@@ -401,18 +404,19 @@ def backtest_ml_strategy(
     tickers: List[str],
     start_date: datetime,
     end_date: datetime,
-    initial_capital: float = 100000.0
+    initial_capital: float = 100000.0,
 ) -> pd.DataFrame:
-    """
-    Backtest the ML trading strategy.
+    """Backtest the ML trading strategy.
 
     Args:
+    ----
         tickers: List of tickers to trade
         start_date: Backtest start date
         end_date: Backtest end date
         initial_capital: Starting capital
 
     Returns:
+    -------
         DataFrame with backtest results
     """
     logger.info("="*70)
@@ -463,29 +467,29 @@ def backtest_ml_strategy(
 
         # Execute trades
         for signal_dict in signals:
-            ticker = signal_dict['ticker']
-            signal = signal_dict['signal']
-            shares = signal_dict['shares']
-            price = signal_dict['price']
+            ticker = signal_dict["ticker"]
+            signal = signal_dict["signal"]
+            shares = signal_dict["shares"]
+            price = signal_dict["price"]
 
-            if signal == 'BUY' and ticker not in positions:
+            if signal == "BUY" and ticker not in positions:
                 # Open position
                 cost = shares * price
                 if cost <= portfolio_value:
                     positions[ticker] = {
-                        'shares': shares,
-                        'entry_price': price,
-                        'entry_date': current_date
+                        "shares": shares,
+                        "entry_price": price,
+                        "entry_date": current_date,
                     }
                     portfolio_value -= cost
 
                     trades.append({
-                        'date': current_date,
-                        'ticker': ticker,
-                        'action': 'BUY',
-                        'shares': shares,
-                        'price': price,
-                        'value': cost
+                        "date": current_date,
+                        "ticker": ticker,
+                        "action": "BUY",
+                        "shares": shares,
+                        "price": price,
+                        "value": cost,
                     })
 
                     logger.info(f"  BUY {shares} {ticker} @ ${price:.2f}")
@@ -493,27 +497,27 @@ def backtest_ml_strategy(
         # Check existing positions for exit signals
         for ticker in list(positions.keys()):
             if ticker in current_market_data:
-                current_price = float(current_market_data[ticker]['close'].iloc[-1])
-                entry_price = positions[ticker]['entry_price']
+                current_price = float(current_market_data[ticker]["close"].iloc[-1])
+                entry_price = positions[ticker]["entry_price"]
 
                 exit_signal = strategy.check_risk_management(ticker, entry_price, current_price)
 
                 if exit_signal:
                     # Close position
-                    shares = positions[ticker]['shares']
+                    shares = positions[ticker]["shares"]
                     proceeds = shares * current_price
                     portfolio_value += proceeds
 
                     pnl = proceeds - (shares * entry_price)
 
                     trades.append({
-                        'date': current_date,
-                        'ticker': ticker,
-                        'action': exit_signal,
-                        'shares': shares,
-                        'price': current_price,
-                        'value': proceeds,
-                        'pnl': pnl
+                        "date": current_date,
+                        "ticker": ticker,
+                        "action": exit_signal,
+                        "shares": shares,
+                        "price": current_price,
+                        "value": proceeds,
+                        "pnl": pnl,
                     })
 
                     logger.info(f"  {exit_signal} {shares} {ticker} @ ${current_price:.2f} (P&L: ${pnl:.2f})")
@@ -522,28 +526,28 @@ def backtest_ml_strategy(
 
     # Close all remaining positions
     for ticker, position in positions.items():
-        current_price = float(market_data[ticker]['close'].iloc[-1])
-        shares = position['shares']
+        current_price = float(market_data[ticker]["close"].iloc[-1])
+        shares = position["shares"]
         proceeds = shares * current_price
         portfolio_value += proceeds
 
-        pnl = proceeds - (shares * position['entry_price'])
+        pnl = proceeds - (shares * position["entry_price"])
 
         trades.append({
-            'date': end_date,
-            'ticker': ticker,
-            'action': 'CLOSE',
-            'shares': shares,
-            'price': current_price,
-            'value': proceeds,
-            'pnl': pnl
+            "date": end_date,
+            "ticker": ticker,
+            "action": "CLOSE",
+            "shares": shares,
+            "price": current_price,
+            "value": proceeds,
+            "pnl": pnl,
         })
 
     # Create results DataFrame
     results_df = pd.DataFrame(trades)
 
     # Calculate performance metrics
-    total_pnl = results_df['pnl'].sum() if 'pnl' in results_df.columns else 0
+    total_pnl = results_df["pnl"].sum() if "pnl" in results_df.columns else 0
     final_value = portfolio_value
     total_return = (final_value - initial_capital) / initial_capital
 
@@ -581,7 +585,7 @@ if __name__ == "__main__":
             tickers=[ticker],
             start_date=datetime.now() - timedelta(days=365*2),
             end_date=datetime.now(),
-            initial_capital=100000.0
+            initial_capital=100000.0,
         )
     else:
         logger.error(f"Failed to load models for {ticker}")

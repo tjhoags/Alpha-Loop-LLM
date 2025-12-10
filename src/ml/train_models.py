@@ -11,7 +11,7 @@ from src.ml.models import build_models, save_model, time_series_cv
 
 def load_data(symbol: str) -> pd.DataFrame:
     engine = get_engine()
-    query = f"""
+    query = """
     SELECT symbol, timestamp, [open], high, low, [close], volume
     FROM price_bars
     WHERE symbol = :symbol
@@ -44,25 +44,25 @@ def train_for_symbol(symbol: str, settings) -> None:
 
 def main() -> None:
     import time
-    
+
     settings = get_settings()
     logger.add(settings.logs_dir / "model_training.log", rotation="50 MB", level=settings.log_level)
     logger.info("🚀 Starting CONTINUOUS model training with valuation metrics...")
-    
+
     cycle = 0
     while True:
         cycle += 1
         logger.info(f"\n{'='*80}")
         logger.info(f"TRAINING CYCLE #{cycle} - {datetime.now()}")
         logger.info(f"{'='*80}\n")
-        
+
         try:
             for sym in settings.target_symbols:
                 train_for_symbol(sym, settings)
-            
+
             logger.success(f"✅ Cycle #{cycle} complete. Sleeping 1 hour before next cycle...")
             time.sleep(3600)  # Retrain every hour
-            
+
         except KeyboardInterrupt:
             logger.info("🛑 Training stopped by user")
             break

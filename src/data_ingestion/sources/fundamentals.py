@@ -1,7 +1,5 @@
-from datetime import datetime
-from typing import Optional, Dict
+from typing import Dict
 
-import pandas as pd
 import requests
 from loguru import logger
 from tenacity import retry, stop_after_attempt, wait_exponential
@@ -20,7 +18,7 @@ class FundamentalsClient:
         params = {
             "function": "OVERVIEW",
             "symbol": symbol,
-            "apikey": self.settings.alpha_vantage_api_key
+            "apikey": self.settings.alpha_vantage_api_key,
         }
         resp = requests.get(self.base_url, params=params, timeout=15)
         if resp.status_code == 200:
@@ -33,7 +31,7 @@ class FundamentalsClient:
         params = {
             "function": "CASH_FLOW",
             "symbol": symbol,
-            "apikey": self.settings.alpha_vantage_api_key
+            "apikey": self.settings.alpha_vantage_api_key,
         }
         resp = requests.get(self.base_url, params=params, timeout=15)
         if resp.status_code == 200:
@@ -41,8 +39,7 @@ class FundamentalsClient:
         return {}
 
     def get_advanced_metrics(self, symbol: str) -> Dict[str, float]:
-        """
-        Computes institutional-grade valuation metrics:
+        """Computes institutional-grade valuation metrics:
         - EV/EBITDA
         - FCF Yield
         - CROCI (approx)
@@ -50,19 +47,19 @@ class FundamentalsClient:
         """
         overview = self.fetch_overview(symbol)
         cash_flow = self.fetch_cash_flow(symbol)
-        
+
         metrics = {}
         if not overview or not cash_flow:
             return metrics
-            
+
         try:
             # Parse raw values
             ebitda = float(overview.get("EBITDA", 0) or 0)
             ev = float(overview.get("EVToEBITDA", 0) or 0) * ebitda if ebitda else 0 # Backout EV if needed or use provided ratio directly
-            
+
             # 1. EV / EBITDA
             metrics["ev_ebitda"] = float(overview.get("EVToEBITDA", 0) or 0)
-            
+
             # 2. Free Cash Flow Yield (FCF / Market Cap)
             annual_reports = cash_flow.get("annualReports", [])
             if annual_reports:
@@ -77,14 +74,14 @@ class FundamentalsClient:
 
             # 3. PEG Ratio (Growth adjusted)
             metrics["peg_ratio"] = float(overview.get("PEGRatio", 0) or 0)
-            
+
             # 4. Profitability
             metrics["roic"] = float(overview.get("ReturnOnAssetsTTM", 0) or 0) # Proxy if ROIC missing
             metrics["gross_margin"] = float(overview.get("GrossProfitTTM", 0) or 0) / (float(overview.get("RevenueTTM", 0) or 1))
 
         except Exception as e:
             logger.error(f"Error computing fundamentals for {symbol}: {e}")
-            
+
         return metrics
 
     def persist_fundamentals(self, symbol: str, metrics: Dict):

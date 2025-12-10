@@ -1,5 +1,7 @@
 """
-Value Agent - SPECIALIZED Creative Value Investing
+================================================================================
+VALUE AGENT - Creative Value Investing
+================================================================================
 Author: Tom Hogan | Alpha Loop Capital, LLC
 
 PHILOSOPHY: Basic P/E and DCF DO NOT WORK.
@@ -16,6 +18,58 @@ This agent implements CREATIVE value approaches:
 
 Basic valuation = What the market already sees
 Creative value = What the market DOESN'T see
+
+Tier: STRATEGY (3)
+Reports To: BOOKMAKER, HOAGS
+Cluster: strategy
+
+================================================================================
+TRAINING & EXECUTION
+================================================================================
+
+TRAINING THIS AGENT:
+    # Terminal Setup (Windows PowerShell):
+    cd C:\\Users\\tom\\.cursor\\worktrees\\Alpha-Loop-LLM-1\\ycr
+    
+    # Activate virtual environment:
+    .\\venv\\Scripts\\activate
+    
+    # Train VALUE individually:
+    python -m src.training.agent_training_utils --agent VALUE
+    
+    # Train with related strategy agents:
+    python -m src.training.agent_training_utils --agents VALUE,MOMENTUM,BOOKMAKER
+    
+    # Cross-train: VALUE finds opportunities, AUTHOR documents:
+    python -m src.training.agent_training_utils --cross-train "VALUE,RESEARCH_AGENT:AUTHOR:agent_trainer"
+
+RUNNING THE AGENT:
+    from src.agents.specialized.value_agent import ValueAgent
+    
+    value = ValueAgent()
+    
+    # Analyze variant perception
+    result = value.process({
+        "type": "analyze_variant",
+        "ticker": "CCJ",
+        "data": {...}
+    })
+    
+    # Generate creative value thesis
+    result = value.process({
+        "type": "generate_thesis",
+        "ticker": "CCJ",
+        "data": {...}
+    })
+    
+    # Pre-mortem analysis (kill box)
+    result = value.process({
+        "type": "pre_mortem",
+        "ticker": "CCJ",
+        "thesis": "Uranium supercycle thesis"
+    })
+
+================================================================================
 """
 
 import sys
