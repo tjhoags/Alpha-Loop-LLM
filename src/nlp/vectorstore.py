@@ -7,8 +7,7 @@ from loguru import logger
 
 
 class SimpleFaissStore:
-    """
-    Lightweight FAISS-backed vector store.
+    """Lightweight FAISS-backed vector store.
     Stores normalized embeddings and parallel metadata list.
     """
 

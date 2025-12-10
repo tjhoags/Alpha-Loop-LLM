@@ -1,8 +1,6 @@
 
+"""VolatilityStrategyAgent - strategy specialization.
 """
-VolatilityStrategyAgent - strategy specialization.
-"""
-from typing import Any, Dict, List
 from src.agents.strategies.base_strategy import BaseStrategyAgent
 
 

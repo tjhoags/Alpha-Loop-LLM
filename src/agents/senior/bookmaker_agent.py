@@ -31,6 +31,110 @@ Key Capabilities:
 - Mathematical equation generation
 - Risk-adjusted return optimization
 - Cross-asset opportunity identification
+
+================================================================================
+NATURAL LANGUAGE EXPLANATION
+================================================================================
+
+WHAT BOOKMAKER DOES:
+    BOOKMAKER is the alpha-hunting engine of Alpha Loop Capital. While other
+    agents focus on execution, risk, or communication, BOOKMAKER's singular
+    obsession is finding profitable edges in the market.
+    
+    It reverse-engineers Tom's portfolio construction methods, looking for
+    patterns that can be systematized. When it finds something promising,
+    it creates mathematical formulas to quantify and exploit that edge.
+    
+    Think of BOOKMAKER as the "quant research desk" of the agent ecosystem.
+
+KEY FUNCTIONS:
+    1. discover_alpha_factors() - Scans the market universe for new sources
+       of alpha. Looks at valuation mispricings, factor exposures, flow
+       imbalances, behavioral biases, and structural inefficiencies.
+       
+    2. create_valuation_equation() - Takes a discovered edge and turns it
+       into a mathematical formula that can be backtested and deployed.
+       
+    3. analyze_portfolio_construction() - Studies current positions and
+       suggests optimizations for position sizing, sector exposure, and
+       risk concentration.
+       
+    4. calculate_optimal_expression() - Given an alpha idea, determines
+       the best way to express it (stock vs options, single name vs basket).
+
+RELATIONSHIPS WITH OTHER AGENTS:
+    - HOAGS: Reports directly to HOAGS. All alpha ideas must be approved
+      by HOAGS before capital allocation. BOOKMAKER notifies HOAGS
+      immediately when high-conviction ideas are discovered.
+      
+    - SCOUT: Works closely with SCOUT on arbitrage opportunities. SCOUT
+      finds retail inefficiencies, BOOKMAKER quantifies the alpha.
+      
+    - HUNTER: Coordinates with HUNTER on algorithm detection. Understanding
+      what algorithms are running helps BOOKMAKER avoid crowded trades.
+      
+    - KILLJOY: All position recommendations must pass KILLJOY's risk
+      guardrails before execution.
+      
+    - STRINGS: BOOKMAKER's alpha factors feed into STRINGS for weight
+      optimization across the ensemble.
+
+PATHS OF GROWTH/TRANSFORMATION:
+    1. REAL-TIME ALPHA: Currently runs batch analysis. Could evolve to
+       stream real-time alpha signals as market data arrives.
+       
+    2. ALTERNATIVE DATA: Expand beyond traditional factors to incorporate
+       satellite imagery, social sentiment, supply chain data.
+       
+    3. ML-DRIVEN DISCOVERY: Use machine learning to discover non-linear
+       relationships that traditional quant methods miss.
+       
+    4. CROSS-ASSET ALPHA: Extend from equities to find alpha in bonds,
+       commodities, and crypto with similar rigor.
+       
+    5. SELF-IMPROVING EQUATIONS: Equations that automatically retrain
+       and adapt as market regimes change.
+       
+    6. CROWDING AVOIDANCE: Better detection of when an alpha source
+       becomes crowded and loses its edge.
+
+================================================================================
+TRAINING & EXECUTION
+================================================================================
+
+TRAINING THIS AGENT:
+    # Terminal Setup (Windows PowerShell):
+    cd C:\\Users\\tom\\.cursor\\worktrees\\Alpha-Loop-LLM-1\\ycr
+    
+    # Activate virtual environment:
+    .\\venv\\Scripts\\activate
+    
+    # Train BOOKMAKER individually:
+    python -m src.training.agent_training_utils --agent BOOKMAKER
+    
+    # Train with alpha-related agents:
+    python -m src.training.agent_training_utils --agents BOOKMAKER,SCOUT,HUNTER
+    
+    # Cross-train with options arbitrage:
+    python -m src.training.agent_training_utils --cross-train "BOOKMAKER,SCOUT:AUTHOR:options_arbitrage"
+
+RUNNING THE AGENT:
+    from src.agents.senior.bookmaker_agent import get_bookmaker
+    
+    bookmaker = get_bookmaker()
+    
+    # Discover alpha factors
+    result = bookmaker.process({
+        "action": "discover_alpha",
+        "universe": ["AAPL", "MSFT", "NVDA", "CCJ"]
+    })
+    
+    # Analyze portfolio construction
+    result = bookmaker.process({
+        "action": "analyze_portfolio",
+        "positions": [{"ticker": "AAPL", "value": 50000}]
+    })
+
 ================================================================================
 """
 

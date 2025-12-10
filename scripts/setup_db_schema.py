@@ -1,11 +1,9 @@
-import time
-from concurrent.futures import ThreadPoolExecutor
 
 from loguru import logger
-from sqlalchemy import MetaData, Table, Column, String, Float, DateTime, inspect
+from sqlalchemy import Column, DateTime, Float, MetaData, String, Table
 
-from src.config.settings import get_settings
 from src.database.connection import get_engine
+
 
 def create_tables():
     engine = get_engine()
@@ -35,7 +33,7 @@ def create_tables():
         Column("roic", Float),
         Column("gross_margin", Float),
     )
-    
+
     # 3. Risk Metrics (Greeks/VaR snapshot)
     risk_metrics = Table(
         "risk_metrics", metadata,

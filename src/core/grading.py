@@ -1,5 +1,4 @@
-"""
-================================================================================
+"""================================================================================
 INSTITUTIONAL-GRADE AGENT GRADING SYSTEM
 ================================================================================
 Author: Tom Hogan | Alpha Loop Capital, LLC
@@ -20,13 +19,14 @@ By end of 2026, they will know Alpha Loop Capital.
 """
 
 from dataclasses import dataclass, field
-from typing import Dict, Any, Tuple, List, Optional
 from datetime import datetime
 from enum import Enum
+from typing import Any, Dict, List, Tuple
 
 
 class GradeTier(Enum):
     """Grade tiers - each has specific requirements."""
+
     A_PLUS = "A+"   # Elite - Top 1% hedge fund quality
     A = "A"         # Excellent - Institutional quality
     B_PLUS = "B+"   # Good - Needs polish
@@ -38,11 +38,11 @@ class GradeTier(Enum):
 
 @dataclass(frozen=True)
 class InstitutionalThresholds:
-    """
-    INSTITUTIONAL-GRADE THRESHOLDS - CITADEL/GOLDMAN LEVEL
-    
+    """INSTITUTIONAL-GRADE THRESHOLDS - CITADEL/GOLDMAN LEVEL
+
     These are HARD. If you can't meet them, you can't compete.
     """
+
     # =========================================================================
     # MODEL PERFORMANCE (ML Agents)
     # =========================================================================
@@ -58,7 +58,7 @@ class InstitutionalThresholds:
     elite_win_rate: float = 0.58       # Elite win rate
     min_profit_factor: float = 1.2     # Profits > Losses
     elite_profit_factor: float = 1.8   # Elite profit factor
-    
+
     # =========================================================================
     # AGENT EXECUTION (Operational Agents)
     # =========================================================================
@@ -68,7 +68,7 @@ class InstitutionalThresholds:
     elite_executions: int = 1000       # Elite - battle-tested
     min_capabilities: int = 5          # Minimum skill breadth
     elite_capabilities: int = 15       # Elite - comprehensive skills
-    
+
     # =========================================================================
     # LEARNING & ADAPTATION
     # =========================================================================
@@ -78,7 +78,7 @@ class InstitutionalThresholds:
     elite_adaptation_rate: float = 0.9 # Elite adaptation
     min_regime_accuracy: float = 0.6   # Regime detection accuracy
     elite_regime_accuracy: float = 0.8 # Elite regime detection
-    
+
     # =========================================================================
     # BATTLE STATS (Toughness Metrics)
     # =========================================================================
@@ -90,7 +90,7 @@ class InstitutionalThresholds:
     elite_regime_changes: int = 10     # Elite - fully adaptive
     min_black_swans: int = 0           # Handled black swan events
     elite_black_swans: int = 3         # Elite - crisis-tested
-    
+
     # =========================================================================
     # UNIQUE ALPHA (What Makes You Different)
     # =========================================================================
@@ -100,7 +100,7 @@ class InstitutionalThresholds:
     elite_contrarian_wins: int = 50    # Elite contrarian
     min_information_edges: int = 3     # Proprietary information
     elite_information_edges: int = 30  # Elite - information advantage
-    
+
     # =========================================================================
     # COMPETITIVE BENCHMARKS (vs Industry)
     # =========================================================================
@@ -113,12 +113,13 @@ class InstitutionalThresholds:
 @dataclass
 class AgentGradeReport:
     """Comprehensive grade report for an agent."""
+
     agent_name: str
     grade: GradeTier
     grade_letter: str
     numeric_score: float  # 0-100
     timestamp: datetime = field(default_factory=datetime.now)
-    
+
     # Category scores (0-100 each)
     performance_score: float = 0.0
     execution_score: float = 0.0
@@ -126,23 +127,23 @@ class AgentGradeReport:
     battle_score: float = 0.0
     alpha_score: float = 0.0
     competitive_score: float = 0.0
-    
+
     # Details
     strengths: List[str] = field(default_factory=list)
     weaknesses: List[str] = field(default_factory=list)
     critical_failures: List[str] = field(default_factory=list)
     improvement_actions: List[str] = field(default_factory=list)
-    
+
     # Competitive analysis
     vs_citadel: str = "UNKNOWN"
     vs_goldman: str = "UNKNOWN"
     vs_twosigma: str = "UNKNOWN"
-    
+
     # Production readiness
     production_ready: bool = False
     paper_trading_ready: bool = False
     needs_retraining: bool = True
-    
+
     def to_dict(self) -> Dict[str, Any]:
         return {
             "agent": self.agent_name,
@@ -174,12 +175,11 @@ class AgentGradeReport:
 
 
 class InstitutionalGrader:
-    """
-    INSTITUTIONAL-GRADE AGENT GRADING SYSTEM
-    
+    """INSTITUTIONAL-GRADE AGENT GRADING SYSTEM
+
     This grader is HARSH. It evaluates agents against hedge fund standards.
     If you're not getting A grades, you're not competing with the big boys.
-    
+
     Grading Categories (equally weighted):
     1. PERFORMANCE - Raw predictive ability
     2. EXECUTION - Operational excellence
@@ -188,22 +188,23 @@ class InstitutionalGrader:
     5. ALPHA - Unique insights and edge
     6. COMPETITIVE - How you stack vs industry
     """
-    
+
     def __init__(self, thresholds: InstitutionalThresholds = None):
         self.thresholds = thresholds or InstitutionalThresholds()
-        
+
     def grade_agent(self, stats: Dict[str, Any]) -> AgentGradeReport:
-        """
-        Comprehensively grade an agent.
-        
+        """Comprehensively grade an agent.
+
         Args:
+        ----
             stats: Agent statistics dictionary
-            
+
         Returns:
+        -------
             AgentGradeReport with detailed grading
         """
         agent_name = stats.get("name", "UnknownAgent")
-        
+
         # Calculate category scores
         perf_score = self._grade_performance(stats)
         exec_score = self._grade_execution(stats)
@@ -211,7 +212,7 @@ class InstitutionalGrader:
         battle_score = self._grade_battle(stats)
         alpha_score = self._grade_alpha(stats)
         comp_score = self._grade_competitive(stats)
-        
+
         # Calculate overall numeric score (0-100)
         numeric_score = (
             perf_score * 0.25 +      # Performance is critical
@@ -221,19 +222,19 @@ class InstitutionalGrader:
             alpha_score * 0.20 +     # Unique edge is gold
             comp_score * 0.10        # Must beat competition
         )
-        
+
         # Determine grade tier
         grade = self._numeric_to_grade(numeric_score)
-        
+
         # Get critical failures
         critical = self._identify_critical_failures(stats)
-        
+
         # If ANY critical failures, cap grade at C
         if critical:
             if grade in [GradeTier.A_PLUS, GradeTier.A, GradeTier.B_PLUS, GradeTier.B]:
                 grade = GradeTier.C
                 numeric_score = min(numeric_score, 69)
-        
+
         # Build report
         report = AgentGradeReport(
             agent_name=agent_name,
@@ -257,14 +258,14 @@ class InstitutionalGrader:
             paper_trading_ready=(grade in [GradeTier.A_PLUS, GradeTier.A, GradeTier.B_PLUS, GradeTier.B] and not critical),
             needs_retraining=(grade in [GradeTier.C, GradeTier.D, GradeTier.F] or bool(critical)),
         )
-        
+
         return report
-    
+
     def _grade_performance(self, stats: Dict[str, Any]) -> float:
         """Grade model/agent performance (0-100)."""
         t = self.thresholds
         score = 50  # Start at baseline
-        
+
         # AUC scoring
         auc = self._parse_rate(stats.get("auc", stats.get("metrics", {}).get("auc")))
         if auc >= t.elite_auc:
@@ -273,7 +274,7 @@ class InstitutionalGrader:
             score += 10 * ((auc - t.min_auc) / (t.elite_auc - t.min_auc))
         else:
             score -= 20  # Penalty for below minimum
-        
+
         # Accuracy scoring
         acc = self._parse_rate(stats.get("accuracy", stats.get("metrics", {}).get("accuracy")))
         if acc >= t.elite_accuracy:
@@ -282,7 +283,7 @@ class InstitutionalGrader:
             score += 10 * ((acc - t.min_accuracy) / (t.elite_accuracy - t.min_accuracy))
         else:
             score -= 20
-        
+
         # Sharpe scoring
         sharpe = float(stats.get("sharpe", stats.get("metrics", {}).get("sharpe", 0)) or 0)
         if sharpe >= t.elite_sharpe:
@@ -291,7 +292,7 @@ class InstitutionalGrader:
             score += 10 * ((sharpe - t.min_sharpe) / (t.elite_sharpe - t.min_sharpe))
         else:
             score -= 15
-        
+
         # Max drawdown scoring (lower is better)
         dd = float(stats.get("max_drawdown", stats.get("metrics", {}).get("max_drawdown", 0.1)) or 0.1)
         if dd <= t.elite_drawdown:
@@ -300,14 +301,14 @@ class InstitutionalGrader:
             score += 5 * ((t.max_drawdown - dd) / (t.max_drawdown - t.elite_drawdown))
         else:
             score -= 15  # Penalty for excessive drawdown
-        
+
         return max(0, min(100, score))
-    
+
     def _grade_execution(self, stats: Dict[str, Any]) -> float:
         """Grade execution quality (0-100)."""
         t = self.thresholds
         score = 50
-        
+
         # Success rate
         success_rate = self._parse_rate(stats.get("success_rate"))
         if success_rate >= t.elite_success_rate:
@@ -316,7 +317,7 @@ class InstitutionalGrader:
             score += 15 * ((success_rate - t.min_success_rate) / (t.elite_success_rate - t.min_success_rate))
         else:
             score -= 25
-        
+
         # Execution count
         exec_count = int(stats.get("execution_count", 0) or 0)
         if exec_count >= t.elite_executions:
@@ -325,7 +326,7 @@ class InstitutionalGrader:
             score += 10 * ((exec_count - t.min_executions) / (t.elite_executions - t.min_executions))
         else:
             score -= 15
-        
+
         # Capabilities breadth
         caps = len(stats.get("capabilities", []))
         if caps >= t.elite_capabilities:
@@ -334,16 +335,16 @@ class InstitutionalGrader:
             score += 10 * ((caps - t.min_capabilities) / (t.elite_capabilities - t.min_capabilities))
         else:
             score -= 10
-        
+
         return max(0, min(100, score))
-    
+
     def _grade_learning(self, stats: Dict[str, Any]) -> float:
         """Grade learning and adaptation (0-100)."""
         t = self.thresholds
         score = 50
-        
+
         learning = stats.get("learning", {})
-        
+
         # Learning events
         events = int(learning.get("total_outcomes", 0) or 0)
         if events >= t.elite_learning_events:
@@ -352,7 +353,7 @@ class InstitutionalGrader:
             score += 15 * ((events - t.min_learning_events) / (t.elite_learning_events - t.min_learning_events))
         else:
             score -= 20
-        
+
         # Recent accuracy (learning effectiveness)
         recent_acc = float(learning.get("recent_accuracy", 0.5) or 0.5)
         if recent_acc >= 0.7:
@@ -363,7 +364,7 @@ class InstitutionalGrader:
             score += 0
         else:
             score -= 15  # Degrading performance
-        
+
         # Adaptations made
         adaptations = int(learning.get("adaptations", 0) or 0)
         if adaptations >= 10:
@@ -374,16 +375,16 @@ class InstitutionalGrader:
             score += 5
         else:
             score -= 5  # No adaptation
-        
+
         return max(0, min(100, score))
-    
+
     def _grade_battle(self, stats: Dict[str, Any]) -> float:
         """Grade battle-hardiness and resilience (0-100)."""
         t = self.thresholds
         score = 50
-        
+
         battle = stats.get("battle_stats", {})
-        
+
         # Crashes survived
         crashes = int(battle.get("crashes_survived", 0) or 0)
         if crashes >= t.elite_crashes_survived:
@@ -392,7 +393,7 @@ class InstitutionalGrader:
             score += 10
         else:
             score -= 5  # Untested under pressure
-        
+
         # Drawdowns navigated
         dds = int(battle.get("drawdowns_navigated", 0) or 0)
         if dds >= t.elite_drawdowns_navigated:
@@ -401,7 +402,7 @@ class InstitutionalGrader:
             score += 10
         else:
             score -= 5
-        
+
         # Regime changes adapted
         regimes = int(battle.get("regime_changes_adapted", 0) or 0)
         if regimes >= t.elite_regime_changes:
@@ -410,23 +411,23 @@ class InstitutionalGrader:
             score += 10
         else:
             score -= 10  # Not regime-adaptive
-        
+
         # Black swans handled
         swans = int(battle.get("black_swans_handled", 0) or 0)
         if swans >= t.elite_black_swans:
             score += 10
         elif swans >= t.min_black_swans:
             score += 5
-        
+
         return max(0, min(100, score))
-    
+
     def _grade_alpha(self, stats: Dict[str, Any]) -> float:
         """Grade unique alpha generation (0-100) - THIS IS WHAT MAKES YOU DIFFERENT."""
         t = self.thresholds
         score = 50
-        
+
         battle = stats.get("battle_stats", {})
-        
+
         # Unique insights generated
         insights = int(battle.get("unique_insights", 0) or 0)
         if insights >= t.elite_unique_insights:
@@ -435,7 +436,7 @@ class InstitutionalGrader:
             score += 15
         else:
             score -= 20  # Not innovative enough
-        
+
         # Contrarian wins (being right when others wrong)
         contrarian = int(stats.get("contrarian_wins", 0) or 0)
         if contrarian >= t.elite_contrarian_wins:
@@ -444,7 +445,7 @@ class InstitutionalGrader:
             score += 10
         else:
             score -= 10  # Following the herd
-        
+
         # Information edges exploited
         edges = int(battle.get("information_edges", 0) or 0)
         if edges >= t.elite_information_edges:
@@ -453,14 +454,14 @@ class InstitutionalGrader:
             score += 10
         else:
             score -= 5
-        
+
         return max(0, min(100, score))
-    
+
     def _grade_competitive(self, stats: Dict[str, Any]) -> float:
         """Grade competitive positioning vs industry (0-100)."""
         t = self.thresholds
         score = 50
-        
+
         # SPY outperformance
         spy_beat = float(stats.get("spy_outperformance", 0) or 0)
         if spy_beat >= t.spy_outperformance_elite:
@@ -471,7 +472,7 @@ class InstitutionalGrader:
             score += 5
         else:
             score -= 20  # Can't beat index? Why exist?
-        
+
         # Peer percentile
         percentile = float(stats.get("peer_percentile", 0.5) or 0.5)
         if percentile >= t.peer_percentile_elite:
@@ -480,9 +481,9 @@ class InstitutionalGrader:
             score += 15
         else:
             score -= 10
-        
+
         return max(0, min(100, score))
-    
+
     def _numeric_to_grade(self, score: float) -> GradeTier:
         """Convert numeric score to grade tier."""
         if score >= 95:
@@ -499,109 +500,109 @@ class InstitutionalGrader:
             return GradeTier.D
         else:
             return GradeTier.F
-    
+
     def _identify_critical_failures(self, stats: Dict[str, Any]) -> List[str]:
         """Identify critical failures that disqualify for production."""
         failures = []
         t = self.thresholds
-        
+
         # AUC below absolute minimum
         auc = self._parse_rate(stats.get("auc", stats.get("metrics", {}).get("auc")))
         if auc < 0.51:
             failures.append(f"AUC {auc:.3f} is below absolute minimum (0.51) - no predictive ability")
-        
+
         # Excessive drawdown
         dd = float(stats.get("max_drawdown", stats.get("metrics", {}).get("max_drawdown", 0)) or 0)
         if dd > 0.15:
             failures.append(f"Max drawdown {dd:.1%} exceeds critical limit (15%) - unacceptable risk")
-        
+
         # Success rate critical failure
         sr = self._parse_rate(stats.get("success_rate"))
         if sr < 0.80 and stats.get("execution_count", 0) > 50:
             failures.append(f"Success rate {sr:.1%} is critically low (<80%)")
-        
+
         # No learning
         learning = stats.get("learning", {})
         if learning.get("total_outcomes", 0) < 10 and stats.get("execution_count", 0) > 100:
             failures.append("Agent is not learning from outcomes - critical flaw")
-        
+
         # Negative Sharpe
         sharpe = float(stats.get("sharpe", stats.get("metrics", {}).get("sharpe", 0)) or 0)
         if sharpe < 0:
             failures.append(f"Negative Sharpe ratio ({sharpe:.2f}) - losing money risk-adjusted")
-        
+
         return failures
-    
+
     def _identify_strengths(self, stats: Dict[str, Any]) -> List[str]:
         """Identify agent strengths."""
         strengths = []
         t = self.thresholds
-        
+
         auc = self._parse_rate(stats.get("auc", stats.get("metrics", {}).get("auc")))
         if auc >= t.elite_auc:
             strengths.append(f"Elite AUC ({auc:.3f}) - exceptional predictive ability")
-        
+
         sharpe = float(stats.get("sharpe", stats.get("metrics", {}).get("sharpe", 0)) or 0)
         if sharpe >= t.elite_sharpe:
             strengths.append(f"Elite Sharpe ratio ({sharpe:.2f}) - excellent risk-adjusted returns")
-        
+
         insights = stats.get("battle_stats", {}).get("unique_insights", 0)
         if insights >= t.elite_unique_insights:
             strengths.append(f"High innovation ({insights} unique insights) - differentiated thinking")
-        
+
         crashes = stats.get("battle_stats", {}).get("crashes_survived", 0)
         if crashes >= t.elite_crashes_survived:
             strengths.append(f"Battle-hardened ({crashes} crashes survived) - proven resilience")
-        
+
         return strengths
-    
+
     def _identify_weaknesses(self, stats: Dict[str, Any]) -> List[str]:
         """Identify agent weaknesses."""
         weaknesses = []
         t = self.thresholds
-        
+
         auc = self._parse_rate(stats.get("auc", stats.get("metrics", {}).get("auc")))
         if auc < t.min_auc:
             weaknesses.append(f"AUC ({auc:.3f}) below minimum - improve model")
-        
+
         exec_count = int(stats.get("execution_count", 0) or 0)
         if exec_count < t.min_executions:
             weaknesses.append(f"Only {exec_count} executions - needs more testing")
-        
+
         insights = stats.get("battle_stats", {}).get("unique_insights", 0)
         if insights < t.min_unique_insights:
             weaknesses.append(f"Only {insights} unique insights - not differentiated enough")
-        
+
         dd = float(stats.get("max_drawdown", stats.get("metrics", {}).get("max_drawdown", 0)) or 0)
         if dd > t.max_drawdown:
             weaknesses.append(f"Drawdown ({dd:.1%}) too high - tighten risk controls")
-        
+
         return weaknesses
-    
+
     def _generate_improvements(self, stats: Dict[str, Any]) -> List[str]:
         """Generate specific improvement actions."""
         actions = []
-        
+
         auc = self._parse_rate(stats.get("auc", stats.get("metrics", {}).get("auc")))
         if auc < 0.54:
             actions.append("Add behavioral features (sentiment, fear/greed, herding)")
             actions.append("Increase training data - more history improves patterns")
-        
+
         insights = stats.get("battle_stats", {}).get("unique_insights", 0)
         if insights < 10:
             actions.append("Enable all thinking modes (contrarian, second-order, regime-aware)")
             actions.append("Integrate cross-agent learning for novel insights")
-        
+
         crashes = stats.get("battle_stats", {}).get("crashes_survived", 0)
         if crashes < 5:
             actions.append("Run stress tests and fault injection via NOBUS agent")
-        
+
         regimes = stats.get("battle_stats", {}).get("regime_changes_adapted", 0)
         if regimes < 2:
             actions.append("Test across multiple market regimes (crisis, risk-on, risk-off)")
-        
+
         return actions if actions else ["Continue current training - on track"]
-    
+
     def _compare_to_citadel(self, score: float) -> str:
         """Compare to Citadel benchmark."""
         if score >= 90:
@@ -612,7 +613,7 @@ class InstitutionalGrader:
             return "BEHIND - Significant gap to close"
         else:
             return "NOT COMPETITIVE - Major overhaul needed"
-    
+
     def _compare_to_goldman(self, score: float) -> str:
         """Compare to Goldman benchmark."""
         if score >= 85:
@@ -621,7 +622,7 @@ class InstitutionalGrader:
             return "APPROACHING - Getting there"
         else:
             return "BEHIND - More work needed"
-    
+
     def _compare_to_twosigma(self, score: float) -> str:
         """Compare to Two Sigma benchmark."""
         if score >= 92:
@@ -630,7 +631,7 @@ class InstitutionalGrader:
             return "APPROACHING - Strong but not elite"
         else:
             return "BEHIND - Focus on unique alpha"
-    
+
     @staticmethod
     def _parse_rate(rate_value: Any) -> float:
         """Convert '85.0%' or numeric into float 0-1."""
@@ -654,9 +655,8 @@ class InstitutionalGrader:
 # =============================================================================
 
 def grade_agent_institutional(stats: Dict[str, Any]) -> Dict[str, Any]:
-    """
-    Convenience wrapper for institutional grading.
-    
+    """Convenience wrapper for institutional grading.
+
     Returns full grade report as dictionary.
     """
     grader = InstitutionalGrader()
@@ -665,15 +665,15 @@ def grade_agent_institutional(stats: Dict[str, Any]) -> Dict[str, Any]:
 
 
 def is_production_ready(stats: Dict[str, Any]) -> Tuple[bool, str]:
-    """
-    Quick check: Is this agent production ready?
-    
-    Returns:
+    """Quick check: Is this agent production ready?
+
+    Returns
+    -------
         (ready: bool, reason: str)
     """
     grader = InstitutionalGrader()
     report = grader.grade_agent(stats)
-    
+
     if report.production_ready:
         return True, f"Grade {report.grade_letter} - Production ready"
     else:
@@ -682,12 +682,11 @@ def is_production_ready(stats: Dict[str, Any]) -> Tuple[bool, str]:
 
 
 def get_grade_summary(stats: Dict[str, Any]) -> str:
-    """
-    Get a one-line grade summary.
+    """Get a one-line grade summary.
     """
     grader = InstitutionalGrader()
     report = grader.grade_agent(stats)
-    
+
     return (
         f"{report.agent_name}: {report.grade_letter} ({report.numeric_score}/100) | "
         f"Perf:{report.performance_score:.0f} Exec:{report.execution_score:.0f} "
@@ -700,6 +699,7 @@ def get_grade_summary(stats: Dict[str, Any]) -> str:
 # Legacy compatibility
 class GradeThresholds:
     """Legacy alias for backwards compatibility."""
+
     min_success_rate: float = 0.90
     min_executions: int = 100
     min_capabilities: int = 5
@@ -709,7 +709,7 @@ class GradeThresholds:
 
 class AgentGrader(InstitutionalGrader):
     """Legacy alias for backwards compatibility."""
-    pass
+
 
 
 def grade_agent_stats(stats: Dict[str, Any], thresholds=None) -> Dict[str, Any]:

@@ -1,11 +1,117 @@
 """
-RiskAgent - Risk management and limits enforcement
+================================================================================
+RISK AGENT - Risk Assessment & Margin of Safety
+================================================================================
 Author: Tom Hogan | Alpha Loop Capital, LLC
 
 Responsibilities:
-- Enforce 30% Margin of Safety
+- Enforce 30% Margin of Safety (core value investing principle)
 - Position size limits
 - Portfolio heat management
+- Trade-level risk assessment
+
+Tier: SENIOR (2)
+Reports To: HOAGS, KILLJOY
+Cluster: risk
+
+Core Philosophy:
+"Margin of safety is the central concept of investment."
+- Benjamin Graham
+
+================================================================================
+NATURAL LANGUAGE EXPLANATION
+================================================================================
+
+WHAT RISK_AGENT DOES:
+    RISK_AGENT is the "value investing guardian" of Alpha Loop Capital.
+    Its primary job is enforcing the 30% Margin of Safety rule - we only
+    buy when price is at least 30% below intrinsic value.
+    
+    While KILLJOY handles position sizing and portfolio-level risk,
+    RISK_AGENT focuses on individual trade-level risk assessment,
+    particularly margin of safety calculations.
+    
+    Think of RISK_AGENT as the "due diligence analyst" who asks:
+    "Is this cheap enough?" before every trade.
+
+KEY CONSTANTS:
+    - MARGIN_OF_SAFETY: 30% (minimum discount to intrinsic value)
+    - MAX_POSITION_SIZE: 10% (per holding)
+    - MAX_PORTFOLIO_HEAT: 20% (total risk budget)
+
+KEY FUNCTIONS:
+    1. process() - Main entry point. Routes to trade assessment
+       or portfolio risk check.
+       
+    2. _assess_trade() - Calculates margin of safety for a trade.
+       Checks if price is sufficiently below intrinsic value.
+       
+    3. _check_portfolio_risk() - Assesses overall portfolio risk
+       against limits.
+
+RELATIONSHIPS WITH OTHER AGENTS:
+    - BOOKMAKER: Receives intrinsic value estimates from BOOKMAKER
+      for margin of safety calculations.
+      
+    - KILLJOY: Works alongside KILLJOY. RISK_AGENT says "is it cheap
+      enough?" while KILLJOY says "can we afford it?"
+      
+    - ALL STRATEGY AGENTS: Every trade recommendation passes through
+      RISK_AGENT for margin of safety check.
+      
+    - HOAGS: Reports margin of safety compliance to HOAGS.
+
+PATHS OF GROWTH/TRANSFORMATION:
+    1. MULTI-FACTOR MARGIN: Consider multiple valuation approaches
+       (DCF, multiples, asset-based) for robustness.
+       
+    2. CONFIDENCE-WEIGHTED MARGIN: Adjust required margin based on
+       confidence in intrinsic value estimate.
+       
+    3. SECTOR-SPECIFIC MARGINS: Different margin requirements for
+       different sectors/asset classes.
+       
+    4. DYNAMIC MARGIN: Adjust margin requirements based on market
+       conditions (higher in euphoria, lower in panic).
+       
+    5. MARGIN MONITORING: Track how margins evolve post-purchase.
+
+================================================================================
+TRAINING & EXECUTION
+================================================================================
+
+TRAINING THIS AGENT:
+    # Terminal Setup (Windows PowerShell):
+    cd C:\\Users\\tom\\.cursor\\worktrees\\Alpha-Loop-LLM-1\\ycr
+    
+    # Activate virtual environment:
+    .\\venv\\Scripts\\activate
+    
+    # Train RISK_AGENT individually:
+    python -m src.training.agent_training_utils --agent RISK_AGENT
+    
+    # Train risk management pipeline:
+    python -m src.training.agent_training_utils --agents RISK_AGENT,KILLJOY,BOOKMAKER
+
+RUNNING THE AGENT:
+    from src.agents.risk_agent.risk_agent import RiskAgent
+    
+    risk = RiskAgent()
+    
+    # Assess a trade for margin of safety
+    result = risk.process({
+        "type": "assess_trade",
+        "ticker": "CCJ",
+        "intrinsic_value": 80.00,
+        "current_price": 50.00,
+        "position_size": 0.05
+    })
+    # Returns: approved=True, margin_of_safety=37.5%
+    
+    # Check portfolio risk
+    result = risk.process({"type": "check_portfolio_risk"})
+
+================================================================================
 """
 
 import sys

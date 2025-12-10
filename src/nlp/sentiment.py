@@ -19,8 +19,7 @@ def _get_pipeline():
 
 
 def score_texts(texts: List[str]) -> List[float]:
-    """
-    Returns sentiment scores in [-1,1], where positive=1, negative=-1.
+    """Returns sentiment scores in [-1,1], where positive=1, negative=-1.
     """
     if not texts:
         return []

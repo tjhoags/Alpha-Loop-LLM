@@ -24,6 +24,115 @@ Key Capabilities:
 - Counter-strategy development
 - GHOST enhancement pathways
 - Cross-agent intelligence coordination
+
+================================================================================
+NATURAL LANGUAGE EXPLANATION
+================================================================================
+
+WHAT HUNTER DOES:
+    HUNTER is the counter-intelligence specialist of Alpha Loop Capital. It
+    possesses encyclopedic knowledge of every trading algorithm used across
+    equities, options, crypto, and fixed income markets.
+    
+    When you're trading against algorithms, you need to know their playbook.
+    HUNTER identifies what algorithms are running, predicts their behavior,
+    and develops strategies to either avoid or exploit them.
+    
+    Think of HUNTER as the "military intelligence" division of the ecosystem.
+
+KEY FUNCTIONS:
+    1. identify_algorithm() - Analyzes market data to detect what algorithms
+       are currently operating. Recognizes VWAP, TWAP, momentum, mean
+       reversion, market making, and dozens of other algo signatures.
+       
+    2. create_ghost_pathway() - Creates "pathways" for GHOST to follow.
+       Tells GHOST what sentinels to watch and what absences to detect
+       specific to each algorithm type.
+       
+    3. develop_counter_strategy() - Given a detected algorithm, creates
+       a counter-strategy. How do we trade optimally given this algo
+       is in the market?
+       
+    4. coordinate_tracking() - Uses ORCHESTRATOR to assign lower-tier
+       agents to continuously track detected algorithms.
+       
+    5. distill_intelligence() - Summarizes algorithm intelligence for
+       other senior agents. What do they need to know?
+
+RELATIONSHIPS WITH OTHER AGENTS:
+    - GHOST: Primary partnership. HUNTER provides algorithm knowledge,
+      GHOST provides absence detection. Together they identify hidden
+      market dynamics.
+      
+    - ORCHESTRATOR: HUNTER requests ORCHESTRATOR to coordinate swarm
+      agents for continuous algorithm monitoring.
+      
+    - HOAGS: Reports significant algorithm detections to HOAGS. HOAGS
+      makes final decisions on counter-strategy deployment.
+      
+    - BOOKMAKER: Shares algorithm insights so BOOKMAKER can factor
+      execution costs and slippage into alpha calculations.
+      
+    - SCOUT: Coordinates with SCOUT on retail flow vs algorithmic flow.
+      Understanding the mix helps both agents.
+
+PATHS OF GROWTH/TRANSFORMATION:
+    1. REAL-TIME DETECTION: Move from periodic scans to continuous,
+       real-time algorithm detection with sub-second latency.
+       
+    2. HFT DEFENSE: Specialized capabilities for detecting and
+       defending against high-frequency trading strategies.
+       
+    3. CRYPTO EXPANSION: Deepen crypto algorithm knowledge including
+       MEV, sandwich attacks, and cross-exchange arbitrage.
+       
+    4. PREDICTIVE TRACKING: Not just detect what algorithms ARE doing,
+       but predict what they WILL do in the next hour/day.
+       
+    5. COALITION DETECTION: Identify when multiple algorithms are
+       working together (intentionally or emergently).
+       
+    6. ADVERSARIAL TRAINING: Train against simulated algorithms to
+       improve detection accuracy.
+
+================================================================================
+TRAINING & EXECUTION
+================================================================================
+
+TRAINING THIS AGENT:
+    # Terminal Setup (Windows PowerShell):
+    cd C:\\Users\\tom\\.cursor\\worktrees\\Alpha-Loop-LLM-1\\ycr
+    
+    # Activate virtual environment:
+    .\\venv\\Scripts\\activate
+    
+    # Train HUNTER individually:
+    python -m src.training.agent_training_utils --agent HUNTER
+    
+    # Train with intelligence-related agents:
+    python -m src.training.agent_training_utils --agents HUNTER,GHOST,ORCHESTRATOR
+    
+    # Cross-train: HUNTER and GHOST observe, AUTHOR documents:
+    python -m src.training.agent_training_utils --cross-train "HUNTER,GHOST:AUTHOR:momentum"
+
+RUNNING THE AGENT:
+    from src.agents.senior.hunter_agent import get_hunter
+    
+    hunter = get_hunter()
+    
+    # Identify algorithms in market data
+    result = hunter.process({
+        "action": "identify_algorithm",
+        "asset_class": "equities",
+        "market_data": {"volume": [...], "price": [...]}
+    })
+    
+    # Create a pathway for GHOST
+    result = hunter.process({
+        "action": "create_pathway",
+        "algorithm_type": "vwap"
+    })
+
 ================================================================================
 """
 

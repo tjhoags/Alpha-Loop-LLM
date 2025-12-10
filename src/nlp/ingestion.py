@@ -98,7 +98,7 @@ def load_and_chunk_documents() -> List[Dict]:
                         "source_path": str(path),
                         "chunk_id": i,
                         "suffix": path.suffix.lower(),
-                    }
+                    },
                 )
         except Exception as exc:  # noqa: BLE001
             logger.error(f"Failed to read {path}: {exc}")

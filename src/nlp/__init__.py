@@ -1,4 +1,3 @@
-"""
-NLP utilities for research ingestion, embeddings, and sentiment.
+"""NLP utilities for research ingestion, embeddings, and sentiment.
 """
 

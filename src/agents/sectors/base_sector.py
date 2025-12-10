@@ -1,9 +1,9 @@
 
-"""
-BaseSectorAgent - shared logic for sector-level specialization.
+"""BaseSectorAgent - shared logic for sector-level specialization.
 """
 from typing import Any, Dict, List
-from src.core.agent_base import BaseAgent, AgentTier
+
+from src.core.agent_base import AgentTier, BaseAgent
 
 
 class BaseSectorAgent(BaseAgent):

@@ -30,7 +30,7 @@ def build_models(random_state: int = 42) -> Dict[str, Pipeline]:
                         eval_metric="logloss",
                     ),
                 ),
-            ]
+            ],
         ),
         "lightgbm": Pipeline(
             steps=[
@@ -46,7 +46,7 @@ def build_models(random_state: int = 42) -> Dict[str, Pipeline]:
                         random_state=random_state,
                     ),
                 ),
-            ]
+            ],
         ),
         "catboost": Pipeline(
             steps=[
@@ -62,7 +62,7 @@ def build_models(random_state: int = 42) -> Dict[str, Pipeline]:
                         random_seed=random_state,
                     ),
                 ),
-            ]
+            ],
         ),
     }
 
@@ -96,4 +96,50 @@ def save_model(model: Pipeline, name: str, models_dir: Path, metadata: dict | No
     joblib.dump(payload, fname)
     logger.info(f"Saved model: {fname}")
     return fname
+
+
+def calculate_risk_metrics(returns: np.ndarray) -> Dict[str, float]:
+    """Calculate risk metrics for a return series.
+
+    Args:
+    ----
+        returns: Array of returns
+
+    Returns:
+    -------
+        Dict with risk metrics
+    """
+    if len(returns) == 0:
+        return {
+            "volatility": 0.0,
+            "sharpe_ratio": 0.0,
+            "max_drawdown": 0.0,
+            "skewness": 0.0,
+            "kurtosis": 0.0,
+        }
+
+    # Annualized volatility (assuming daily returns)
+    volatility = float(np.std(returns) * np.sqrt(252))
+
+    # Sharpe ratio (assuming risk-free rate of 0)
+    mean_return = float(np.mean(returns) * 252)  # Annualized
+    sharpe_ratio = mean_return / volatility if volatility > 0 else 0.0
+
+    # Maximum drawdown
+    cumulative = np.cumprod(1 + returns)
+    running_max = np.maximum.accumulate(cumulative)
+    drawdowns = (cumulative - running_max) / running_max
+    max_drawdown = float(np.min(drawdowns)) if len(drawdowns) > 0 else 0.0
+
+    # Higher moments
+    skewness = float(np.mean(((returns - np.mean(returns)) / np.std(returns)) ** 3)) if np.std(returns) > 0 else 0.0
+    kurtosis = float(np.mean(((returns - np.mean(returns)) / np.std(returns)) ** 4) - 3) if np.std(returns) > 0 else 0.0
+
+    return {
+        "volatility": volatility,
+        "sharpe_ratio": sharpe_ratio,
+        "max_drawdown": max_drawdown,
+        "skewness": skewness,
+        "kurtosis": kurtosis,
+    }
 

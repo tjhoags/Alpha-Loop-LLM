@@ -8,14 +8,12 @@ from tenacity import retry, stop_after_attempt, wait_exponential
 
 from src.config.settings import get_settings
 
-
 BASE_URL = "https://api.exchange.coinbase.com"
 
 
 @retry(stop=stop_after_attempt(3), wait=wait_exponential(multiplier=2, min=2, max=10))
 def fetch_candles(product_id: str = "BTC-USD", granularity: int = 300, lookback_hours: Optional[int] = None) -> pd.DataFrame:
-    """
-    Fetch candles from Coinbase Pro-style API.
+    """Fetch candles from Coinbase Pro-style API.
     granularity: seconds (300 = 5m)
     """
     settings = get_settings()
@@ -44,7 +42,7 @@ def fetch_candles(product_id: str = "BTC-USD", granularity: int = 300, lookback_
                 "close": float(row[4]),
                 "volume": float(row[5]),
                 "source": "coinbase",
-            }
+            },
         )
     df = pd.DataFrame(records).sort_values("timestamp")
     logger.info(f"Coinbase fetched {len(df)} rows for {product_id}")

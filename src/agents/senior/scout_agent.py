@@ -30,6 +30,112 @@ Key Capabilities:
 - Risk premia calculation
 - Scalp trade optimization
 - Immediate opportunity reporting
+
+================================================================================
+NATURAL LANGUAGE EXPLANATION
+================================================================================
+
+WHAT SCOUT DOES:
+    SCOUT is the arbitrage hunter of Alpha Loop Capital, specializing in
+    small and mid-cap stocks where retail trading creates exploitable
+    inefficiencies.
+    
+    In large caps like AAPL or MSFT, markets are efficient and spreads
+    are tight. But in small caps, retail traders often post bad bid/asks,
+    creating moments where you can scalp risk-free profit.
+    
+    SCOUT finds these moments and calculates exactly how to exploit them -
+    even if it means trading just a single options contract.
+    
+    Think of SCOUT as the "floor trader" of the ecosystem, always watching
+    for momentary mispricings.
+
+KEY FUNCTIONS:
+    1. scan_for_inefficiencies() - Continuous scan of the small/mid cap
+       universe looking for bad bid/asks, options mispricing, and risk
+       premia anomalies. Returns opportunities sorted by urgency.
+       
+    2. analyze_bid_ask() - Deep dive on a specific stock's spread quality.
+       Compares to historical, estimates retail vs institutional flow.
+       
+    3. calculate_fair_value() - Determines theoretical fair value for
+       stocks and options using Black-Scholes and multi-factor models.
+       
+    4. optimize_scalp() - Given an opportunity, calculates exact entry
+       price, position size, and timing. Even for single contracts.
+
+RELATIONSHIPS WITH OTHER AGENTS:
+    - HOAGS: Reports IMMEDIATELY when urgent opportunities are found.
+      Time-sensitive nature of scalping requires fast communication.
+      
+    - BOOKMAKER: Feeds opportunities to BOOKMAKER for alpha quantification.
+      SCOUT finds them, BOOKMAKER measures the edge.
+      
+    - HUNTER: Coordinates on flow analysis. HUNTER knows algorithms,
+      SCOUT knows retail patterns. Together they understand order flow.
+      
+    - KILLJOY: All scalp recommendations must pass KILLJOY's position
+      limits. Even small trades need risk approval.
+      
+    - CONVERSION_REVERSAL: Works with the options arbitrage specialist
+      on put-call parity violations and box spreads.
+
+PATHS OF GROWTH/TRANSFORMATION:
+    1. CRYPTO EXPANSION: Apply retail arbitrage hunting to crypto
+       markets where retail inefficiency is even more pronounced.
+       
+    2. REAL-TIME STREAMING: Move from periodic scans to real-time
+       streaming with sub-second detection.
+       
+    3. AUTO-EXECUTION: Gain ability to execute approved scalps
+       automatically when opportunities appear.
+       
+    4. OTC MARKETS: Expand to OTC stocks where inefficiencies are
+       massive but liquidity risk is higher.
+       
+    5. SENTIMENT INTEGRATION: Incorporate retail sentiment data
+       (Reddit, Twitter) to predict where bad quotes will appear.
+       
+    6. DARK POOL AWARENESS: Understand when dark pool prints signal
+       upcoming public market mispricings.
+
+================================================================================
+TRAINING & EXECUTION
+================================================================================
+
+TRAINING THIS AGENT:
+    # Terminal Setup (Windows PowerShell):
+    cd C:\\Users\\tom\\.cursor\\worktrees\\Alpha-Loop-LLM-1\\ycr
+    
+    # Activate virtual environment:
+    .\\venv\\Scripts\\activate
+    
+    # Train SCOUT individually:
+    python -m src.training.agent_training_utils --agent SCOUT
+    
+    # Train with arbitrage-related agents:
+    python -m src.training.agent_training_utils --agents SCOUT,BOOKMAKER,HUNTER
+    
+    # Cross-train with retail arbitrage ML:
+    python -m src.training.agent_training_utils --cross-train "SCOUT,HUNTER:AUTHOR:retail_arbitrage"
+
+RUNNING THE AGENT:
+    from src.agents.senior.scout_agent import get_scout
+    
+    scout = get_scout()
+    
+    # Scan for inefficiencies
+    result = scout.process({
+        "action": "scan",
+        "universe": ["SOFI", "HOOD", "RIVN", "CCJ"]
+    })
+    
+    # Analyze specific ticker
+    result = scout.process({
+        "action": "analyze_ticker",
+        "ticker": "SOFI"
+    })
+
 ================================================================================
 """
 

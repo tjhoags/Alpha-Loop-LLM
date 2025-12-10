@@ -1,12 +1,11 @@
+import os
 from functools import lru_cache
 from pathlib import Path
 from typing import List, Optional
-import os
 
 from dotenv import load_dotenv
 from pydantic import Field, field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
-
 
 # Load .env from your OneDrive location FIRST
 ENV_PATH = r"C:\Users\tom\OneDrive\Alpha Loop LLM\API - Dec 2025.env"
@@ -17,16 +16,16 @@ else:
 
 
 class Settings(BaseSettings):
+    """Application settings loaded from environment variables.
     """
-    Application settings loaded from environment variables.
-    """
+
     model_config = SettingsConfigDict(
         env_file=".env",
         env_file_encoding="utf-8",
         case_sensitive=False,
-        extra="ignore"
+        extra="ignore",
     )
-    
+
     # ==========================================================================
     # DATABASE - Azure SQL Server
     # ==========================================================================
@@ -84,14 +83,14 @@ class Settings(BaseSettings):
     polygon_lookback_hours: int = Field(default=240)
     coinbase_lookback_hours: int = Field(default=240)
     alpha_vantage_outputsize: str = Field(default="full")
-    
+
     # Research ingestion / NLP
     research_paths: List[str] = Field(
         default_factory=lambda: [
             r"C:\Users\tom\Alphaloopcapital Dropbox\Tom Hogan\Archives",
             r"C:\Users\tom\Alphaloopcapital Dropbox\Tom Hogan\Current",
             r"C:\Users\tom\Alphaloopcapital Dropbox\ALC Internal Only\Agents",
-        ]
+        ],
     )
     embedding_model_name: str = Field(default="sentence-transformers/all-MiniLM-L6-v2")
     max_chunk_size: int = Field(default=1200)
@@ -128,33 +127,33 @@ class Settings(BaseSettings):
 
     # Use SQLite for local development (fast, no setup)
     use_sqlite: bool = Field(default=False)  # Using Azure SQL now!
-    
+
     @property
     def sqlalchemy_url(self) -> str:
         if self.database_url:
             return self.database_url
-        
+
         # USE SQLITE FOR NOW (faster, no network issues)
         if self.use_sqlite:
             sqlite_path = self.data_dir / "market_data.db"
             return f"sqlite:///{sqlite_path}"
-        
+
         # Azure SQL
         db_name = self.sql_db.split("/")[-1] if "/" in self.sql_db else self.sql_db
         server = self.sql_server
-        
+
         if not server.endswith(".database.windows.net"):
             server = f"{server}.database.windows.net"
-        
-        driver = self.db_odbc_driver.replace(' ', '+')
-        
+
+        driver = self.db_odbc_driver.replace(" ", "+")
+
         if self.db_username and self.db_password:
             return f"mssql+pyodbc://{self.db_username}:{self.db_password}@{server}/{db_name}?driver={driver}"
         else:
             return f"mssql+pyodbc://@{server}/{db_name}?driver={driver}&Authentication=ActiveDirectoryInteractive"
 
 
-@lru_cache()
+@lru_cache
 def get_settings() -> Settings:
     settings = Settings()
     # Ensure critical directories exist

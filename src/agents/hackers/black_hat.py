@@ -1,5 +1,7 @@
 """
+================================================================================
 BLACK HAT AGENT - THE AGGRESSOR
+================================================================================
 Author: Tom Hogan | Alpha Loop Capital, LLC
 
 ROLE:
@@ -14,6 +16,111 @@ PHILOSOPHY:
 - Logic fuzzing
 
 WE ARE THE ONES WHO DROWN OTHERS.
+
+================================================================================
+NATURAL LANGUAGE EXPLANATION
+================================================================================
+
+WHAT BLACKHAT DOES:
+    BLACKHAT is the internal adversary - a "red team" agent whose job is
+    to destroy our own strategies before the market does. It looks for
+    every possible weakness, exploit, and failure mode.
+    
+    The philosophy is simple: if BLACKHAT can break it, the market WILL
+    break it. Better to find and fix weaknesses internally than discover
+    them during a live trade.
+    
+    Think of BLACKHAT as the "penetration tester" of the trading system.
+    It attacks everything: data pipelines, signal logic, execution paths,
+    risk limits - nothing is sacred.
+
+KEY FUNCTIONS:
+    1. process() - Main attack function. Takes a target and attack type,
+       then systematically tries to break it.
+       
+    2. _fuzz_logic() - Throws garbage, extreme values, and nulls at any
+       logic to see if it breaks. Edge cases, NaNs, infinities.
+       
+    3. _find_exploit() - Looks for overfitting, look-ahead bias, or
+       parameter fragility in strategies.
+       
+    4. _simulate_market_attack() - Simulates predatory fund behavior:
+       stop hunting, liquidity cascades, coordinated selling.
+       
+    5. _calculate_kill_prob() - Estimates probability that a found
+       vulnerability would result in catastrophic loss.
+
+RELATIONSHIPS WITH OTHER AGENTS:
+    - WHITEHAT: Adversarial partner. BLACKHAT attacks, WHITEHAT defends.
+      They form a continuous security improvement loop.
+      
+    - HOAGS: Reports all vulnerabilities to HOAGS. Critical vulns get
+      immediate escalation.
+      
+    - KILLJOY: Works with KILLJOY on stress scenarios. BLACKHAT finds
+      the worst cases, KILLJOY ensures we survive them.
+      
+    - ALL STRATEGY AGENTS: Every strategy agent is a potential target.
+      BLACKHAT attacks them to find weaknesses.
+
+PATHS OF GROWTH/TRANSFORMATION:
+    1. ML-DRIVEN ATTACKS: Use machine learning to find more sophisticated
+       attack vectors that human-designed fuzzing misses.
+       
+    2. MARKET SIMULATION: More realistic market attack simulations
+       including flash crashes, circuit breakers, exchange outages.
+       
+    3. ADVERSARIAL TRAINING: Automatically retrain strategy agents
+       against discovered vulnerabilities.
+       
+    4. REGULATORY ATTACKS: Test compliance systems by simulating
+       regulatory edge cases and violations.
+       
+    5. DATA POISONING: Test resilience to bad data in feeds.
+       
+    6. COMPETITIVE INTELLIGENCE: Simulate attacks from competitor
+       algorithms with known strategies.
+
+================================================================================
+TRAINING & EXECUTION
+================================================================================
+
+TRAINING THIS AGENT:
+    # Terminal Setup (Windows PowerShell):
+    cd C:\\Users\\tom\\.cursor\\worktrees\\Alpha-Loop-LLM-1\\ycr
+    
+    # Activate virtual environment:
+    .\\venv\\Scripts\\activate
+    
+    # Train BLACKHAT individually:
+    python -m src.training.agent_training_utils --agent BLACKHAT
+    
+    # Train security pair together:
+    python -m src.training.agent_training_utils --agents BLACKHAT,WHITEHAT
+    
+    # Cross-train: BLACKHAT attacks, WHITEHAT defends, AUTHOR documents:
+    python -m src.training.agent_training_utils --cross-train "BLACKHAT,WHITEHAT:AUTHOR:agent_trainer"
+
+RUNNING THE AGENT:
+    from src.agents.hackers.black_hat import BlackHatAgent
+    
+    blackhat = BlackHatAgent()
+    
+    # Attack a strategy
+    result = blackhat.process({
+        "target": "momentum_strategy",
+        "attack_type": "general",
+        "strategy_params": {"stop_loss": 0.25}
+    })
+    
+    # Simulate market attack
+    result = blackhat.process({
+        "target": "portfolio",
+        "attack_type": "market_attack",
+        "portfolio": {"positions": [...]}
+    })
+
+================================================================================
 """
 
 from typing import Dict, Any, List

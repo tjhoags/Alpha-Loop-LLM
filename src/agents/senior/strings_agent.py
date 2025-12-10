@@ -15,6 +15,111 @@ Cluster: ml_ops
 
 Core Philosophy:
 "Pull the right strings to optimize the ensemble."
+
+================================================================================
+NATURAL LANGUAGE EXPLANATION
+================================================================================
+
+WHAT STRINGS DOES:
+    STRINGS is the "puppet master" of agent weights. Every agent produces
+    signals, but not all signals are equal. STRINGS continuously optimizes
+    how much weight to give each agent's signals based on their recent
+    performance.
+    
+    An agent that's been crushing it gets more weight. An agent that's
+    been struggling gets less weight. This ensemble approach outperforms
+    any single agent.
+    
+    The name comes from "pulling the strings" - adjusting the invisible
+    threads that control how signals combine.
+
+KEY FUNCTIONS:
+    1. optimize_weights() - Runs weight optimization using methods like
+       Bayesian optimization, genetic algorithms, or grid search.
+       Finds the optimal mix of agent weights.
+       
+    2. evaluate_agent_performance() - Tracks each agent's accuracy,
+       Sharpe ratio, win rate, and other metrics over time.
+       
+    3. calculate_optimal_ensemble() - Given a set of agents, calculates
+       the optimal weight combination to maximize risk-adjusted returns.
+       
+    4. update_agent_weight() - Adjusts a specific agent's weight based
+       on performance or manual override.
+
+RELATIONSHIPS WITH OTHER AGENTS:
+    - HOAGS: Reports weight changes to HOAGS. Major reweightings require
+      HOAGS approval to prevent unstable oscillations.
+      
+    - ALL AGENTS: STRINGS monitors every agent that produces signals.
+      It's the central hub for signal aggregation.
+      
+    - BOOKMAKER: BOOKMAKER generates alpha, STRINGS determines how
+      much of that alpha to include in the ensemble.
+      
+    - KILLJOY: Weight changes must respect KILLJOY's risk limits.
+      Can't weight an agent 100% even if it's performing well.
+
+PATHS OF GROWTH/TRANSFORMATION:
+    1. REAL-TIME REWEIGHTING: Move from periodic optimization to
+       continuous, real-time weight adjustment.
+       
+    2. REGIME-CONDITIONAL WEIGHTS: Different weights for different
+       market regimes (risk-on vs risk-off).
+       
+    3. META-LEARNING: Learn which optimization methods work best
+       in which conditions. Optimize the optimizer.
+       
+    4. ATTRIBUTION ANALYSIS: Detailed breakdown of which agents
+       contributed to P&L over any time period.
+       
+    5. CORRELATION-AWARE: Consider correlations between agents
+       when setting weights, not just individual performance.
+       
+    6. DYNAMIC ENSEMBLE SIZE: Automatically add/remove agents
+       from the ensemble based on performance.
+
+================================================================================
+TRAINING & EXECUTION
+================================================================================
+
+TRAINING THIS AGENT:
+    # Terminal Setup (Windows PowerShell):
+    cd C:\\Users\\tom\\.cursor\\worktrees\\Alpha-Loop-LLM-1\\ycr
+    
+    # Activate virtual environment:
+    .\\venv\\Scripts\\activate
+    
+    # Train STRINGS individually:
+    python -m src.training.agent_training_utils --agent STRINGS
+    
+    # Train with ML-related agents:
+    python -m src.training.agent_training_utils --agents STRINGS,BOOKMAKER,SCOUT
+    
+    # Cross-train: STRINGS and BOOKMAKER analyze, AUTHOR documents:
+    python -m src.training.agent_training_utils --cross-train "STRINGS,BOOKMAKER:AUTHOR:agent_trainer"
+
+RUNNING THE AGENT:
+    from src.agents.senior.strings_agent import get_strings
+    
+    strings = get_strings()
+    
+    # Optimize weights for a set of agents
+    result = strings.process({
+        "action": "optimize",
+        "agents": ["BOOKMAKER", "SCOUT", "HUNTER"],
+        "method": "bayesian"
+    })
+    
+    # Evaluate agent performance
+    result = strings.process({
+        "action": "evaluate_agent",
+        "agent_id": "BOOKMAKER"
+    })
+    
+    # Get current weights
+    result = strings.process({"action": "get_weights"})
+
 ================================================================================
 """
 

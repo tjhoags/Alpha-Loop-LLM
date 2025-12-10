@@ -1,9 +1,9 @@
 
-"""
-BaseStrategyAgent - foundation for strategy agents.
+"""BaseStrategyAgent - foundation for strategy agents.
 """
 from typing import Any, Dict, List
-from src.core.agent_base import BaseAgent, AgentTier
+
+from src.core.agent_base import AgentTier, BaseAgent
 
 
 class BaseStrategyAgent(BaseAgent):

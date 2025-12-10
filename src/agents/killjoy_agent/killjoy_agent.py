@@ -31,6 +31,131 @@ Tier: SENIOR (2)
 
 Core Philosophy:
 "The first rule of trading is: Don't lose money. The second rule is: Don't forget the first."
+
+================================================================================
+NATURAL LANGUAGE EXPLANATION
+================================================================================
+
+WHAT KILLJOY DOES:
+    KILLJOY is the risk guardian of Alpha Loop Capital. While other agents
+    hunt alpha and find opportunities, KILLJOY's job is to say "no" when
+    needed. It prevents catastrophic losses.
+    
+    The name says it all - KILLJOY "kills the joy" of over-eager trading.
+    When BOOKMAKER finds an amazing opportunity and SCOUT confirms it,
+    KILLJOY asks: "But what if you're both wrong?"
+    
+    Think of KILLJOY as the "chief risk officer" who ensures survival
+    above all else. No single trade can blow up the portfolio.
+
+KEY FUNCTIONS:
+    1. allocate_capital() - Determines how much capital to risk on any
+       strategy. Uses Kelly Criterion with fractional sizing.
+       
+    2. size_position() - Calculates exact position size with all
+       guardrails: volatility scaling, correlation adjustment, heat
+       penalty, concentration limits.
+       
+    3. check_heat() - Monitors portfolio "heat" (risk). Calculates VaR,
+       drawdown, concentration, correlation. Returns risk level.
+       
+    4. approve_trade() - Final gate for any trade. Checks loss limits,
+       position limits, drawdown limits. Can REJECT or SIZE DOWN.
+       
+    5. emergency_derisk() - When things go wrong, rapidly reduce
+       positions to bring heat back to acceptable levels.
+
+RISK LIMITS (Hard Stops):
+    - Max single position: 10% of portfolio
+    - Max sector: 30% of portfolio
+    - Daily loss limit: 2%
+    - Weekly loss limit: 5%
+    - Max drawdown: 15%
+    - Max daily VaR 95%: 2%
+    - Max top-3 concentration: 40%
+
+RELATIONSHIPS WITH OTHER AGENTS:
+    - HOAGS: Reports to HOAGS. Can override even HOAGS-approved trades
+      if risk limits are breached. KILLJOY has HALT authority.
+      
+    - ALL STRATEGY AGENTS: Every trade recommendation must pass
+      KILLJOY's approval before execution.
+      
+    - STRINGS: Coordinates on ensemble weights. STRINGS optimizes
+      for return, KILLJOY constrains for risk.
+      
+    - WHITEHAT: Works together on systemic risk. WHITEHAT handles
+      technical security, KILLJOY handles financial risk.
+
+PATHS OF GROWTH/TRANSFORMATION:
+    1. PREDICTIVE RISK: Not just reactive limits but predictive risk
+       - knowing when risk is building before limits are hit.
+       
+    2. REGIME-ADAPTIVE LIMITS: Different limits for different market
+       regimes. Tighter in volatility, looser in calm.
+       
+    3. TAIL RISK FOCUS: Better modeling of tail events and black
+       swans. Standard VaR misses the big ones.
+       
+    4. LIQUIDITY INTEGRATION: Factor in market liquidity when
+       calculating position sizes and exit risk.
+       
+    5. CORRELATION DYNAMICS: Real-time correlation monitoring to
+       catch "correlation breakdown" in stress.
+       
+    6. STRESS TESTING: Continuous stress testing against historical
+       crisis scenarios.
+
+================================================================================
+TRAINING & EXECUTION
+================================================================================
+
+TRAINING THIS AGENT:
+    # Terminal Setup (Windows PowerShell):
+    cd C:\\Users\\tom\\.cursor\\worktrees\\Alpha-Loop-LLM-1\\ycr
+    
+    # Activate virtual environment:
+    .\\venv\\Scripts\\activate
+    
+    # Train KILLJOY individually:
+    python -m src.training.agent_training_utils --agent KILLJOY
+    
+    # Train with risk-related agents:
+    python -m src.training.agent_training_utils --agents KILLJOY,WHITEHAT,BLACKHAT
+    
+    # Cross-train: KILLJOY and STRINGS optimize, AUTHOR documents:
+    python -m src.training.agent_training_utils --cross-train "KILLJOY,STRINGS:AUTHOR:agent_trainer"
+
+RUNNING THE AGENT:
+    from src.agents.killjoy_agent.killjoy_agent import get_killjoy
+    
+    killjoy = get_killjoy()
+    
+    # Check current portfolio heat
+    result = killjoy.process({
+        "action": "check_heat",
+        "positions": [
+            {"ticker": "AAPL", "weight": 0.08, "volatility": 0.25},
+            {"ticker": "CCJ", "weight": 0.05, "volatility": 0.40}
+        ]
+    })
+    
+    # Approve a trade
+    result = killjoy.process({
+        "action": "approve_trade",
+        "ticker": "NVDA",
+        "action": "buy",
+        "size_pct": 0.05,
+        "price": 500,
+        "confidence": 0.75
+    })
+    
+    # Emergency derisk
+    result = killjoy.process({
+        "action": "emergency_derisk",
+        "target_heat": 30.0
+    })
+
 ================================================================================
 """
 

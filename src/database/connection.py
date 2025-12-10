@@ -7,7 +7,7 @@ from sqlalchemy.engine import Engine
 from src.config.settings import get_settings
 
 
-@lru_cache()
+@lru_cache
 def get_engine() -> Engine:
     settings = get_settings()
     url = settings.sqlalchemy_url

@@ -1,26 +1,22 @@
-from datetime import datetime
-from typing import List
 import concurrent.futures
+from typing import List
 
 import pandas as pd
 from loguru import logger
-from sqlalchemy import text
 
 from src.config.settings import get_settings
-from src.database.connection import get_engine
 from src.data_ingestion.sources.alpha_vantage import fetch_intraday as av_fetch
-from src.data_ingestion.sources.polygon import fetch_aggregates as polygon_fetch
 from src.data_ingestion.sources.coinbase import fetch_candles as coinbase_fetch
 from src.data_ingestion.sources.fred import FredClient
-from src.data_ingestion.universe import fetch_all_tickers
+from src.data_ingestion.sources.polygon import fetch_aggregates as polygon_fetch
+from src.database.connection import get_engine
 
 
 def collect_equities(symbols: List[str]) -> pd.DataFrame:
-    """
-    Collects data for all symbols in PARALLEL.
+    """Collects data for all symbols in PARALLEL.
     """
     all_frames = []
-    
+
     def process_symbol(sym):
         frames = []
         try:
@@ -29,12 +25,12 @@ def collect_equities(symbols: List[str]) -> pd.DataFrame:
             df_poly = polygon_fetch(sym, timespan="minute", multiplier=1, lookback_days=730)
             if not df_poly.empty:
                 frames.append(df_poly)
-            
+
             # Alpha Vantage: 1-minute bars, full recent history
             df_av = av_fetch(sym, interval="1min")
             if not df_av.empty:
                 frames.append(df_av)
-                
+
             if frames:
                 return pd.concat(frames, ignore_index=True)
         except Exception as exc:
@@ -45,14 +41,14 @@ def collect_equities(symbols: List[str]) -> pd.DataFrame:
     # Max workers = 10 for Full Throttle
     with concurrent.futures.ThreadPoolExecutor(max_workers=10) as executor:
         results = executor.map(process_symbol, symbols)
-        
+
     for res in results:
         if not res.empty:
             all_frames.append(res)
-            
+
     if not all_frames:
         return pd.DataFrame()
-        
+
     df = pd.concat(all_frames, ignore_index=True)
     df.sort_values(["symbol", "timestamp"], inplace=True)
     df.drop_duplicates(subset=["symbol", "timestamp"], keep="last", inplace=True)
@@ -93,16 +89,16 @@ def main() -> None:
     settings = get_settings()
     logger.add(settings.logs_dir / "data_collection.log", rotation="50 MB", level=settings.log_level)
     logger.info("Starting TOTAL MARKET data collection.")
-    
+
     # 1. Expand Universe (Dynamic)
     # WARNING: fetching all 10k tickers might take too long for tonight.
     # For tonight, let's stick to the target list + top 100 tech.
     # To enable full universe, uncomment the line below:
-    # target_symbols = fetch_all_tickers() 
-    
+    # target_symbols = fetch_all_tickers()
+
     # Using settings list for immediate safety, but you can swap this.
-    target_symbols = settings.target_symbols 
-    
+    target_symbols = settings.target_symbols
+
     # 2. Collect Macro
     macro_df = collect_macro()
     persist(macro_df, table="macro_indicators") # New table for macro
@@ -110,10 +106,10 @@ def main() -> None:
     # 3. Collect Equities & Crypto
     eq_df = collect_equities(target_symbols)
     crypto_df = collect_crypto()
-    
+
     combined = pd.concat([eq_df, crypto_df], ignore_index=True)
     count = persist(combined, table="price_bars")
-    
+
     logger.info(f"Data collection cycle completed. Rows stored: {count}")
 
 

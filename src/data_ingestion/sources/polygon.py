@@ -8,14 +8,12 @@ from tenacity import retry, stop_after_attempt, wait_exponential
 
 from src.config.settings import get_settings
 
-
 BASE_URL = "https://api.polygon.io"
 
 
 @retry(stop=stop_after_attempt(3), wait=wait_exponential(multiplier=2, min=2, max=10))
 def fetch_aggregates(symbol: str, timespan: str = "minute", multiplier: int = 5, lookback_hours: Optional[int] = None) -> pd.DataFrame:
-    """
-    Fetch aggregate bars from Polygon with extended lookback.
+    """Fetch aggregate bars from Polygon with extended lookback.
     For large ranges, Polygon caps at 50k bars per call. With 5m bars, 240h ~ 2880 bars.
     """
     settings = get_settings()
@@ -41,7 +39,7 @@ def fetch_aggregates(symbol: str, timespan: str = "minute", multiplier: int = 5,
                 "close": row["c"],
                 "volume": row["v"],
                 "source": "polygon",
-            }
+            },
         )
     df = pd.DataFrame(records)
     logger.info(f"Polygon fetched {len(df)} rows for {symbol} (lookback_hours={hrs})")

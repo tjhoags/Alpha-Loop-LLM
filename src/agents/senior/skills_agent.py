@@ -25,6 +25,113 @@ COMMUNICATION CHANNELS:
 
 Core Philosophy:
 "Understand intent, optimize execution, measure everything objectively."
+
+================================================================================
+NATURAL LANGUAGE EXPLANATION
+================================================================================
+
+WHAT SKILLS DOES:
+    SKILLS is the bridge between Tom's natural language commands and the
+    agent ecosystem. When Tom says "make the agents better at detecting
+    momentum shifts," SKILLS parses that, figures out which agents need
+    what skills, and distributes the improvements.
+    
+    SKILLS also runs objective assessments of every agent, maintaining
+    skill scores from 1-100. This creates accountability - agents that
+    underperform get flagged for improvement.
+    
+    Think of SKILLS as the "HR department" combined with "training director"
+    of the ecosystem.
+
+KEY FUNCTIONS:
+    1. parse_instruction() - Takes Tom's natural language input, extracts
+       intent, identifies target agents, and generates optimization
+       suggestions. Turns "improve risk detection" into actionable tasks.
+       
+    2. distribute_skills() - Pushes parsed skills and traits to target
+       agents. Ensures improvements reach the right places.
+       
+    3. assess_agent() - Runs objective skill assessment for any agent.
+       Tests capabilities, measures performance, identifies weaknesses.
+       
+    4. generate_weekly_report() - Creates comprehensive weekly report
+       of agent performance, skill changes, and training updates.
+       
+    5. push_to_channels() - Sends updates via Slack, Discord, Notion,
+       and Email to keep Tom informed.
+
+RELATIONSHIPS WITH OTHER AGENTS:
+    - HOAGS: All skill information flows up to HOAGS. HOAGS has final
+      authority on skill distributions and agent modifications.
+      
+    - THE_AUTHOR: Works closely on documentation. SKILLS provides data,
+      THE_AUTHOR formats it for human consumption.
+      
+    - ALL AGENTS: SKILLS maintains profiles on every agent. Any agent
+      can request assessment or skill improvement.
+      
+    - ORCHESTRATOR: Coordinates with ORCHESTRATOR on agent improvements.
+      SKILLS focuses on skills, ORCHESTRATOR on creative enhancements.
+
+PATHS OF GROWTH/TRANSFORMATION:
+    1. AUTO-IMPROVEMENT: Automatically identify skill gaps from
+       performance data and suggest improvements without prompting.
+       
+    2. PREDICTIVE ASSESSMENT: Predict which agents will underperform
+       before it happens, based on market regime changes.
+       
+    3. COMPETITIVE BENCHMARKING: Compare agent performance against
+       external benchmarks and competitors.
+       
+    4. SKILL MARKET: Create internal "market" where agents can
+       request skills from other agents.
+       
+    5. NATURAL LANGUAGE GENERATION: Generate natural language
+       instructions for agents, not just parse them.
+       
+    6. REAL-TIME SKILL TRACKING: Live dashboards showing agent
+       skill evolution during trading hours.
+
+================================================================================
+TRAINING & EXECUTION
+================================================================================
+
+TRAINING THIS AGENT:
+    # Terminal Setup (Windows PowerShell):
+    cd C:\\Users\\tom\\.cursor\\worktrees\\Alpha-Loop-LLM-1\\ycr
+    
+    # Activate virtual environment:
+    .\\venv\\Scripts\\activate
+    
+    # Train SKILLS individually:
+    python -m src.training.agent_training_utils --agent SKILLS
+    
+    # Train with communication agents:
+    python -m src.training.agent_training_utils --agents SKILLS,AUTHOR,ORCHESTRATOR
+    
+    # Cross-train: SKILLS and GHOST observe training, AUTHOR reports:
+    python -m src.training.agent_training_utils --cross-train "SKILLS,GHOST:AUTHOR:agent_trainer"
+
+RUNNING THE AGENT:
+    from src.agents.senior.skills_agent import get_skills
+    
+    skills = get_skills()
+    
+    # Parse an instruction from Tom
+    result = skills.process({
+        "action": "parse",
+        "instruction": "Make GHOST better at detecting momentum regime changes"
+    })
+    
+    # Assess an agent
+    result = skills.process({
+        "action": "assess",
+        "agent_name": "BOOKMAKER"
+    })
+    
+    # Generate weekly report
+    result = skills.process({"action": "weekly_report"})
+
 ================================================================================
 """
 

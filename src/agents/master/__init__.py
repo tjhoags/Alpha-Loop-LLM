@@ -1,5 +1,4 @@
-"""
-Master Tier Agents - Tier 1
+"""Master Tier Agents - Tier 1
 Ultimate decision authority in the ALC ecosystem.
 """
 

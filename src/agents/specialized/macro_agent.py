@@ -1,9 +1,9 @@
 
-"""
-MacroAgent - generated to replace empty stub.
+"""MacroAgent - generated to replace empty stub.
 """
 from typing import Any, Dict, List
-from src.core.agent_base import BaseAgent, AgentTier
+
+from src.core.agent_base import AgentTier, BaseAgent
 
 
 class MacroAgent(BaseAgent):
