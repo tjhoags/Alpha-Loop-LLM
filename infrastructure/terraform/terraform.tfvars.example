@@ -1,0 +1,28 @@
+# =============================================================================
+# ALC-Algo Terraform Variables - EXAMPLE
+# Author: Tom Hogan | Alpha Loop Capital, LLC
+# =============================================================================
+# Copy this file to terraform.tfvars and fill in your values
+# NEVER commit terraform.tfvars to version control!
+
+# Environment (dev, staging, or prod)
+environment = "dev"
+
+# Azure region
+location = "eastus"
+
+# PostgreSQL password (CHANGE THIS!)
+postgres_password = "YOUR_SECURE_PASSWORD_HERE"
+
+# Your IP address for database access (optional)
+# Get your IP: curl ifconfig.me
+my_ip_address = "YOUR_IP_HERE"
+
+# Training VM size
+training_vm_size = "Standard_DS3_v2"  # 4 cores, 14 GB RAM
+
+# Maximum training nodes (auto-scales from 0 to this number)
+max_training_nodes = 2
+
+# Enable GPU for deep learning (WARNING: Expensive! ~$3/hour)
+enable_gpu_training = false

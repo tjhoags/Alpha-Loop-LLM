@@ -1,0 +1,184 @@
+# =============================================================================
+# ALC-Algo Trading Configuration
+# Trading parameters, risk management, and execution settings
+# =============================================================================
+
+# -----------------------------------------------------------------------------
+# General Settings
+# -----------------------------------------------------------------------------
+general:
+  environment: "${ENVIRONMENT}"  # development, paper, live
+  timezone: "America/New_York"
+  trading_hours:
+    market_open: "09:30"
+    market_close: "16:00"
+    pre_market_start: "04:00"
+    after_hours_end: "20:00"
+  trading_days:
+    - Monday
+    - Tuesday
+    - Wednesday
+    - Thursday
+    - Friday
+
+# -----------------------------------------------------------------------------
+# Universe Definition
+# -----------------------------------------------------------------------------
+universe:
+  # Primary universe filters
+  min_market_cap: 1_000_000_000  # $1B minimum
+  min_avg_volume: 500_000  # shares
+  min_price: 5.0
+  max_price: 10000.0
+  exclude_sectors:
+    - Utilities
+  exclude_industries: []
+  
+  # Index membership
+  include_indices:
+    - SPY   # S&P 500
+    - QQQ   # Nasdaq 100
+    - IWM   # Russell 2000
+    
+  # Watchlist tickers (always include)
+  watchlist:
+    - AAPL
+    - MSFT
+    - GOOGL
+    - AMZN
+    - NVDA
+    - META
+    - TSLA
+    - JPM
+    - V
+    - UNH
+
+# -----------------------------------------------------------------------------
+# Position Sizing
+# -----------------------------------------------------------------------------
+position_sizing:
+  method: "volatility_adjusted"  # fixed, equal_weight, volatility_adjusted, kelly
+  
+  # Fixed position sizing
+  fixed:
+    position_size: 10000
+    
+  # Equal weight
+  equal_weight:
+    max_positions: 20
+    
+  # Volatility adjusted (inverse volatility)
+  volatility_adjusted:
+    target_volatility: 0.15  # 15% annualized
+    lookback_days: 20
+    max_position_pct: 0.10  # 10% max single position
+    
+  # Kelly criterion
+  kelly:
+    fraction: 0.25  # Quarter Kelly
+    max_position_pct: 0.10
+
+# -----------------------------------------------------------------------------
+# Risk Management
+# -----------------------------------------------------------------------------
+risk_management:
+  # Portfolio level limits
+  portfolio:
+    max_gross_exposure: 1.5  # 150% of capital
+    max_net_exposure: 1.0    # 100% of capital
+    max_sector_exposure: 0.30  # 30% in any sector
+    max_single_position: 0.10  # 10% in any single name
+    target_cash_buffer: 0.05   # Keep 5% in cash
+    
+  # Trade level limits
+  trade:
+    max_daily_trades: 50
+    max_trade_size: 25000
+    min_trade_size: 1000
+    
+  # Stop losses
+  stop_loss:
+    enabled: true
+    type: "trailing"  # fixed, trailing, volatility
+    fixed_pct: 0.05   # 5% fixed stop
+    trailing_pct: 0.08  # 8% trailing stop
+    volatility_multiplier: 2.0  # 2x ATR
+    
+  # Daily loss limits
+  daily_limits:
+    max_daily_loss: 5000
+    max_daily_loss_pct: 0.02  # 2% of portfolio
+    pause_on_limit: true
+    
+  # Drawdown limits
+  drawdown:
+    max_drawdown: 0.15  # 15% max drawdown
+    reduce_at: 0.10     # Reduce exposure at 10%
+    reduction_factor: 0.5  # Reduce to 50% exposure
+
+# -----------------------------------------------------------------------------
+# Execution Settings
+# -----------------------------------------------------------------------------
+execution:
+  broker: "ibkr"
+  
+  order_types:
+    default: "limit"
+    market_hours: "limit"
+    pre_market: "limit"
+    after_hours: "limit"
+    
+  limit_order:
+    offset_pct: 0.001  # 0.1% from mid
+    timeout_seconds: 60
+    
+  slippage:
+    estimated_bps: 5  # 5 basis points
+    
+  commission:
+    per_share: 0.005
+    minimum: 1.0
+    maximum: 0.5  # 0.5% of trade value
+
+# -----------------------------------------------------------------------------
+# Options Trading
+# -----------------------------------------------------------------------------
+options:
+  enabled: true
+  
+  strategies:
+    - covered_calls
+    - cash_secured_puts
+    - spreads
+    - iron_condors
+    
+  filters:
+    min_dte: 7
+    max_dte: 60
+    min_delta: 0.15
+    max_delta: 0.40
+    min_open_interest: 100
+    min_volume: 50
+    max_bid_ask_spread: 0.10  # 10% of mid price
+    
+  sizing:
+    max_contracts: 10
+    max_notional: 50000
+
+# -----------------------------------------------------------------------------
+# Backtesting Settings
+# -----------------------------------------------------------------------------
+backtesting:
+  start_date: "2020-01-01"
+  end_date: null  # null = latest available
+  initial_capital: 100000
+  
+  costs:
+    commission_per_share: 0.005
+    slippage_bps: 5
+    short_borrow_rate: 0.01  # 1% annual
+    
+  rebalance:
+    frequency: "daily"  # daily, weekly, monthly
+    time: "market_open"  # market_open, market_close
+

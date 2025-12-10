@@ -1,0 +1,263 @@
+# =============================================================================
+# ALC-Algo Model Configuration
+# Machine learning model hyperparameters and training settings
+# =============================================================================
+
+# -----------------------------------------------------------------------------
+# General ML Settings
+# -----------------------------------------------------------------------------
+general:
+  random_seed: 42
+  n_jobs: -1  # Use all cores
+  verbose: 1
+  
+# -----------------------------------------------------------------------------
+# Feature Engineering
+# -----------------------------------------------------------------------------
+features:
+  # Technical indicators
+  technical:
+    enabled: true
+    indicators:
+      # Trend
+      - name: sma
+        periods: [5, 10, 20, 50, 200]
+      - name: ema
+        periods: [5, 10, 20, 50]
+      - name: macd
+        fast: 12
+        slow: 26
+        signal: 9
+      - name: adx
+        period: 14
+        
+      # Momentum
+      - name: rsi
+        periods: [7, 14, 21]
+      - name: stochastic
+        k_period: 14
+        d_period: 3
+      - name: williams_r
+        period: 14
+      - name: cci
+        period: 20
+        
+      # Volatility
+      - name: bollinger_bands
+        period: 20
+        std: 2
+      - name: atr
+        periods: [7, 14, 21]
+      - name: keltner_channel
+        period: 20
+        
+      # Volume
+      - name: obv
+      - name: vwap
+      - name: mfi
+        period: 14
+      - name: ad_line
+        
+  # Price-based features
+  price:
+    enabled: true
+    features:
+      - returns_1d
+      - returns_5d
+      - returns_20d
+      - log_returns_1d
+      - high_low_ratio
+      - close_open_ratio
+      - gap_percent
+      - range_percent
+      
+  # Fundamental features
+  fundamental:
+    enabled: true
+    features:
+      - pe_ratio
+      - pb_ratio
+      - ps_ratio
+      - ev_ebitda
+      - debt_to_equity
+      - current_ratio
+      - roe
+      - roa
+      - profit_margin
+      - revenue_growth
+      - earnings_growth
+
+  # Options features
+  options:
+    enabled: true
+    features:
+      - implied_volatility
+      - iv_rank
+      - iv_percentile
+      - put_call_ratio
+      - max_pain
+      - gamma_exposure
+
+# -----------------------------------------------------------------------------
+# Target Variables
+# -----------------------------------------------------------------------------
+targets:
+  # Forward returns
+  returns:
+    horizons: [1, 5, 10, 20]  # days
+    
+  # Classification targets
+  classification:
+    thresholds:
+      up: 0.02      # +2% = bullish
+      down: -0.02   # -2% = bearish
+    classes:
+      - bearish
+      - neutral
+      - bullish
+
+# -----------------------------------------------------------------------------
+# Model Definitions
+# -----------------------------------------------------------------------------
+models:
+  # Gradient Boosting Models
+  xgboost:
+    enabled: true
+    params:
+      objective: "binary:logistic"
+      n_estimators: 500
+      max_depth: 6
+      learning_rate: 0.05
+      subsample: 0.8
+      colsample_bytree: 0.8
+      min_child_weight: 5
+      reg_alpha: 0.1
+      reg_lambda: 1.0
+      early_stopping_rounds: 50
+      eval_metric: "auc"
+      
+  lightgbm:
+    enabled: true
+    params:
+      objective: "binary"
+      n_estimators: 500
+      max_depth: 6
+      learning_rate: 0.05
+      num_leaves: 31
+      subsample: 0.8
+      colsample_bytree: 0.8
+      min_child_samples: 20
+      reg_alpha: 0.1
+      reg_lambda: 1.0
+      early_stopping_round: 50
+      metric: "auc"
+      
+  catboost:
+    enabled: true
+    params:
+      iterations: 500
+      depth: 6
+      learning_rate: 0.05
+      l2_leaf_reg: 3
+      early_stopping_rounds: 50
+      eval_metric: "AUC"
+      
+  # Neural Network
+  neural_network:
+    enabled: true
+    architecture:
+      hidden_layers: [256, 128, 64]
+      dropout: 0.3
+      batch_norm: true
+      activation: "relu"
+    training:
+      epochs: 100
+      batch_size: 256
+      learning_rate: 0.001
+      weight_decay: 0.0001
+      early_stopping_patience: 10
+      
+  # LSTM for sequence modeling
+  lstm:
+    enabled: true
+    architecture:
+      sequence_length: 20
+      hidden_size: 128
+      num_layers: 2
+      dropout: 0.2
+      bidirectional: false
+    training:
+      epochs: 100
+      batch_size: 64
+      learning_rate: 0.001
+      
+  # Transformer
+  transformer:
+    enabled: false  # Experimental
+    architecture:
+      d_model: 128
+      nhead: 8
+      num_encoder_layers: 3
+      dim_feedforward: 512
+      dropout: 0.1
+
+# -----------------------------------------------------------------------------
+# Ensemble Configuration
+# -----------------------------------------------------------------------------
+ensemble:
+  enabled: true
+  method: "weighted_average"  # voting, weighted_average, stacking
+  
+  weights:
+    xgboost: 0.30
+    lightgbm: 0.30
+    catboost: 0.20
+    neural_network: 0.20
+    
+  meta_model:
+    type: "logistic_regression"
+    cv_folds: 5
+
+# -----------------------------------------------------------------------------
+# Validation Strategy
+# -----------------------------------------------------------------------------
+validation:
+  method: "walk_forward"  # kfold, time_series, walk_forward
+  
+  kfold:
+    n_splits: 5
+    shuffle: false
+    
+  time_series:
+    n_splits: 5
+    gap: 5  # days gap between train and test
+    
+  walk_forward:
+    train_size: 252  # 1 year
+    test_size: 21    # 1 month
+    step_size: 21    # 1 month
+    min_train_size: 126  # 6 months minimum
+
+# -----------------------------------------------------------------------------
+# Hyperparameter Optimization
+# -----------------------------------------------------------------------------
+optimization:
+  enabled: true
+  method: "optuna"  # grid, random, optuna, hyperopt
+  n_trials: 100
+  timeout: 3600  # seconds
+  
+  optuna:
+    sampler: "TPE"
+    pruner: "MedianPruner"
+    study_direction: "maximize"
+
+# -----------------------------------------------------------------------------
+# Model Persistence
+# -----------------------------------------------------------------------------
+persistence:
+  save_path: "data/models"
+  format: "joblib"  # pickle, joblib, onnx
+  save_best_only: true
+  versioning: true
+

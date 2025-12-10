@@ -1,0 +1,198 @@
+# =============================================================================
+# ALC-Algo Project Configuration
+# Author: Tom Hogan | Alpha Loop Capital, LLC
+# =============================================================================
+
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "alc-algo"
+version = "1.0.0"
+description = "Institutional-grade algorithmic trading platform by Alpha Loop Capital"
+readme = "README.md"
+license = {text = "Proprietary"}
+requires-python = ">=3.10"
+authors = [
+    {name = "Tom Hogan", email = "tom@alphalooopcapital.com"}
+]
+keywords = [
+    "algorithmic-trading",
+    "quantitative-finance",
+    "machine-learning",
+    "multi-agent-system",
+    "azure",
+    "trading-platform"
+]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Financial and Insurance Industry",
+    "License :: Other/Proprietary License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Office/Business :: Financial :: Investment",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
+
+dependencies = [
+    "pandas>=2.0.0",
+    "numpy>=1.24.0",
+    "scipy>=1.10.0",
+    "ib_insync>=0.9.86",
+    "alpha-vantage>=2.3.1",
+    "yfinance>=0.2.28",
+    "fredapi>=0.5.1",
+    "google-cloud-aiplatform>=1.38.0",
+    "google-generativeai>=0.3.0",
+    "openai>=1.3.0",
+    "anthropic>=0.7.0",
+    "requests>=2.31.0",
+    "python-dotenv>=1.0.0",
+    "pydantic>=2.5.0",
+    "aiohttp>=3.9.0",
+    "coloredlogs>=15.0.1",
+    "click>=8.1.7",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.4.0",
+    "pytest-asyncio>=0.21.0",
+    "pytest-cov>=4.1.0",
+    "black>=23.11.0",
+    "flake8>=6.1.0",
+    "mypy>=1.7.0",
+    "isort>=5.12.0",
+    "bandit>=1.7.0",
+    "safety>=2.3.0",
+]
+docs = [
+    "mkdocs>=1.5.0",
+    "mkdocs-material>=9.4.0",
+    "mkdocstrings[python]>=0.24.0",
+]
+all = ["alc-algo[dev,docs]"]
+
+[project.urls]
+Homepage = "https://github.com/AlphaLoopCapital/ALC-Algo"
+Documentation = "https://alphalooopcapital.github.io/ALC-Algo"
+Repository = "https://github.com/AlphaLoopCapital/ALC-Algo.git"
+Issues = "https://github.com/AlphaLoopCapital/ALC-Algo/issues"
+
+[project.scripts]
+alc-algo = "src.alc_algo.cli:main"
+
+# =============================================================================
+# Tool Configuration
+# =============================================================================
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["src*", "config*"]
+exclude = ["tests*", "docs*"]
+
+[tool.black]
+line-length = 120
+target-version = ['py310', 'py311']
+include = '\.pyi?$'
+exclude = '''
+/(
+    \.eggs
+  | \.git
+  | \.hg
+  | \.mypy_cache
+  | \.tox
+  | \.venv
+  | _build
+  | buck-out
+  | build
+  | dist
+  | venv
+)/
+'''
+
+[tool.isort]
+profile = "black"
+line_length = 120
+multi_line_output = 3
+include_trailing_comma = true
+force_grid_wrap = 0
+use_parentheses = true
+ensure_newline_before_comments = true
+skip = [".gitignore", ".dockerignore", "venv", ".venv"]
+skip_glob = ["**/venv/**", "**/.venv/**"]
+
+[tool.mypy]
+python_version = "3.10"
+warn_return_any = true
+warn_unused_configs = true
+ignore_missing_imports = true
+exclude = [
+    "venv",
+    ".venv",
+    "tests",
+    "build",
+    "dist",
+]
+
+[tool.pytest.ini_options]
+minversion = "7.0"
+addopts = "-ra -q --strict-markers"
+testpaths = ["tests"]
+python_files = ["test_*.py", "*_test.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+markers = [
+    "slow: marks tests as slow (deselect with '-m \"not slow\"')",
+    "integration: marks tests as integration tests",
+    "unit: marks tests as unit tests",
+]
+filterwarnings = [
+    "ignore::DeprecationWarning",
+    "ignore::PendingDeprecationWarning",
+]
+
+[tool.coverage.run]
+source = ["src"]
+branch = true
+omit = [
+    "*/tests/*",
+    "*/__init__.py",
+    "*/venv/*",
+]
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "def __repr__",
+    "raise AssertionError",
+    "raise NotImplementedError",
+    "if __name__ == .__main__.:",
+    "if TYPE_CHECKING:",
+]
+fail_under = 60
+
+[tool.bandit]
+exclude_dirs = ["tests", "venv", ".venv"]
+skips = ["B101"]  # Skip assert warnings
+
+[tool.flake8]
+max-line-length = 120
+extend-ignore = ["E501", "W503", "E203"]
+exclude = [
+    ".git",
+    "__pycache__",
+    "build",
+    "dist",
+    "venv",
+    ".venv",
+    "*.egg-info",
+]
+per-file-ignores = [
+    "__init__.py:F401",
+]
+

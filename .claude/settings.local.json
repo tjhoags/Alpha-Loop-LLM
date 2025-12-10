@@ -1,0 +1,29 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git cherry-pick:*)",
+      "Bash(dir /s \"c:\\Users\\tom\\ALC-Algo\")",
+      "Bash(ls:*)",
+      "Bash(git restore:*)",
+      "Bash(python -m pytest:*)",
+      "Bash(python:*)",
+      "Bash(az account show:*)",
+      "Bash(where:*)",
+      "Bash(python scripts/verify_infrastructure.py:*)",
+      "Bash(pip install:*)",
+      "Bash(git ls-tree:*)",
+      "Bash(echo:*)",
+      "Bash(wc:*)",
+      "Bash(iconv:*)",
+      "Bash(grep:*)",
+      "Bash(dir /s /b \"c:\\Users\\tom\\ALC-Algo\\.cursor\")",
+      "Bash(dir:*)",
+<<<<<<< HEAD
+      "Bash(findstr:*)",
+      "Bash(IBKR_PORT=7496 python:*)"
+=======
+      "Bash(findstr:*)"
+>>>>>>> 44491335e902137152981dac00876203bc521dfd
+    ]
+  }
+}

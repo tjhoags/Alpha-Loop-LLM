@@ -1,0 +1,29 @@
+{
+  "timestamp": "2025-12-09T02:00:27.686796",
+  "test_duration_days": null,
+  "agents": {
+    "enhanced_momentum": {
+      "total_return": 0.2957265336776247,
+      "annual_return": 0.09051901723772637,
+      "sharpe_ratio": 0.5417713919471304,
+      "sortino_ratio": 0.6673127996257348,
+      "calmar_ratio": 0.9674982883193449,
+      "max_drawdown": -0.09355987326341243,
+      "volatility": 0.08442779622211756,
+      "win_rate": 0.7996894409937888,
+      "profit_factor": 2.4758522439930393,
+      "total_trades": 1298,
+      "avg_trade_pnl": 40.94978772694416,
+      "total_commission": 942.9112125304198
+    },
+    "mean_reversion": {
+      "total_return": 1.015252991631045,
+      "annual_return": 0.264129464729671,
+      "sharpe_ratio": 1.1706275246779954,
+      "sortino_ratio": 1.5798657828498808,
+      "max_drawdown": -0.23456297773146903,
+      "win_rate": 0.0,
+      "total_trades": 10
+    }
+  }
+}

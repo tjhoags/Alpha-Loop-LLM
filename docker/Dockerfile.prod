@@ -1,0 +1,77 @@
+# =============================================================================
+# ALC-Algo Production Dockerfile
+# Author: Tom Hogan | Alpha Loop Capital, LLC
+# =============================================================================
+# Multi-stage build for minimal production image
+
+# Stage 1: Builder
+FROM python:3.10-slim as builder
+
+WORKDIR /build
+
+# Install build dependencies
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    build-essential \
+    && rm -rf /var/lib/apt/lists/*
+
+# Copy requirements
+COPY requirements.txt .
+
+# Install Python dependencies
+RUN pip wheel --no-cache-dir --no-deps --wheel-dir /build/wheels -r requirements.txt
+
+# Stage 2: Production
+FROM python:3.10-slim as production
+
+# Labels
+LABEL maintainer="Tom Hogan <tom@alphalooopcapital.com>"
+LABEL organization="Alpha Loop Capital, LLC"
+LABEL project="ALC-Algo"
+LABEL description="Institutional-grade algorithmic trading platform"
+
+# Set environment variables
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1 \
+    PYTHONPATH=/app \
+    ALC_ALGO_ENV=production
+
+WORKDIR /app
+
+# Install runtime dependencies
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    curl \
+    && rm -rf /var/lib/apt/lists/* \
+    && apt-get clean
+
+# Copy wheels from builder
+COPY --from=builder /build/wheels /wheels
+COPY --from=builder /build/requirements.txt .
+
+# Install Python packages
+RUN pip install --no-cache-dir /wheels/* \
+    && rm -rf /wheels
+
+# Create non-root user
+RUN useradd --create-home --shell /bin/bash alc && \
+    chown -R alc:alc /app
+
+# Copy application code
+COPY --chown=alc:alc . .
+
+# Create necessary directories
+RUN mkdir -p data/raw data/processed data/portfolio data/logs data/models \
+    && chown -R alc:alc data
+
+# Switch to non-root user
+USER alc
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
+    CMD python -c "from config.settings import settings; print('OK')" || exit 1
+
+# Default command
+CMD ["python", "main.py"]
+
+# Expose port (if running API)
+EXPOSE 8000
+
