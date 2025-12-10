@@ -1,7 +1,7 @@
 """================================================================================
 FRIEDS AGENT - Chris Friedman's Authority Agent (Partner to HOAGS)
 ================================================================================
-Author: Chris Friedman (Owner/COO)
+Author: Chris Friedman (COO)
 Developer: Alpha Loop Capital, LLC
 
 FRIEDS is Chris Friedman's virtual authority agent, operating at the same tier as
@@ -10,7 +10,7 @@ operations authority under Chris Friedman. They work as partners coordinating
 the entire firm.
 
 Tier: MASTER (1)
-Reports To: Chris Friedman (Owner/COO)
+Reports To: Chris Friedman (COO)
 Division: Operations
 Partner Agent: HOAGS (Investment Authority)
 

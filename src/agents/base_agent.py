@@ -39,6 +39,12 @@ except ImportError:
     HAS_SKLEARN = False
 
 from src.config.settings import get_settings
+from src.core.cross_file_analyzer import (
+    AgentIssueHandler,
+    IssueType,
+    IssueSeverity,
+    DetectedIssue,
+)
 
 
 class AgentStatus(Enum):
@@ -625,5 +631,175 @@ class BaseAgent(ABC):
 
     def __repr__(self) -> str:
         return f"{self.__class__.__name__}(id={self.config.agent_id}, status={self.status.value}, sharpe={self.performance.sharpe_ratio:.2f})"
+
+    # =========================================================================
+    # CROSS-FILE ISSUE DETECTION & FIXING
+    # =========================================================================
+
+    def get_issue_handler(self) -> AgentIssueHandler:
+        """Get or create the issue handler for this agent.
+        
+        Returns:
+            AgentIssueHandler for reporting and finding issues
+        """
+        if not hasattr(self, '_issue_handler') or self._issue_handler is None:
+            self._issue_handler = AgentIssueHandler(
+                agent_name=f"{self.config.agent_type}_{self.config.agent_id}",
+                project_root=str(self.settings.base_dir)
+            )
+        return self._issue_handler
+
+    def report_issue(
+        self,
+        filepath: str,
+        line_number: int,
+        issue_type: IssueType,
+        description: str,
+        code_snippet: str,
+        severity: IssueSeverity = IssueSeverity.MEDIUM,
+        suggested_fix: Optional[str] = None,
+    ) -> DetectedIssue:
+        """Report an issue found during agent operation.
+        
+        When an agent detects a problem in a file, it should call this method.
+        The system will then automatically scan for similar issues across the
+        codebase and can propagate fixes.
+        
+        Args:
+            filepath: Path to the file with the issue
+            line_number: Line number of the issue
+            issue_type: Type of issue (from IssueType enum)
+            description: Human-readable description of the issue
+            code_snippet: The problematic code
+            severity: How severe the issue is
+            suggested_fix: Suggested fix code if known
+            
+        Returns:
+            DetectedIssue object
+            
+        Example:
+            issue = agent.report_issue(
+                filepath="src/ml/train.py",
+                line_number=42,
+                issue_type=IssueType.DEPRECATED_USAGE,
+                description="Using deprecated pandas method",
+                code_snippet="df.append(new_row)",
+                suggested_fix="pd.concat([df, pd.DataFrame([new_row])])",
+            )
+        """
+        handler = self.get_issue_handler()
+        issue = handler.report_issue(
+            filepath=filepath,
+            line_number=line_number,
+            issue_type=issue_type,
+            description=description,
+            code_snippet=code_snippet,
+            severity=severity,
+            suggested_fix=suggested_fix,
+        )
+        
+        logger.info(
+            f"Agent {self.config.agent_id} reported issue: "
+            f"{issue_type.value} in {filepath}:{line_number}"
+        )
+        
+        return issue
+
+    def find_similar_issues(
+        self,
+        issue: DetectedIssue,
+        similarity_threshold: float = 0.8,
+    ) -> List[DetectedIssue]:
+        """Find similar issues across the codebase.
+        
+        After finding an issue, use this to locate similar problems
+        in other files that may need the same fix.
+        
+        Args:
+            issue: The reference issue to find similar ones to
+            similarity_threshold: How similar issues must be (0-1)
+            
+        Returns:
+            List of similar issues in other files
+        """
+        handler = self.get_issue_handler()
+        similar = handler.find_similar(issue, similarity_threshold)
+        
+        logger.info(
+            f"Agent {self.config.agent_id} found {len(similar)} similar issues"
+        )
+        
+        return similar
+
+    def propagate_fix(
+        self,
+        issue: DetectedIssue,
+        fix_code: str,
+        auto_apply: bool = False,
+    ) -> Dict[str, Any]:
+        """Propagate a fix to all similar issues across the codebase.
+        
+        After fixing an issue, call this to automatically find and fix
+        (or suggest fixes for) similar issues in other files.
+        
+        Args:
+            issue: The issue that was fixed
+            fix_code: The code that fixed the issue
+            auto_apply: Whether to automatically apply to similar issues
+            
+        Returns:
+            Summary of propagation results
+            
+        Example:
+            # After fixing an issue manually
+            results = agent.propagate_fix(
+                issue=detected_issue,
+                fix_code="new_correct_code()",
+                auto_apply=True  # Apply same fix to all similar issues
+            )
+            print(f"Fixed {results['fixes_applied']} similar issues")
+        """
+        handler = self.get_issue_handler()
+        results = handler.propagate_fix(issue, fix_code, auto_apply)
+        
+        logger.info(
+            f"Agent {self.config.agent_id} propagated fix: "
+            f"{results['fixes_applied']} applied, {results['fixes_pending']} pending"
+        )
+        
+        return results
+
+    def scan_codebase_for_issues(
+        self,
+        directory: Optional[str] = None,
+    ) -> List[DetectedIssue]:
+        """Scan the codebase for all known issue patterns.
+        
+        This method scans the project for all registered issue patterns
+        and returns a list of detected issues.
+        
+        Args:
+            directory: Specific directory to scan (defaults to project root)
+            
+        Returns:
+            List of all detected issues
+        """
+        handler = self.get_issue_handler()
+        issues = handler.scan_codebase(directory)
+        
+        logger.info(
+            f"Agent {self.config.agent_id} codebase scan: {len(issues)} issues found"
+        )
+        
+        return issues
+
+    def get_issue_report(self) -> Dict[str, Any]:
+        """Get a comprehensive report of all detected issues.
+        
+        Returns:
+            Report dictionary with statistics and issue details
+        """
+        handler = self.get_issue_handler()
+        return handler.get_report()
 
 

@@ -40,8 +40,8 @@ class Settings(BaseSettings):
     # DATA APIS - Using os.getenv since dotenv is loaded above
     # ==========================================================================
     alpha_vantage_api_key: str = Field(default_factory=lambda: os.getenv("ALPHAVANTAGE_API_KEY", ""))
-    # Massive.com (rebranded from Polygon.io) - API key for REST and WebSocket
-    massive_api_key: str = Field(default_factory=lambda: os.getenv("PolygonIO_API_KEY", ""))
+    # Massive.com (formerly Polygon.io) - API key for REST and WebSocket
+    massive_api_key: str = Field(default_factory=lambda: os.getenv("MASSIVE_API_KEY", ""))
     massive_access_key: str = Field(default_factory=lambda: os.getenv("MASSIVE_ACCESS_KEY", ""))
     massive_secret_key: str = Field(default_factory=lambda: os.getenv("MASSIVE_SECRET_KEY", ""))
     massive_endpoint_url: str = Field(default_factory=lambda: os.getenv("MASSIVE_ENDPOINT_URL", "https://files.massive.com"))

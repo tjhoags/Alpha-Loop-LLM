@@ -11,45 +11,196 @@ This is a **sophisticated, institutional-grade algorithmic trading system** desi
 
 ---
 
-## QUICK START
+## 📚 DOCUMENTATION INDEX
 
-### Which Terminal to Use?
-
-**You can use EITHER:**
-- **Local Windows PowerShell** (Windows + X → Terminal)
-- **Cursor's Integrated Terminal** (Terminal → New Terminal)
-
-Both work the same way! Use whichever you prefer.
+| Document | Description |
+|----------|-------------|
+| **`CROSS_PLATFORM_COMMANDS.md`** | ⭐ Complete natural language guide for ALL commands |
+| `SETUP_WINDOWS.md` | Windows-specific setup details |
+| `SETUP_MAC.md` | MacBook-specific setup details |
+| `MULTI_MACHINE_SETUP.md` | Running on both machines simultaneously |
+| `TERMINAL_COMMANDS.md` | Quick terminal command reference |
+| `FULL_THROTTLE_SETUP.md` | Maximum data ingestion guide |
+| `TRAINING_GUIDE.md` | ML model training details |
 
 ---
 
-### Windows Setup
+## 🚀 QUICK START
 
-See `SETUP_WINDOWS.md` for complete Windows instructions.
+### Step 1: Open Your Terminal
 
-**Quick start:**
+<details>
+<summary><b>🪟 Windows (PowerShell)</b></summary>
+
+**In Plain English:** "Open a command window where you can type instructions"
+
+1. Press `Windows + X` on your keyboard
+2. Click "Terminal" or "Windows PowerShell"
+3. A window opens with a prompt like `PS C:\Users\tom>`
+
+**Or in Cursor IDE:** Press `Ctrl + ~` or go to Terminal → New Terminal
+</details>
+
+<details>
+<summary><b>🍎 MacBook Pro (Terminal)</b></summary>
+
+**In Plain English:** "Open a command window where you can type instructions"
+
+1. Press `Cmd + Space` to open Spotlight
+2. Type "Terminal" and press Enter
+3. A window opens with a prompt like `tom@MacBook-Pro ~ %`
+
+**Or in Cursor IDE:** Press `Cmd + ~` or go to Terminal → New Terminal
+</details>
+
+---
+
+### Step 2: Navigate to Project
+
+<details>
+<summary><b>🪟 Windows (PowerShell)</b></summary>
+
+**In Plain English:** "Go to the folder where all the code lives"
+
 ```powershell
-cd "C:\Users\tom\.cursor\worktrees\Alpha-Loop-LLM-1\bek"
-python -m venv venv
-.\venv\Scripts\Activate.ps1
-pip install -r requirements.txt
-Copy-Item "C:\Users\tom\OneDrive\Alpha Loop LLM\API - Dec 2025.env" -Destination ".env"
-python scripts/test_db_connection.py
+# Type this and press Enter:
+cd "C:\Users\tom\.cursor\worktrees\Alpha-Loop-LLM-1\sii"
+
+# Verify you're in the right place:
+dir
 ```
+</details>
 
-### MacBook Setup
+<details>
+<summary><b>🍎 MacBook Pro (Terminal)</b></summary>
 
-See `SETUP_MAC.md` for complete Mac instructions.
+**In Plain English:** "Go to the folder where all the code lives"
 
-**Quick start:**
 ```bash
-cd ~/Alpha-Loop-LLM/Alpha-Loop-LLM-1/bek
+# Type this and press Enter:
+cd ~/Alpha-Loop-LLM/Alpha-Loop-LLM-1/sii
+
+# Verify you're in the right place:
+ls
+```
+</details>
+
+---
+
+### Step 3: Set Up Virtual Environment
+
+<details>
+<summary><b>🪟 Windows (PowerShell)</b></summary>
+
+**In Plain English:** "Create an isolated Python workspace for this project"
+
+```powershell
+# Create the virtual environment (one-time):
+python -m venv venv
+
+# Activate it (do this every time you open a new terminal):
+.\venv\Scripts\Activate.ps1
+
+# If you get an "execution policy" error, run this first:
+Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
+```
+
+**Success:** You'll see `(venv)` at the start of your prompt
+</details>
+
+<details>
+<summary><b>🍎 MacBook Pro (Terminal)</b></summary>
+
+**In Plain English:** "Create an isolated Python workspace for this project"
+
+```bash
+# Create the virtual environment (one-time):
 python3 -m venv venv
+
+# Activate it (do this every time you open a new terminal):
 source venv/bin/activate
+```
+
+**Success:** You'll see `(venv)` at the start of your prompt
+</details>
+
+---
+
+### Step 4: Install Dependencies
+
+<details>
+<summary><b>🪟 Windows (PowerShell)</b></summary>
+
+**In Plain English:** "Install all the required Python packages"
+
+```powershell
 pip install -r requirements.txt
-cp ~/path/to/.env .env
+```
+</details>
+
+<details>
+<summary><b>🍎 MacBook Pro (Terminal)</b></summary>
+
+**In Plain English:** "Install all the required Python packages"
+
+```bash
+pip install -r requirements.txt
+```
+</details>
+
+---
+
+### Step 5: Configure Environment
+
+<details>
+<summary><b>🪟 Windows (PowerShell)</b></summary>
+
+**In Plain English:** "Copy your API keys and database credentials to the project"
+
+```powershell
+Copy-Item "C:\Users\tom\OneDrive\Alpha Loop LLM\API - Dec 2025.env" -Destination ".env"
+```
+</details>
+
+<details>
+<summary><b>🍎 MacBook Pro (Terminal)</b></summary>
+
+**In Plain English:** "Copy your API keys and database credentials to the project"
+
+```bash
+cp ~/OneDrive/Alpha\ Loop\ LLM/API\ -\ Dec\ 2025.env .env
+```
+</details>
+
+---
+
+### Step 6: Test Database Connection
+
+<details>
+<summary><b>🪟 Windows (PowerShell)</b></summary>
+
+**In Plain English:** "Make sure we can connect to the database"
+
+```powershell
 python scripts/test_db_connection.py
 ```
+</details>
+
+<details>
+<summary><b>🍎 MacBook Pro (Terminal)</b></summary>
+
+**In Plain English:** "Make sure we can connect to the database"
+
+```bash
+python scripts/test_db_connection.py
+```
+</details>
+
+---
+
+## 📊 RUNNING THE SYSTEM
+
+### Full Command Reference: See [`CROSS_PLATFORM_COMMANDS.md`](CROSS_PLATFORM_COMMANDS.md)
 
 ### Running on Both Machines
 
@@ -57,97 +208,130 @@ See `MULTI_MACHINE_SETUP.md` for running on Windows + MacBook simultaneously.
 
 ---
 
-## STARTING OVERNIGHT TRAINING
+## 🌙 OVERNIGHT TRAINING
 
-### Windows - Terminal 1: Data Collection
+### Terminal 1: Data Collection
+
+**In Plain English:** "Start pulling market data from all sources"
+
+<details>
+<summary><b>🪟 Windows (PowerShell)</b></summary>
+
 ```powershell
-cd "C:\Users\tom\.cursor\worktrees\Alpha-Loop-LLM-1\bek"
+cd "C:\Users\tom\.cursor\worktrees\Alpha-Loop-LLM-1\sii"
 .\venv\Scripts\Activate.ps1
 python src/data_ingestion/collector.py
 ```
+</details>
 
-### Windows - Terminal 2: Model Training
+<details>
+<summary><b>🍎 MacBook Pro (Terminal)</b></summary>
+
+```bash
+cd ~/Alpha-Loop-LLM/Alpha-Loop-LLM-1/sii
+source venv/bin/activate
+caffeinate -d python src/data_ingestion/collector.py
+```
+**Note:** `caffeinate -d` prevents your Mac from sleeping
+</details>
+
+### Terminal 2: Model Training
+
+**In Plain English:** "Train machine learning models on the collected data"
+
+<details>
+<summary><b>🪟 Windows (PowerShell)</b></summary>
+
 ```powershell
-cd "C:\Users\tom\.cursor\worktrees\Alpha-Loop-LLM-1\bek"
+cd "C:\Users\tom\.cursor\worktrees\Alpha-Loop-LLM-1\sii"
 .\venv\Scripts\Activate.ps1
 python src/ml/train_models.py
 ```
+</details>
 
-### MacBook - Terminal 1: Data Collection
-```bash
-cd ~/Alpha-Loop-LLM/Alpha-Loop-LLM-1/bek
-source venv/bin/activate
-python src/data_ingestion/collector.py
-```
+<details>
+<summary><b>🍎 MacBook Pro (Terminal)</b></summary>
 
-### MacBook - Terminal 2: Model Training
 ```bash
-cd ~/Alpha-Loop-LLM/Alpha-Loop-LLM-1/bek
+cd ~/Alpha-Loop-LLM/Alpha-Loop-LLM-1/sii
 source venv/bin/activate
-python src/ml/train_models.py
+caffeinate -d python src/ml/train_models.py
 ```
+</details>
 
 **Leave both running overnight!**
 
 ---
 
-## TOMORROW MORNING (9:15 AM) - Start Trading
+## ☀️ MORNING (9:15 AM ET) - Start Trading
 
-### Terminal 3 - Trading Engine:
+**In Plain English:** "Start the trading engine that will execute trades at market open"
+
+<details>
+<summary><b>🪟 Windows (PowerShell)</b></summary>
+
 ```powershell
-# Windows
-cd "C:\Users\tom\.cursor\worktrees\Alpha-Loop-LLM-1\bek"
+cd "C:\Users\tom\.cursor\worktrees\Alpha-Loop-LLM-1\sii"
 .\venv\Scripts\Activate.ps1
 python src/trading/execution_engine.py
 ```
+</details>
+
+<details>
+<summary><b>🍎 MacBook Pro (Terminal)</b></summary>
 
 ```bash
-# MacBook
-cd ~/Alpha-Loop-LLM/Alpha-Loop-LLM-1/bek
+cd ~/Alpha-Loop-LLM/Alpha-Loop-LLM-1/sii
 source venv/bin/activate
 python src/trading/execution_engine.py
 ```
+</details>
 
-**Start this at 9:15 AM** - ready for 9:30 AM market open!
+**Prerequisites:** IBKR TWS/Gateway running (paper: port 7497, live: port 7496)
 
 ---
 
-## CHECKING PROGRESS
+## 📊 MONITORING
 
-### View Logs (Windows):
+### View Logs
+
+**In Plain English:** "Watch what the system is doing in real-time"
+
+<details>
+<summary><b>🪟 Windows (PowerShell)</b></summary>
+
 ```powershell
-# Data collection
-Get-Content logs\data_collection.log -Tail 50
+# Watch data collection (live updates):
+Get-Content logs\data_collection.log -Tail 50 -Wait
 
-# Model training
-Get-Content logs\model_training.log -Tail 50
+# Watch model training (live updates):
+Get-Content logs\model_training.log -Tail 50 -Wait
 
-# Trading engine
-Get-Content logs\trading_engine.log -Tail 50
+# Watch trading engine (live updates):
+Get-Content logs\trading_engine.log -Tail 50 -Wait
+
+# Check how many models have been trained:
+(Get-ChildItem models\*.pkl).Count
 ```
+</details>
 
-### View Logs (MacBook):
+<details>
+<summary><b>🍎 MacBook Pro (Terminal)</b></summary>
+
 ```bash
-# Data collection
+# Watch data collection (live updates):
 tail -f logs/data_collection.log
 
-# Model training
+# Watch model training (live updates):
 tail -f logs/model_training.log
 
-# Trading engine
+# Watch trading engine (live updates):
 tail -f logs/trading_engine.log
-```
 
-### Check Models:
-```powershell
-# Windows
-Get-ChildItem models\*.pkl
+# Check how many models have been trained:
+ls models/*.pkl | wc -l
 ```
-
-```bash
-# MacBook
-ls -la models/*.pkl
-```
+</details>
 
 ---
 

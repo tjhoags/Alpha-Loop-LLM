@@ -24,7 +24,7 @@ from tenacity import retry, stop_after_attempt, wait_exponential
 
 class APIClientBase(ABC):
     """Base class for all API clients.
-    
+
     Provides standardized:
     - Retry logic with exponential backoff
     - Rate limiting
@@ -42,7 +42,7 @@ class APIClientBase(ABC):
         rate_limit_delay: float = 0.25,
     ):
         """Initialize API client.
-        
+
         Args:
             api_key: API key for authentication
             base_url: Base URL for API
@@ -80,17 +80,17 @@ class APIClientBase(ABC):
         json_data: Optional[Dict[str, Any]] = None,
     ) -> requests.Response:
         """Make HTTP request with standardized error handling.
-        
+
         Args:
             method: HTTP method (GET, POST, etc.)
             endpoint: API endpoint (relative to base_url)
             params: Query parameters
             headers: Request headers
             json_data: JSON body for POST requests
-            
+
         Returns:
             Response object
-            
+
         Raises:
             requests.RequestException: If request fails after retries
         """
@@ -145,12 +145,12 @@ class APIClientBase(ABC):
 
     def _check_api_errors(self, response: requests.Response) -> None:
         """Check for API-specific error responses.
-        
+
         Override in subclasses for API-specific error handling.
-        
+
         Args:
             response: Response object
-            
+
         Raises:
             ValueError: If API returns an error
         """
@@ -174,12 +174,12 @@ class APIClientBase(ABC):
 
     def get(self, endpoint: str, params: Optional[Dict[str, Any]] = None, headers: Optional[Dict[str, str]] = None) -> requests.Response:
         """Make GET request.
-        
+
         Args:
             endpoint: API endpoint
             params: Query parameters
             headers: Request headers
-            
+
         Returns:
             Response object
         """
@@ -187,13 +187,13 @@ class APIClientBase(ABC):
 
     def post(self, endpoint: str, json_data: Optional[Dict[str, Any]] = None, params: Optional[Dict[str, Any]] = None, headers: Optional[Dict[str, str]] = None) -> requests.Response:
         """Make POST request.
-        
+
         Args:
             endpoint: API endpoint
             json_data: JSON body
             params: Query parameters
             headers: Request headers
-            
+
         Returns:
             Response object
         """
@@ -202,7 +202,7 @@ class APIClientBase(ABC):
     @abstractmethod
     def test_connection(self) -> bool:
         """Test API connection.
-        
+
         Returns:
             True if connection successful, False otherwise
         """
@@ -210,7 +210,7 @@ class APIClientBase(ABC):
 
     def get_stats(self) -> Dict[str, Any]:
         """Get API client statistics.
-        
+
         Returns:
             Dictionary with stats
         """

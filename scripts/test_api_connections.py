@@ -275,7 +275,14 @@ def test_anthropic_api() -> dict:
 
 
 def test_perplexity_api() -> dict:
-    """Test Perplexity API connection."""
+    """Test Perplexity API connection.
+    
+    Available models:
+    - sonar: Fast general model for quick queries
+    - sonar-pro: Enhanced model with better reasoning
+    - sonar-deep-research: Expert-level research (takes minutes, searches 100+ sources)
+      Docs: https://docs.perplexity.ai/getting-started/models/models/sonar-deep-research
+    """
     settings = get_settings()
     result = {"name": "Perplexity", "status": "unknown", "message": "", "latency_ms": 0}
 
@@ -291,21 +298,22 @@ def test_perplexity_api() -> dict:
             "Authorization": f"Bearer {settings.perplexity_api_key}",
             "Content-Type": "application/json",
         }
+        # Using sonar for fast connection test
+        # For research tasks, use sonar-deep-research (takes minutes)
         resp = requests.post(
             url,
             headers=headers,
             json={
-                "model": "llama-3.1-sonar-small-128k-online",
-                "messages": [{"role": "user", "content": "hi"}],
-                "max_tokens": 1,
+                "model": "sonar",
+                "messages": [{"role": "user", "content": "What is 2+2?"}],
             },
-            timeout=15,
+            timeout=30,
         )
         latency = (time.time() - start) * 1000
 
         if resp.status_code == 200:
             result["status"] = "success"
-            result["message"] = "Connected - API key valid"
+            result["message"] = "Connected - sonar model (deep-research available)"
         elif resp.status_code == 401:
             result["status"] = "error"
             result["message"] = "Invalid API key"

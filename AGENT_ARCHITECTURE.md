@@ -53,7 +53,7 @@
 
 ```
            TOM HOGAN                      CHRIS FRIEDMAN
-        (Majority Owner)                 (Minority Owner)
+        (Founder & CIO)                       (COO)
                │                               │
                ▼                               ▼
              KAT                            SHYLA
@@ -165,7 +165,7 @@
 
 ```
                               TOM HOGAN
-                           (Owner/CEO/CIO)
+                           (Founder & CIO)
                           Investment Division
                                  |
                                  v
@@ -270,7 +270,7 @@
 
 ```
                            CHRIS FRIEDMAN
-                            (Owner/COO)
+                               (COO)
                          Operations Division
                                  |
                                  v
