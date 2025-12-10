@@ -93,7 +93,7 @@ def implied_volatility(market_price: float, S: float, K: float, T: float, r: flo
     try:
         iv = brentq(price_diff, 0.001, 5.0)
         return iv
-    except:
+    except Exception:
         return np.nan
 
 

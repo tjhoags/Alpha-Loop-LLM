@@ -8,7 +8,7 @@ from src.config.settings import get_settings
 from src.data_ingestion.sources.alpha_vantage import fetch_intraday as av_fetch
 from src.data_ingestion.sources.coinbase import fetch_candles as coinbase_fetch
 from src.data_ingestion.sources.fred import FredClient
-from src.data_ingestion.sources.polygon import fetch_aggregates as polygon_fetch
+from src.data_ingestion.sources.polygon import fetch_aggregates as massive_fetch
 from src.database.connection import get_engine
 
 
@@ -21,10 +21,10 @@ def collect_equities(symbols: List[str]) -> pd.DataFrame:
         frames = []
         try:
             logger.info(f"Collecting PREMIUM data for {sym}...")
-            # Polygon: 1-minute bars, last 2 years
-            df_poly = polygon_fetch(sym, timespan="minute", multiplier=1, lookback_days=730)
-            if not df_poly.empty:
-                frames.append(df_poly)
+            # Massive.com: 1-minute bars, last 2 years
+            df_massive = massive_fetch(sym, timespan="minute", multiplier=1, lookback_days=730)
+            if not df_massive.empty:
+                frames.append(df_massive)
 
             # Alpha Vantage: 1-minute bars, full recent history
             df_av = av_fetch(sym, interval="1min")

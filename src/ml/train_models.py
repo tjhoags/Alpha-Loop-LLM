@@ -47,7 +47,7 @@ def main() -> None:
 
     settings = get_settings()
     logger.add(settings.logs_dir / "model_training.log", rotation="50 MB", level=settings.log_level)
-    logger.info("🚀 Starting CONTINUOUS model training with valuation metrics...")
+    logger.info("Starting CONTINUOUS model training with valuation metrics...")
 
     cycle = 0
     while True:

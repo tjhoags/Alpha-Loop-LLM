@@ -413,6 +413,230 @@ class ACAEngine:
                 self.capability_registry[cap].append(agent_name)
 
     # =========================================================================
+    # CONTINUOUS IMPROVEMENT FEEDBACK LOOP
+    # =========================================================================
+
+    def trigger_improvement_loop(
+        self,
+        trigger_type: str,
+        context: Dict[str, Any],
+        auto_approve: bool = False,
+    ) -> Optional[str]:
+        """Trigger the continuous improvement feedback loop.
+
+        TRAINING NEVER STOPS. This system automatically spawns agents
+        to improve performance, speed, and capability.
+
+        Args:
+            trigger_type: Type of trigger
+                - "performance_gap": AUC/Accuracy below target
+                - "speed_bottleneck": Processing too slow
+                - "success_pattern": Clone successful approach
+                - "model_degradation": Replace degrading model
+                - "new_pattern": Novel alpha detected
+            context: Details about the trigger
+            auto_approve: Auto-approve for critical issues
+
+        Returns:
+            proposal_id if triggered, None otherwise
+        """
+        import hashlib
+
+        proposal_id = hashlib.sha256(
+            f"{trigger_type}{datetime.now()}".encode()
+        ).hexdigest()[:12]
+
+        # Determine agent spec based on trigger
+        specs = self._get_improvement_specs(trigger_type, context)
+
+        if not specs:
+            logger.warning(f"ACA: No specs for trigger type: {trigger_type}")
+            return None
+
+        # Submit proposal
+        proposal = self.submit_proposal(
+            proposal_id=proposal_id,
+            proposed_by="ACA_FEEDBACK_LOOP",
+            agent_name=specs["agent_name"],
+            agent_tier=specs["tier"],
+            capabilities=specs["capabilities"],
+            gap_description=f"Continuous improvement trigger: {trigger_type}",
+            rationale=specs["rationale"],
+            priority=specs["priority"],
+        )
+
+        logger.info(
+            f"ACA FEEDBACK LOOP: Triggered {trigger_type} -> {specs['agent_name']}"
+        )
+
+        # Auto-approve for critical issues
+        if auto_approve or specs["priority"] == "critical":
+            self.approve_proposal(proposal_id, "ACA_AUTO_APPROVAL")
+            logger.info(f"ACA FEEDBACK LOOP: Auto-approved {proposal_id}")
+
+        return proposal_id
+
+    def _get_improvement_specs(
+        self, trigger_type: str, context: Dict
+    ) -> Optional[Dict]:
+        """Get specs for improvement agent based on trigger type."""
+
+        if trigger_type == "performance_gap":
+            current_auc = context.get("current_auc", 0.52)
+            target_auc = context.get("target_auc", 0.58)
+            symbol = context.get("symbol", "UNKNOWN")
+
+            return {
+                "agent_name": f"OPTIMIZER_{symbol}_{datetime.now().strftime('%H%M%S')}",
+                "tier": "STANDARD",
+                "capabilities": [
+                    "hyperparameter_optimization",
+                    "feature_engineering_improvement",
+                    "model_architecture_search",
+                ],
+                "rationale": f"AUC {current_auc:.3f} below target {target_auc:.3f}. "
+                            f"Spawning optimizer to close gap.",
+                "priority": "high" if target_auc - current_auc > 0.05 else "medium",
+            }
+
+        elif trigger_type == "speed_bottleneck":
+            bottleneck = context.get("bottleneck", "processing")
+            current_time = context.get("current_time_ms", 0)
+            target_time = context.get("target_time_ms", 100)
+
+            return {
+                "agent_name": f"ACCELERATOR_{bottleneck.upper()}_{datetime.now().strftime('%H%M%S')}",
+                "tier": "SUPPORT",
+                "capabilities": [
+                    "parallel_processing",
+                    "batch_optimization",
+                    "cache_management",
+                    "async_execution",
+                ],
+                "rationale": f"Speed bottleneck: {bottleneck}. "
+                            f"Current {current_time}ms, target {target_time}ms. "
+                            f"Spawning accelerator for {current_time/target_time:.1f}x speedup.",
+                "priority": "critical" if current_time > target_time * 5 else "high",
+            }
+
+        elif trigger_type == "success_pattern":
+            source_agent = context.get("source_agent", "UNKNOWN")
+            pattern = context.get("pattern", "unspecified")
+
+            return {
+                "agent_name": f"CLONE_{source_agent}_{datetime.now().strftime('%H%M%S')}",
+                "tier": context.get("source_tier", "STANDARD"),
+                "capabilities": context.get("capabilities", []) + ["pattern_exploration"],
+                "rationale": f"Success pattern detected in {source_agent}: {pattern}. "
+                            f"Cloning and mutating to explore adjacent strategies.",
+                "priority": "medium",
+            }
+
+        elif trigger_type == "model_degradation":
+            degrading_model = context.get("model", "UNKNOWN")
+            degradation_pct = context.get("degradation_pct", 0)
+
+            return {
+                "agent_name": f"REPLACEMENT_{degrading_model}_{datetime.now().strftime('%H%M%S')}",
+                "tier": context.get("model_tier", "STANDARD"),
+                "capabilities": context.get("capabilities", []),
+                "rationale": f"Model {degrading_model} degraded {degradation_pct:.1f}%. "
+                            f"Spawning replacement for seamless transition.",
+                "priority": "critical",
+            }
+
+        elif trigger_type == "new_pattern":
+            pattern_desc = context.get("pattern", "Novel pattern")
+            confidence = context.get("confidence", 0.5)
+
+            return {
+                "agent_name": f"SPECIALIST_{datetime.now().strftime('%H%M%S')}",
+                "tier": "SPECIALIST",
+                "capabilities": [
+                    "pattern_exploitation",
+                    "alpha_capture",
+                    "real_time_adaptation",
+                ],
+                "rationale": f"New pattern detected (confidence {confidence:.1%}): {pattern_desc}. "
+                            f"Spawning specialist to capture emerging alpha.",
+                "priority": "high" if confidence > 0.7 else "medium",
+            }
+
+        return None
+
+    def check_performance_and_spawn(
+        self,
+        metrics: Dict[str, float],
+        symbol: str = "GENERAL",
+    ) -> List[str]:
+        """Check performance metrics and spawn improvement agents as needed.
+
+        TRAINING NEVER STOPS. This method ensures continuous improvement.
+
+        Args:
+            metrics: Dict with 'auc', 'accuracy', 'sharpe', etc.
+            symbol: Symbol being evaluated
+
+        Returns:
+            List of spawned proposal IDs
+        """
+        spawned = []
+
+        # Phase targets (beat Wall Street)
+        phase_targets = {
+            "phase_1": {"auc": 0.52, "accuracy": 0.52},  # Baseline
+            "phase_2": {"auc": 0.55, "accuracy": 0.55},  # Wall Street parity
+            "phase_3": {"auc": 0.58, "accuracy": 0.58},  # Beat Wall Street
+            "phase_4": {"auc": 0.62, "accuracy": 0.62},  # Alpha Loop Standard
+        }
+
+        current_auc = metrics.get("auc", 0.5)
+        current_acc = metrics.get("accuracy", 0.5)
+
+        # Determine current phase and target
+        if current_auc < phase_targets["phase_1"]["auc"]:
+            target = phase_targets["phase_1"]
+            phase = "BASELINE"
+        elif current_auc < phase_targets["phase_2"]["auc"]:
+            target = phase_targets["phase_2"]
+            phase = "WALL_STREET_PARITY"
+        elif current_auc < phase_targets["phase_3"]["auc"]:
+            target = phase_targets["phase_3"]
+            phase = "BEAT_WALL_STREET"
+        elif current_auc < phase_targets["phase_4"]["auc"]:
+            target = phase_targets["phase_4"]
+            phase = "ALPHA_LOOP_STANDARD"
+        else:
+            # Already at Alpha Loop Standard - maintain excellence
+            logger.info(f"ACA: {symbol} at Alpha Loop Standard (AUC={current_auc:.3f})")
+            return spawned
+
+        # Below target - spawn improvement agent
+        gap = target["auc"] - current_auc
+        logger.info(
+            f"ACA FEEDBACK: {symbol} in phase {phase}, "
+            f"AUC gap: {gap:.3f} (current: {current_auc:.3f}, target: {target['auc']:.2f})"
+        )
+
+        proposal_id = self.trigger_improvement_loop(
+            trigger_type="performance_gap",
+            context={
+                "symbol": symbol,
+                "current_auc": current_auc,
+                "target_auc": target["auc"],
+                "current_accuracy": current_acc,
+                "target_accuracy": target["accuracy"],
+                "phase": phase,
+            },
+            auto_approve=gap > 0.03,  # Auto-approve for large gaps
+        )
+
+        if proposal_id:
+            spawned.append(proposal_id)
+
+        return spawned
+
+    # =========================================================================
     # STATUS & STATS
     # =========================================================================
 
@@ -426,6 +650,13 @@ class ACAEngine:
             "agents_created": self.agents_created,
             "active_gaps": len([g for g in self.capability_gaps.values() if not g.resolved]),
             "total_capabilities": len(self.capability_registry),
+            "feedback_loop": "ACTIVE - Training never stops",
+            "phase_targets": {
+                "phase_1_baseline": "AUC > 0.52",
+                "phase_2_wall_street": "AUC > 0.55",
+                "phase_3_beat_ws": "AUC > 0.58",
+                "phase_4_alc_standard": "AUC > 0.62",
+            },
             "timestamp": datetime.now().isoformat(),
         }
 

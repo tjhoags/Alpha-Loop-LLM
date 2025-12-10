@@ -59,7 +59,7 @@ class ValueAgent(BaseAgent):
                     return ("BUY", up_prob)
                 elif up_prob < 1 - self.config.confidence_threshold:
                     return ("SELL", 1 - up_prob)
-            except:
+            except Exception:
                 pass
         return ("HOLD", 0.5)
 

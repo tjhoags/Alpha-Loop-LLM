@@ -55,7 +55,7 @@ def update_intraday_data():
         updated = 0
         for symbol in symbols[:500]:  # Batch of 500 at a time
             try:
-                url = f"https://api.polygon.io/v2/aggs/ticker/{symbol}/range/5/minute/{start.strftime('%Y-%m-%d')}/{end.strftime('%Y-%m-%d')}"
+                url = f"https://api.massive.com/v2/aggs/ticker/{symbol}/range/5/minute/{start.strftime('%Y-%m-%d')}/{end.strftime('%Y-%m-%d')}"
                 resp = requests.get(url, params={"apiKey": api_key, "limit": 50000})
 
                 if resp.status_code == 200:

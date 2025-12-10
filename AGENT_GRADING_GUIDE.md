@@ -117,12 +117,22 @@ DURING TRAINING (1-3 hours):
 │ If AUC drops after rising = Overfitting starting        │
 └─────────────────────────────────────────────────────────┘
 
-END OF TRAINING:
-┌─────────────────────────────────────────────────────────┐
-│ PASS: AUC > 0.52, Accuracy > 52% → Model promoted       │
-│ FAIL: Below thresholds → Model rejected                 │
-│ Typical pass rate: 40-70% of models                     │
-└─────────────────────────────────────────────────────────┘
+END OF TRAINING PHASE → CONTINUOUS IMPROVEMENT:
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ ⚠️  TRAINING NEVER STOPS - Only the weak stop at "good enough"              │
+│                                                                             │
+│ PHASE 1 (Baseline): AUC > 0.52, Accuracy > 52% → Model enters production    │
+│ PHASE 2 (Competitive): AUC > 0.55, Accuracy > 55% → Wall Street parity      │
+│ PHASE 3 (Elite): AUC > 0.58, Accuracy > 58% → Beating Wall Street           │
+│ PHASE 4 (Dominant): AUC > 0.62, Accuracy > 62% → Alpha Loop Standard        │
+│                                                                             │
+│ 🔄 ACA FEEDBACK LOOP:                                                       │
+│    - Underperforming models → ACA spawns improvement agents automatically   │
+│    - Successful patterns → ACA clones and mutates for exploration           │
+│    - Speed bottlenecks → ACA spawns parallel processing agents              │
+│                                                                             │
+│ 📊 LOGGING CONFIRMED: All metrics, decisions, spawns logged to audit trail  │
+└─────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ---
@@ -337,14 +347,96 @@ Any consistent edge > random is valuable.
 
 ---
 
+---
+
+## ACA FEEDBACK LOOP SYSTEM
+
+### Continuous Improvement Architecture
+
+The Agent Creating Agent (ACA) system ensures **training never stops** and performance continuously improves:
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                    ACA FEEDBACK LOOP                            │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                 │
+│  ┌──────────┐    ┌──────────┐    ┌──────────┐    ┌──────────┐  │
+│  │ MONITOR  │───▶│ ANALYZE  │───▶│ SPAWN    │───▶│ IMPROVE  │  │
+│  └──────────┘    └──────────┘    └──────────┘    └──────────┘  │
+│       │                                                │        │
+│       └────────────────────────────────────────────────┘        │
+│                    CONTINUOUS CYCLE                             │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+### ACA Triggers for New Agent Spawning
+
+| Trigger | Action | Expected Outcome |
+|---------|--------|------------------|
+| **Performance < Phase Target** | Spawn improvement agent | Hyperparameter optimization |
+| **Speed Bottleneck** | Spawn parallel agents | 2-10x throughput increase |
+| **New Pattern Detected** | Spawn specialist agent | Capture emerging alpha |
+| **Model Degradation** | Spawn replacement agent | Seamless transition |
+| **Success Pattern** | Clone + Mutate agent | Explore adjacent strategies |
+
+### Logging Confirmation
+
+All operations are logged for audit and improvement:
+
+```python
+# Confirmed logging locations:
+src/core/agent_base.py     # 17 log points - Agent lifecycle
+src/core/learning_engine.py # 41 log points - Training progress
+src/core/aca_engine.py     # 12 log points - Agent spawning
+src/trading/agent_factory.py # MetaAgent operations
+```
+
+**Log outputs:**
+- `logs/training_*.log` - All training metrics
+- `logs/aca_*.log` - Agent creation/termination
+- `logs/performance_*.log` - Live trading metrics
+- Azure Blob Storage - Persistent audit trail
+
+---
+
+## ELITE PERFORMANCE TARGETS
+
+### Beat Wall Street Benchmarks
+
+| Metric | Wall Street Average | Alpha Loop Target | Why |
+|--------|--------------------|--------------------|-----|
+| **Sharpe Ratio** | 0.8 - 1.2 | > 2.0 | Risk-adjusted returns |
+| **Hit Rate** | 52-54% | > 58% | Directional accuracy |
+| **AUC** | 0.52-0.55 | > 0.58 | Signal quality |
+| **Max Drawdown** | 15-20% | < 10% | Capital preservation |
+| **Recovery Time** | 3-6 months | < 4 weeks | Resilience |
+
+### Continuous Improvement Mindset
+
+```
+❌ WRONG: "We passed the threshold, we're done"
+✅ RIGHT: "We passed baseline, now let's dominate"
+
+Wall Street's edge: Resources, infrastructure, talent
+Our edge: AI agents that NEVER STOP IMPROVING
+
+Every second an agent isn't improving, we're falling behind.
+ACA ensures continuous optimization 24/7/365.
+```
+
+---
+
 ## SUMMARY
 
-1. **Agents** = Specialized ML models for each symbol
-2. **Grading** = AUC > 0.52, Accuracy > 52% to pass
-3. **Feasibility** = If >40% models pass, strategy is viable
-4. **Interpretation** = Watch AUC climb from 0.50 toward 0.55+
-5. **Don't panic** = Early training shows random metrics (0.50)
-6. **Success** = .pkl files in models/ folder = ready to trade
+1. **Agents** = Specialized ML models that CONTINUOUSLY IMPROVE
+2. **Grading** = Phase 1 baseline (52%), Phase 4 target (62%+)
+3. **NO STOPPING** = Training never ends, only intensifies
+4. **ACA System** = Automatic spawning of improvement agents
+5. **Beat Wall Street** = Sharpe > 2.0, AUC > 0.58, DD < 10%
+6. **Logging** = 100+ log points across core systems, audit trail confirmed
+7. **Speed** = ACA spawns parallel agents for bottleneck elimination
 
-**Your goal: Wake up at 9:15 AM, see promoted models, start trading engine.**
+**Alpha Loop Capital Standard: We don't compete with Wall Street. We outperform them.**
+
+*"By end of 2026, they will know Alpha Loop Capital."*
 

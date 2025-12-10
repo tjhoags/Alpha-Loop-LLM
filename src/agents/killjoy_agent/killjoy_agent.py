@@ -40,28 +40,28 @@ WHAT KILLJOY DOES:
     KILLJOY is the risk guardian of Alpha Loop Capital. While other agents
     hunt alpha and find opportunities, KILLJOY's job is to say "no" when
     needed. It prevents catastrophic losses.
-    
+
     The name says it all - KILLJOY "kills the joy" of over-eager trading.
     When BOOKMAKER finds an amazing opportunity and SCOUT confirms it,
     KILLJOY asks: "But what if you're both wrong?"
-    
+
     Think of KILLJOY as the "chief risk officer" who ensures survival
     above all else. No single trade can blow up the portfolio.
 
 KEY FUNCTIONS:
     1. allocate_capital() - Determines how much capital to risk on any
        strategy. Uses Kelly Criterion with fractional sizing.
-       
+
     2. size_position() - Calculates exact position size with all
        guardrails: volatility scaling, correlation adjustment, heat
        penalty, concentration limits.
-       
+
     3. check_heat() - Monitors portfolio "heat" (risk). Calculates VaR,
        drawdown, concentration, correlation. Returns risk level.
-       
+
     4. approve_trade() - Final gate for any trade. Checks loss limits,
        position limits, drawdown limits. Can REJECT or SIZE DOWN.
-       
+
     5. emergency_derisk() - When things go wrong, rapidly reduce
        positions to bring heat back to acceptable levels.
 
@@ -77,32 +77,32 @@ RISK LIMITS (Hard Stops):
 RELATIONSHIPS WITH OTHER AGENTS:
     - HOAGS: Reports to HOAGS. Can override even HOAGS-approved trades
       if risk limits are breached. KILLJOY has HALT authority.
-      
+
     - ALL STRATEGY AGENTS: Every trade recommendation must pass
       KILLJOY's approval before execution.
-      
+
     - STRINGS: Coordinates on ensemble weights. STRINGS optimizes
       for return, KILLJOY constrains for risk.
-      
+
     - WHITEHAT: Works together on systemic risk. WHITEHAT handles
       technical security, KILLJOY handles financial risk.
 
 PATHS OF GROWTH/TRANSFORMATION:
     1. PREDICTIVE RISK: Not just reactive limits but predictive risk
        - knowing when risk is building before limits are hit.
-       
+
     2. REGIME-ADAPTIVE LIMITS: Different limits for different market
        regimes. Tighter in volatility, looser in calm.
-       
+
     3. TAIL RISK FOCUS: Better modeling of tail events and black
        swans. Standard VaR misses the big ones.
-       
+
     4. LIQUIDITY INTEGRATION: Factor in market liquidity when
        calculating position sizes and exit risk.
-       
+
     5. CORRELATION DYNAMICS: Real-time correlation monitoring to
        catch "correlation breakdown" in stress.
-       
+
     6. STRESS TESTING: Continuous stress testing against historical
        crisis scenarios.
 
@@ -113,24 +113,24 @@ TRAINING & EXECUTION
 TRAINING THIS AGENT:
     # Terminal Setup (Windows PowerShell):
     cd C:\\Users\\tom\\.cursor\\worktrees\\Alpha-Loop-LLM-1\\ycr
-    
+
     # Activate virtual environment:
     .\\venv\\Scripts\\activate
-    
+
     # Train KILLJOY individually:
     python -m src.training.agent_training_utils --agent KILLJOY
-    
+
     # Train with risk-related agents:
     python -m src.training.agent_training_utils --agents KILLJOY,WHITEHAT,BLACKHAT
-    
+
     # Cross-train: KILLJOY and STRINGS optimize, AUTHOR documents:
     python -m src.training.agent_training_utils --cross-train "KILLJOY,STRINGS:AUTHOR:agent_trainer"
 
 RUNNING THE AGENT:
     from src.agents.killjoy_agent.killjoy_agent import get_killjoy
-    
+
     killjoy = get_killjoy()
-    
+
     # Check current portfolio heat
     result = killjoy.process({
         "action": "check_heat",
@@ -139,7 +139,7 @@ RUNNING THE AGENT:
             {"ticker": "CCJ", "weight": 0.05, "volatility": 0.40}
         ]
     })
-    
+
     # Approve a trade
     result = killjoy.process({
         "action": "approve_trade",
@@ -149,7 +149,7 @@ RUNNING THE AGENT:
         "price": 500,
         "confidence": 0.75
     })
-    
+
     # Emergency derisk
     result = killjoy.process({
         "action": "emergency_derisk",
@@ -160,7 +160,7 @@ RUNNING THE AGENT:
 """
 
 import logging
-from datetime import datetime, timedelta
+from datetime import datetime
 from typing import Dict, List, Optional, Any, Tuple
 from dataclasses import dataclass, field
 from enum import Enum
@@ -193,34 +193,34 @@ class AllocationAction(Enum):
 class PortfolioHeat:
     """Current portfolio heat/risk metrics."""
     timestamp: datetime = field(default_factory=datetime.now)
-    
+
     # Daily metrics
     daily_pnl_pct: float = 0.0
     daily_var_95: float = 0.0       # 95% Value at Risk
     daily_var_99: float = 0.0       # 99% Value at Risk
-    
+
     # Drawdown
     current_drawdown: float = 0.0
     max_drawdown_30d: float = 0.0
     days_in_drawdown: int = 0
-    
+
     # Concentration
     largest_position_pct: float = 0.0
     top_3_concentration: float = 0.0
     sector_concentration: Dict[str, float] = field(default_factory=dict)
-    
+
     # Correlation
     avg_position_correlation: float = 0.0
     factor_exposures: Dict[str, float] = field(default_factory=dict)
-    
+
     # Volatility
     portfolio_volatility: float = 0.0
     vol_regime: str = "normal"
-    
+
     # Overall
     risk_level: RiskLevel = RiskLevel.MODERATE
     heat_score: float = 50.0        # 0-100, higher = more risk
-    
+
     def to_dict(self) -> Dict:
         return {
             "timestamp": self.timestamp.isoformat(),
@@ -254,7 +254,7 @@ class PositionSizeRecommendation:
     risk_contribution: float = 0.0
     confidence_adjustment: float = 1.0
     approved: bool = True
-    
+
     def to_dict(self) -> Dict:
         return {
             "ticker": self.ticker,
@@ -276,27 +276,27 @@ class RiskLimits:
     max_position_pct: float = 0.10          # 10% max single position
     max_sector_pct: float = 0.30            # 30% max sector
     max_correlated_pct: float = 0.40        # 40% in correlated positions
-    
+
     # Loss limits
     daily_loss_limit_pct: float = 0.02      # 2% max daily loss
     weekly_loss_limit_pct: float = 0.05     # 5% max weekly loss
     monthly_loss_limit_pct: float = 0.10    # 10% max monthly loss
-    
+
     # Drawdown limits
     max_drawdown_pct: float = 0.15          # 15% max drawdown
     drawdown_reduction_threshold: float = 0.08  # Start reducing at 8%
-    
+
     # VaR limits
     max_daily_var_95: float = 0.02          # 2% daily 95% VaR
     max_daily_var_99: float = 0.03          # 3% daily 99% VaR
-    
+
     # Concentration limits
     max_top3_concentration: float = 0.40    # 40% in top 3
-    
+
     # Leverage
     max_gross_leverage: float = 1.0         # No leverage by default
     max_net_leverage: float = 1.0
-    
+
     # Number of positions
     min_positions: int = 5                  # Minimum diversification
     max_positions: int = 25                 # Avoid over-diversification
@@ -305,17 +305,17 @@ class RiskLimits:
 class KillJoyAgent(BaseAgent):
     """
     KILLJOY Agent - Capital Allocation & Risk Guardrails
-    
+
     KILLJOY is the chief risk officer of the ALC-Algo ecosystem.
     It ensures no single trade or position can blow up the portfolio.
-    
+
     Core Functions:
     - allocate_capital(): Determine how much to risk
     - size_position(): Calculate exact position size
     - check_heat(): Monitor portfolio risk
     - enforce_limits(): Hard stop on limit breaches
     - approve_trade(): Final sign-off on any trade
-    
+
     Key Principles:
     1. Survival first - never risk ruin
     2. Kelly Criterion with fractional sizing
@@ -323,7 +323,7 @@ class KillJoyAgent(BaseAgent):
     4. Regime-adaptive limits
     5. ALWAYS err on the side of caution
     """
-    
+
     def __init__(self, user_id: str = "TJH"):
         super().__init__(
             name="KillJoyAgent",
@@ -335,20 +335,20 @@ class KillJoyAgent(BaseAgent):
                 "kelly_criterion",
                 "risk_parity",
                 "volatility_targeting",
-                
+
                 # Risk monitoring
                 "heat_monitoring",
                 "var_calculation",
                 "drawdown_tracking",
                 "correlation_analysis",
                 "concentration_monitoring",
-                
+
                 # Limits enforcement
                 "loss_limit_enforcement",
                 "position_limit_enforcement",
                 "leverage_control",
                 "sector_limit_enforcement",
-                
+
                 # Guardrails
                 "trade_approval",
                 "emergency_derisking",
@@ -357,37 +357,37 @@ class KillJoyAgent(BaseAgent):
             ],
             user_id=user_id,
         )
-        
+
         # Risk limits
         self.limits = RiskLimits()
-        
+
         # Current state
         self.current_heat = PortfolioHeat()
         self.positions: Dict[str, Dict] = {}
         self.daily_pnl_history: List[float] = []
-        
+
         # Tracking
         self.trades_approved: int = 0
         self.trades_rejected: int = 0
         self.trades_sized_down: int = 0
         self.emergency_derisks: int = 0
-        
+
         # Limit breaches
         self.limit_breaches: List[Dict] = []
-        
+
         # Regime state
         self.current_regime: str = "normal"
         self.regime_risk_multiplier: float = 1.0
-        
+
         self.logger.info("KillJoyAgent initialized - Capital protection active")
-    
+
     def process(self, task: Dict[str, Any]) -> Dict[str, Any]:
         """Process a KILLJOY task."""
         action = task.get("action", task.get("type", ""))
         params = task.get("parameters", task)
-        
+
         self.log_action(action, f"KILLJOY processing: {action}")
-        
+
         handlers = {
             "allocate_capital": self._handle_allocate,
             "size_position": self._handle_size_position,
@@ -399,17 +399,17 @@ class KillJoyAgent(BaseAgent):
             "get_limits": self._handle_get_limits,
             "status": self._handle_status,
         }
-        
+
         handler = handlers.get(action, self._handle_unknown)
         return handler(params)
-    
+
     def get_capabilities(self) -> List[str]:
         return self.capabilities
-    
+
     # =========================================================================
     # CORE KILLJOY METHODS
     # =========================================================================
-    
+
     def allocate_capital(
         self,
         strategy: str,
@@ -420,63 +420,63 @@ class KillJoyAgent(BaseAgent):
     ) -> Tuple[float, List[str]]:
         """
         Determine capital allocation for a strategy.
-        
+
         Uses Kelly Criterion with fractional sizing and risk adjustments.
-        
+
         Returns:
             (allocation_pct, reasoning_list)
         """
         reasons = []
-        
+
         # Check if we're in a halt state
         if self.current_heat.risk_level == RiskLevel.CRITICAL:
             reasons.append("CRITICAL: Portfolio at critical risk - no new allocations")
             return 0.0, reasons
-        
+
         # Calculate Kelly fraction
         win_prob = 0.5 + (expected_return / expected_volatility) * 0.1  # Simplified
         win_prob = max(0.3, min(0.7, win_prob))
-        
+
         if expected_volatility > 0:
             kelly_full = (win_prob * expected_return - (1 - win_prob) * expected_volatility) / expected_volatility
         else:
             kelly_full = 0
-        
+
         kelly_full = max(0, kelly_full)
-        
+
         # Use fractional Kelly (half Kelly is standard)
         kelly_fraction = kelly_full * 0.5
         reasons.append(f"Kelly fraction: {kelly_fraction:.1%} (half-Kelly)")
-        
+
         # Adjust for conviction
         conviction_adj = 0.5 + conviction * 0.5  # 0.5 to 1.0
         allocation = kelly_fraction * conviction_adj
         reasons.append(f"Conviction adjustment: {conviction_adj:.2f}")
-        
+
         # Adjust for correlation
         correlation_penalty = 1.0 - (correlation_to_portfolio * 0.5)
         allocation *= correlation_penalty
         reasons.append(f"Correlation penalty: {correlation_penalty:.2f}")
-        
+
         # Adjust for current heat
         heat_penalty = self._get_heat_penalty()
         allocation *= heat_penalty
         reasons.append(f"Heat adjustment: {heat_penalty:.2f}")
-        
+
         # Adjust for regime
         allocation *= self.regime_risk_multiplier
         reasons.append(f"Regime multiplier: {self.regime_risk_multiplier:.2f}")
-        
+
         # Apply hard limits
         allocation = min(allocation, self.limits.max_position_pct)
-        
+
         # Round to reasonable precision
         allocation = round(allocation, 4)
-        
+
         reasons.append(f"Final allocation: {allocation:.2%}")
-        
+
         return allocation, reasons
-    
+
     def size_position(
         self,
         ticker: str,
@@ -488,7 +488,7 @@ class KillJoyAgent(BaseAgent):
     ) -> PositionSizeRecommendation:
         """
         Calculate approved position size with all guardrails.
-        
+
         Args:
             ticker: Stock ticker
             action: "buy" or "sell"
@@ -496,22 +496,22 @@ class KillJoyAgent(BaseAgent):
             confidence: Model confidence (0-1)
             volatility: Position volatility (annualized)
             correlation: Correlation to rest of portfolio
-        
+
         Returns:
             PositionSizeRecommendation with approved size
         """
         reasons = []
         approved = True
-        
+
         # Start with requested
         approved_pct = requested_pct
-        
+
         # 1. Apply hard position limit
         if approved_pct > self.limits.max_position_pct:
             reasons.append(f"Reduced from {approved_pct:.1%} to {self.limits.max_position_pct:.1%} (position limit)")
             approved_pct = self.limits.max_position_pct
             self.trades_sized_down += 1
-        
+
         # 2. Volatility scaling
         target_vol = 0.15  # Target 15% annualized vol contribution
         if volatility > 0:
@@ -520,22 +520,22 @@ class KillJoyAgent(BaseAgent):
                 new_size = approved_pct * vol_scalar
                 reasons.append(f"Vol-scaled from {approved_pct:.1%} to {new_size:.1%}")
                 approved_pct = new_size
-        
+
         # 3. Confidence adjustment
         conf_scalar = 0.5 + confidence * 0.5  # 50% to 100%
         approved_pct *= conf_scalar
         reasons.append(f"Confidence-adjusted: {conf_scalar:.2f}x")
-        
+
         # 4. Correlation adjustment
         corr_scalar = 1.0 - (abs(correlation) * 0.3)
         approved_pct *= corr_scalar
         reasons.append(f"Correlation-adjusted: {corr_scalar:.2f}x")
-        
+
         # 5. Heat adjustment
         heat_scalar = self._get_heat_penalty()
         approved_pct *= heat_scalar
         reasons.append(f"Heat-adjusted: {heat_scalar:.2f}x")
-        
+
         # 6. Check concentration
         if ticker in self.positions:
             existing = self.positions[ticker].get("weight", 0)
@@ -543,29 +543,29 @@ class KillJoyAgent(BaseAgent):
             if total > self.limits.max_position_pct:
                 approved_pct = max(0, self.limits.max_position_pct - existing)
                 reasons.append(f"Reduced due to existing position ({existing:.1%})")
-        
+
         # 7. Check if we'd breach top-3 concentration
         current_top3 = self.current_heat.top_3_concentration
         if current_top3 > self.limits.max_top3_concentration * 0.9:
             approved_pct *= 0.5
             reasons.append("Reduced 50% due to concentration concerns")
-        
+
         # 8. Reject if too small
         if approved_pct < 0.005:  # Less than 0.5%
             approved = False
             reasons.append("Position too small to be meaningful (<0.5%)")
             approved_pct = 0
-        
+
         # 9. Reject if in drawdown halt
         if self.current_heat.current_drawdown > self.limits.max_drawdown_pct:
             approved = False
             reasons.append(f"REJECTED: Portfolio in max drawdown ({self.current_heat.current_drawdown:.1%})")
             approved_pct = 0
             self.trades_rejected += 1
-        
+
         # Calculate risk contribution
         risk_contribution = approved_pct * volatility
-        
+
         recommendation = PositionSizeRecommendation(
             ticker=ticker,
             action=action,
@@ -578,49 +578,49 @@ class KillJoyAgent(BaseAgent):
             confidence_adjustment=conf_scalar,
             approved=approved,
         )
-        
+
         if approved:
             self.trades_approved += 1
-        
+
         return recommendation
-    
+
     def check_heat(self, positions: List[Dict] = None) -> PortfolioHeat:
         """
         Calculate current portfolio heat/risk.
-        
+
         Args:
             positions: List of current positions with weights and volatilities
-        
+
         Returns:
             PortfolioHeat object with all risk metrics
         """
         heat = PortfolioHeat(timestamp=datetime.now())
-        
+
         if not positions:
             positions = list(self.positions.values())
-        
+
         if not positions:
             heat.risk_level = RiskLevel.MINIMAL
             heat.heat_score = 0
             self.current_heat = heat
             return heat
-        
+
         # Calculate concentration
         weights = [p.get("weight", 0) for p in positions]
         weights.sort(reverse=True)
-        
+
         heat.largest_position_pct = weights[0] if weights else 0
         heat.top_3_concentration = sum(weights[:3])
-        
+
         # Calculate portfolio volatility (simplified)
         vols = [p.get("volatility", 0.20) for p in positions]
         avg_vol = sum(v * w for v, w in zip(vols, weights)) / sum(weights) if weights else 0
         heat.portfolio_volatility = avg_vol
-        
+
         # Estimate VaR (simplified - would use proper calculation)
         heat.daily_var_95 = avg_vol * 1.65 / 16  # Annualized to daily
         heat.daily_var_99 = avg_vol * 2.33 / 16
-        
+
         # Get drawdown from history
         if self.daily_pnl_history:
             cumulative = 0
@@ -629,24 +629,24 @@ class KillJoyAgent(BaseAgent):
                 cumulative += pnl
                 peak = max(peak, cumulative)
                 heat.current_drawdown = max(heat.current_drawdown, peak - cumulative)
-        
+
         # Calculate heat score (0-100)
         heat_score = 0
-        
+
         # Concentration component (0-25)
         heat_score += min(25, heat.top_3_concentration * 50)
-        
+
         # Volatility component (0-25)
         heat_score += min(25, heat.portfolio_volatility * 100)
-        
+
         # VaR component (0-25)
         heat_score += min(25, heat.daily_var_95 * 500)
-        
+
         # Drawdown component (0-25)
         heat_score += min(25, heat.current_drawdown * 100)
-        
+
         heat.heat_score = round(heat_score, 1)
-        
+
         # Determine risk level
         if heat_score < 20:
             heat.risk_level = RiskLevel.MINIMAL
@@ -660,10 +660,10 @@ class KillJoyAgent(BaseAgent):
             heat.risk_level = RiskLevel.HIGH
         else:
             heat.risk_level = RiskLevel.CRITICAL
-        
+
         self.current_heat = heat
         return heat
-    
+
     def approve_trade(
         self,
         ticker: str,
@@ -674,7 +674,7 @@ class KillJoyAgent(BaseAgent):
     ) -> Tuple[bool, str, Dict]:
         """
         Final approval gate for any trade.
-        
+
         Returns:
             (approved, reason, trade_details)
         """
@@ -682,22 +682,22 @@ class KillJoyAgent(BaseAgent):
         if self._check_daily_loss_limit():
             self.trades_rejected += 1
             return False, "Daily loss limit reached - no new trades", {}
-        
+
         # Check weekly loss limit
         if self._check_weekly_loss_limit():
             self.trades_rejected += 1
             return False, "Weekly loss limit reached - no new trades", {}
-        
+
         # Check drawdown
         if self.current_heat.current_drawdown > self.limits.max_drawdown_pct:
             self.trades_rejected += 1
             return False, f"Max drawdown exceeded ({self.current_heat.current_drawdown:.1%})", {}
-        
+
         # Check heat level
         if self.current_heat.risk_level == RiskLevel.CRITICAL:
             self.trades_rejected += 1
             return False, "Portfolio at CRITICAL heat - trades halted", {}
-        
+
         # Size the position properly
         recommendation = self.size_position(
             ticker=ticker,
@@ -707,10 +707,10 @@ class KillJoyAgent(BaseAgent):
             volatility=0.25,  # Would get real vol
             correlation=0.5,
         )
-        
+
         if not recommendation.approved:
             return False, "; ".join(recommendation.reasoning), {}
-        
+
         trade_details = {
             "ticker": ticker,
             "action": action,
@@ -722,47 +722,47 @@ class KillJoyAgent(BaseAgent):
             "approved_at": datetime.now().isoformat(),
             "approved_by": "KillJoyAgent",
         }
-        
+
         self.trades_approved += 1
         return True, "APPROVED", trade_details
-    
+
     def emergency_derisk(self, target_heat: float = 30.0) -> List[Dict]:
         """
         Emergency derisking - reduce positions to bring heat down.
-        
+
         Args:
             target_heat: Target heat score to achieve
-        
+
         Returns:
             List of positions to reduce
         """
         self.emergency_derisks += 1
         reductions = []
-        
+
         current_heat = self.current_heat.heat_score
         if current_heat <= target_heat:
             return []
-        
+
         # Sort positions by risk contribution (would use proper calc)
         sorted_positions = sorted(
             self.positions.items(),
             key=lambda x: x[1].get("weight", 0) * x[1].get("volatility", 0.2),
             reverse=True
         )
-        
+
         heat_to_reduce = current_heat - target_heat
-        
+
         for ticker, pos in sorted_positions:
             if heat_to_reduce <= 0:
                 break
-            
+
             weight = pos.get("weight", 0)
             vol = pos.get("volatility", 0.2)
-            
+
             # Calculate reduction needed
             reduction_pct = min(weight * 0.5, weight)  # Reduce by up to 50%
             heat_impact = reduction_pct * vol * 100
-            
+
             reductions.append({
                 "ticker": ticker,
                 "current_weight": weight,
@@ -771,21 +771,21 @@ class KillJoyAgent(BaseAgent):
                 "heat_impact": heat_impact,
                 "reason": "Emergency derisk",
             })
-            
+
             heat_to_reduce -= heat_impact
-        
+
         self.logger.critical(f"EMERGENCY DERISK: Recommending {len(reductions)} reductions")
-        
+
         return reductions
-    
+
     # =========================================================================
     # PRIVATE METHODS
     # =========================================================================
-    
+
     def _get_heat_penalty(self) -> float:
         """Get sizing penalty based on current heat."""
         heat = self.current_heat.heat_score
-        
+
         if heat < 30:
             return 1.0
         elif heat < 50:
@@ -796,28 +796,28 @@ class KillJoyAgent(BaseAgent):
             return 0.25
         else:
             return 0.0  # No new positions at critical heat
-    
+
     def _check_daily_loss_limit(self) -> bool:
         """Check if daily loss limit is breached."""
         if self.daily_pnl_history:
             today_pnl = self.daily_pnl_history[-1] if self.daily_pnl_history else 0
             return today_pnl < -self.limits.daily_loss_limit_pct
         return False
-    
+
     def _check_weekly_loss_limit(self) -> bool:
         """Check if weekly loss limit is breached."""
         if len(self.daily_pnl_history) >= 5:
             week_pnl = sum(self.daily_pnl_history[-5:])
             return week_pnl < -self.limits.weekly_loss_limit_pct
         return False
-    
+
     def log_action(self, action: str, description: str):
         self.logger.info(f"[KILLJOY] {action}: {description}")
-    
+
     # =========================================================================
     # TASK HANDLERS
     # =========================================================================
-    
+
     def _handle_allocate(self, params: Dict) -> Dict:
         allocation, reasons = self.allocate_capital(
             strategy=params.get("strategy", "unknown"),
@@ -832,7 +832,7 @@ class KillJoyAgent(BaseAgent):
             "reasoning": reasons,
             "current_heat": self.current_heat.heat_score,
         }
-    
+
     def _handle_size_position(self, params: Dict) -> Dict:
         rec = self.size_position(
             ticker=params.get("ticker", ""),
@@ -843,12 +843,12 @@ class KillJoyAgent(BaseAgent):
             correlation=params.get("correlation", 0.5),
         )
         return {"success": True, "recommendation": rec.to_dict()}
-    
+
     def _handle_check_heat(self, params: Dict) -> Dict:
         positions = params.get("positions", [])
         heat = self.check_heat(positions)
         return {"success": True, "heat": heat.to_dict()}
-    
+
     def _handle_approve_trade(self, params: Dict) -> Dict:
         approved, reason, details = self.approve_trade(
             ticker=params.get("ticker", ""),
@@ -863,29 +863,29 @@ class KillJoyAgent(BaseAgent):
             "reason": reason,
             "trade_details": details,
         }
-    
+
     def _handle_enforce_limits(self, params: Dict) -> Dict:
         breaches = []
-        
+
         # Check all limits
         if self.current_heat.daily_var_95 > self.limits.max_daily_var_95:
             breaches.append({"limit": "daily_var_95", "value": self.current_heat.daily_var_95})
-        
+
         if self.current_heat.current_drawdown > self.limits.max_drawdown_pct:
             breaches.append({"limit": "max_drawdown", "value": self.current_heat.current_drawdown})
-        
+
         if self.current_heat.top_3_concentration > self.limits.max_top3_concentration:
             breaches.append({"limit": "top3_concentration", "value": self.current_heat.top_3_concentration})
-        
+
         self.limit_breaches.extend(breaches)
-        
+
         return {
             "success": True,
             "breaches": breaches,
             "breach_count": len(breaches),
             "action_required": len(breaches) > 0,
         }
-    
+
     def _handle_emergency_derisk(self, params: Dict) -> Dict:
         target = params.get("target_heat", 30.0)
         reductions = self.emergency_derisk(target)
@@ -894,23 +894,23 @@ class KillJoyAgent(BaseAgent):
             "reductions": reductions,
             "count": len(reductions),
         }
-    
+
     def _handle_update_positions(self, params: Dict) -> Dict:
         positions = params.get("positions", [])
         for pos in positions:
             ticker = pos.get("ticker")
             if ticker:
                 self.positions[ticker] = pos
-        
+
         # Recalculate heat
         self.check_heat()
-        
+
         return {
             "success": True,
             "positions_count": len(self.positions),
             "current_heat": self.current_heat.heat_score,
         }
-    
+
     def _handle_get_limits(self, params: Dict) -> Dict:
         return {
             "success": True,
@@ -924,7 +924,7 @@ class KillJoyAgent(BaseAgent):
                 "max_top3_concentration": self.limits.max_top3_concentration,
             }
         }
-    
+
     def _handle_status(self, params: Dict) -> Dict:
         return {
             "success": True,
@@ -938,7 +938,7 @@ class KillJoyAgent(BaseAgent):
             "regime": self.current_regime,
             "regime_multiplier": self.regime_risk_multiplier,
         }
-    
+
     def _handle_unknown(self, params: Dict) -> Dict:
         return {"success": False, "error": "Unknown action"}
 

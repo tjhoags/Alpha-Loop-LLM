@@ -26,7 +26,7 @@ WHAT THIS AGENT DOES:
     ConversionReversalAgent hunts for TRUE arbitrage opportunities in
     options markets. Unlike statistical arbitrage which has risk, these
     are mathematically locked profits that arise from temporary mispricings.
-    
+
     The key insight: In small/mid cap stocks (<$30bn), retail order flow
     can create mispricings that violate put-call parity. We exploit these
     before market makers correct them.
@@ -52,31 +52,31 @@ TRAINING & EXECUTION
 TRAINING THIS AGENT:
     # Terminal Setup (Windows PowerShell):
     cd C:\\Users\\tom\\.cursor\\worktrees\\Alpha-Loop-LLM-1\\ycr
-    
+
     # Activate virtual environment:
     .\\venv\\Scripts\\activate
-    
+
     # Train CONVERSION_REVERSAL individually:
     python -m src.training.agent_training_utils --agent CONVERSION_REVERSAL
-    
+
     # Train arbitrage pipeline:
     python -m src.training.agent_training_utils --agents CONVERSION_REVERSAL,SCOUT,EXECUTION_AGENT
-    
+
     # Cross-train with capital allocation:
     python -m src.training.agent_training_utils --cross-train "CONVERSION_REVERSAL,SCOUT:AUTHOR:capital_agent"
 
 RUNNING THE AGENT:
     from src.agents.specialized.conversion_reversal_agent import ConversionReversalAgent
-    
+
     arb_agent = ConversionReversalAgent()
-    
+
     # Scan universe for arbitrage
     result = arb_agent.process({
         "type": "scan_universe",
         "tickers": ["AAPL", "NVDA", "AMD"],
         "min_profit": 0.01
     })
-    
+
     # Process specific opportunity
     result = arb_agent.process({
         "type": "process_opportunity",
@@ -89,20 +89,19 @@ RUNNING THE AGENT:
 """
 
 import logging
-from datetime import datetime
-from typing import Dict, List, Optional, Any
-from dataclasses import dataclass, field
-from enum import Enum
 import uuid
+from dataclasses import dataclass
+from datetime import datetime
+from enum import Enum
+from functools import cached_property
+from typing import Any, Callable, Dict, List, Optional
 
-from src.core.agent_base import BaseAgent, AgentTier, ThinkingMode
+from src.core.agent_base import AgentTier, BaseAgent, ThinkingMode
 from src.ml.options_arbitrage_features import (
-    ConversionReversalOpportunity,
     calculate_put_call_parity_violation,
     detect_conversion_opportunity,
     detect_reversal_opportunity,
-    detect_box_spread_opportunity,
-    scan_for_conversion_reversals
+    detect_box_spread_opportunity
 )
 
 
@@ -247,14 +246,10 @@ class ConversionReversalAgent(BaseAgent):
         # Primary thinking mode
         self.primary_thinking_mode = ThinkingMode.STRUCTURAL
 
-    def process(self, task: Dict[str, Any]) -> Dict[str, Any]:
-        """Process a task for the Conversion/Reversal Agent."""
-        action = task.get("action", task.get("type", ""))
-        params = task.get("parameters", task)
-
-        self.log_action(action, f"Processing: {action}")
-
-        handlers = {
+    @cached_property
+    def _handlers(self) -> Dict[str, Callable[[Dict[str, Any]], Dict[str, Any]]]:
+        """Cached handler dispatch table for O(1) lookup."""
+        return {
             "scan_chain": self._handle_scan_chain,
             "analyze_strike": self._handle_analyze_strike,
             "check_parity": self._handle_check_parity,
@@ -264,7 +259,14 @@ class ConversionReversalAgent(BaseAgent):
             "get_status": self._handle_get_status,
         }
 
-        handler = handlers.get(action, self._handle_unknown)
+    def process(self, task: Dict[str, Any]) -> Dict[str, Any]:
+        """Process a task for the Conversion/Reversal Agent."""
+        action = task.get("action", task.get("type", ""))
+        params = task.get("parameters", task)
+
+        self.log_action(action, f"Processing: {action}")
+
+        handler = self._handlers.get(action, self._handle_unknown)
         return handler(params)
 
     def get_capabilities(self) -> List[str]:
@@ -328,7 +330,7 @@ class ConversionReversalAgent(BaseAgent):
             try:
                 expiry_date = datetime.strptime(str(expiry), "%Y-%m-%d")
                 dte = (expiry_date - datetime.now()).days
-            except:
+            except Exception:
                 dte = 30
 
             T = dte / 365
@@ -389,7 +391,7 @@ class ConversionReversalAgent(BaseAgent):
         try:
             expiry_date = datetime.strptime(expiry, "%Y-%m-%d")
             dte = (expiry_date - datetime.now()).days
-        except:
+        except Exception:
             dte = 30
 
         T = dte / 365
@@ -456,7 +458,7 @@ class ConversionReversalAgent(BaseAgent):
                     try:
                         expiry_date = datetime.strptime(str(expiry), "%Y-%m-%d")
                         dte = (expiry_date - datetime.now()).days
-                    except:
+                    except Exception:
                         dte = 30
 
                     T = dte / 365
@@ -609,7 +611,7 @@ class ConversionReversalAgent(BaseAgent):
         try:
             expiry_date = datetime.strptime(expiry, "%Y-%m-%d")
             dte = (expiry_date - datetime.now()).days
-        except:
+        except Exception:
             dte = 30
 
         T = dte / 365

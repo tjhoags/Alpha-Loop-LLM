@@ -45,15 +45,14 @@ class UniverseScanner:
         self.settings = get_settings()
         self.universe: List[Dict] = []
 
-    def fetch_polygon_tickers(self) -> pd.DataFrame:
-        """Fetch all US stock tickers from Polygon.
-        """
-        api_key = self.settings.polygon_api_key
+    def fetch_massive_tickers(self) -> pd.DataFrame:
+        """Fetch all US stock tickers from Massive.com (formerly Polygon.io)."""
+        api_key = self.settings.massive_api_key
         if not api_key:
-            logger.warning("No Polygon API key - using sample universe")
+            logger.warning("No Massive.com API key - using sample universe")
             return self._get_sample_universe()
 
-        url = "https://api.polygon.io/v3/reference/tickers"
+        url = "https://api.massive.com/v3/reference/tickers"
         params = {
             "market": "stocks",
             "active": "true",
@@ -77,7 +76,7 @@ class UniverseScanner:
                     next_url = f"{next_url}&apiKey={api_key}"
                 params = {}  # Clear params for pagination
 
-            logger.info(f"Fetched {len(all_tickers)} tickers from Polygon")
+            logger.info(f"Fetched {len(all_tickers)} tickers from Massive.com")
             return pd.DataFrame(all_tickers)
 
         except Exception as e:
@@ -230,7 +229,7 @@ class UniverseScanner:
     def get_trading_universe(self) -> List[str]:
         """Get the full trading universe as list of tickers.
         """
-        df = self.fetch_polygon_tickers()
+        df = self.fetch_massive_tickers()
         df = self.filter_universe(df)
 
         if "ticker" in df.columns:

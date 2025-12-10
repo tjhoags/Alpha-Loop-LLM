@@ -146,7 +146,7 @@ class ProductionAlgo:
                     try:
                         proba = model.predict_proba(features)
                         predictions.append(proba[0][1])  # Probability of class 1 (up)
-                    except:
+                    except Exception:
                         pass
 
             if not predictions:
@@ -304,7 +304,7 @@ def check_readiness() -> Dict:
                 if (metrics.get("auc", 0) >= 0.52 and
                     metrics.get("sharpe", 0) >= 1.5):
                     promoted += 1
-            except:
+            except Exception:
                 pass
 
         status["models"]["promoted"] = promoted
@@ -326,7 +326,7 @@ def check_readiness() -> Dict:
         status["data"]["rows"] = rows
         status["data"]["ready"] = rows > 10000
         conn.close()
-    except:
+    except Exception:
         pass
 
     # Check IBKR (simplified)
@@ -336,7 +336,7 @@ def check_readiness() -> Dict:
         result = sock.connect_ex(("127.0.0.1", 7497))
         status["ibkr"]["ready"] = result == 0
         sock.close()
-    except:
+    except Exception:
         pass
 
     # Overall readiness

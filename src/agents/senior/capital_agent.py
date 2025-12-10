@@ -24,8 +24,6 @@ Key Capabilities:
 """
 
 import logging
-from dataclasses import dataclass, field
-from datetime import datetime
 from typing import Any, Dict, List, Optional
 from src.core.agent_base import AgentTier, BaseAgent
 
@@ -33,10 +31,10 @@ logger = logging.getLogger(__name__)
 
 class CapitalAgent(BaseAgent):
     """CAPITAL Agent - The Treasurer
-    
+
     Manages allocation limits and risk budgets.
     """
-    
+
     def __init__(self):
         super().__init__(
             name="CAPITAL",
@@ -87,13 +85,13 @@ def get_capital() -> CapitalAgent:
 if __name__ == "__main__":
     import argparse
     import time
-    
+
     def train_interactive(agent: CapitalAgent):
         print(f"\nTraining {agent.name}...")
         print("Capital agent learns to optimize allocation for risk-adjusted returns.")
         print("1. Optimize Kelly Criterion")
         print("2. Stress Test Liquidity")
-        
+
         choice = input("Select: ")
         if choice == '1':
             print("Adjusting bet sizes based on recent win rates...")
@@ -112,13 +110,13 @@ if __name__ == "__main__":
         print("SCOUT: 'Found opportunity. Need $50k allocation.'")
         time.sleep(0.5)
         print("CAPITAL: 'Checking risk limits... Approved. $50k allocated. Max Loss set to $500.'")
-        
+
     parser = argparse.ArgumentParser(description="Run the CAPITAL Agent.")
     parser.add_argument("mode", nargs="?", default="help", choices=["train", "collaborate", "run", "help"], help="Mode to run the agent in")
     args = parser.parse_args()
 
     agent = get_capital()
-    
+
     print(f"\n--- {agent.name} AGENT ---")
     print(agent.get_natural_language_explanation())
 
@@ -131,5 +129,6 @@ if __name__ == "__main__":
         print(f"Total AUM: ${agent.total_aum:,.2f}")
     elif args.mode == "help":
         parser.print_help()
+
 
 

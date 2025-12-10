@@ -27,9 +27,12 @@ import uuid
 from dataclasses import dataclass
 from datetime import datetime
 from enum import Enum
-from typing import Any, Dict, List, Optional
+from typing import TYPE_CHECKING, Any, Dict, List, Optional
 
 from src.core.agent_base import AgentTier, BaseAgent, ThinkingMode
+
+if TYPE_CHECKING:
+    import pandas as pd
 from src.ml.small_mid_cap_models import MeanReversionModel, RetailArbitrageModel
 
 logger = logging.getLogger(__name__)

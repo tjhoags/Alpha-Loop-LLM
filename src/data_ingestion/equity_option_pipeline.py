@@ -7,7 +7,7 @@ Central pipeline for ingesting equity and options data from multiple sources.
 
 DATA SOURCES:
 - Alpha Vantage (Premium): Real-time quotes, fundamentals
-- Polygon: Historical bars, options data
+- Massive.com (formerly Polygon.io): Historical bars, options data
 - Yahoo Finance: Backup/free tier
 - Coinbase: Crypto data
 
@@ -78,7 +78,7 @@ class EquityOptionPipeline:
         # Rate limiting (requests per minute)
         self.rate_limits = {
             "alpha_vantage": 5,
-            "polygon": 100,
+            "massive": 100,
             "yahoo": 30,
         }
 
@@ -100,7 +100,7 @@ class EquityOptionPipeline:
             start_date: Start of date range
             end_date: End of date range
             interval: Bar interval ("1d", "1h", "5m", etc.)
-            source: Data source ("alpha_vantage", "polygon", "yahoo", "auto")
+            source: Data source ("alpha_vantage", "massive", "yahoo", "auto")
 
         Returns:
         -------
@@ -215,7 +215,7 @@ class EquityOptionPipeline:
         """
         return {
             "alpha_vantage": {"status": "unknown", "latency_ms": 0},
-            "polygon": {"status": "unknown", "latency_ms": 0},
+            "massive": {"status": "unknown", "latency_ms": 0},
             "yahoo": {"status": "unknown", "latency_ms": 0},
         }
 

@@ -72,7 +72,7 @@ class CrossTrainingConfig:
     communication_mode: str = "articulate"  # articulate, observe, synthesize
     training_rounds: int = 10
     verbose: bool = False
-    
+
     def to_dict(self) -> Dict:
         return {
             "source_agents": self.source_agents,
@@ -96,7 +96,7 @@ class CrossTrainingResult:
     communication_log: List[Dict[str, Any]]
     timestamp: datetime = field(default_factory=datetime.now)
     errors: List[str] = field(default_factory=list)
-    
+
     def to_dict(self) -> Dict:
         return {
             "success": self.success,
@@ -114,12 +114,12 @@ class CrossTrainingResult:
 class CrossAgentTrainer:
     """
     Cross-Agent Training System
-    
+
     Enables sophisticated multi-agent collaborative training where:
     - Source agents analyze data/situations via external scripts
     - Source agents articulate insights to target agents
     - Target agents learn from synthesized multi-agent intelligence
-    
+
     ┌──────────────────────────────────────────────────────────────────────────┐
     │                       CROSS-AGENT TRAINING FLOW                          │
     ├──────────────────────────────────────────────────────────────────────────┤
@@ -138,13 +138,13 @@ class CrossAgentTrainer:
     │   4. Target learns and improves                                           │
     │                                                                           │
     └──────────────────────────────────────────────────────────────────────────┘
-    
+
     COMMUNICATION MODES:
     - "articulate": Source agents verbally describe what they see
     - "observe": Source agents pass raw observations
     - "synthesize": Source agents work together before passing to target
     """
-    
+
     # Script-to-Agent mappings - which scripts provide what capabilities
     SCRIPT_CAPABILITIES = {
         "capital_agent": {
@@ -178,7 +178,7 @@ class CrossAgentTrainer:
             "description": "Trade execution quality data"
         },
     }
-    
+
     # Agent synergies - which agents work well together
     AGENT_SYNERGIES = {
         ("GHOST", "SCOUT"): {
@@ -206,19 +206,19 @@ class CrossAgentTrainer:
             "combined_insight": "Performance-weighted agent capabilities"
         },
     }
-    
+
     def __init__(self, verbose: bool = False):
         """Initialize cross-agent trainer."""
         self.verbose = verbose
         self.training_history: List[CrossTrainingResult] = []
         self.loaded_agents: Dict[str, Any] = {}
         self.communication_bus: List[Dict[str, Any]] = []
-        
+
     def load_agent(self, agent_name: str) -> Optional[Any]:
         """Load an agent by name."""
         if agent_name in self.loaded_agents:
             return self.loaded_agents[agent_name]
-        
+
         try:
             from src.agents.training.train_agent import AgentTrainer
             trainer = AgentTrainer()
@@ -229,19 +229,19 @@ class CrossAgentTrainer:
         except Exception as e:
             logger.error(f"Failed to load agent {agent_name}: {e}")
             return None
-    
+
     def get_script_data(self, script_name: str) -> Dict[str, Any]:
         """
         Execute a script and get its data/insights.
-        
+
         Args:
             script_name: Name of script to execute (e.g., "capital_agent")
-            
+
         Returns:
             Dictionary with script output
         """
         script_info = self.SCRIPT_CAPABILITIES.get(script_name, {})
-        
+
         # Try to load the actual agent/script
         try:
             agent = self.load_agent(script_name.replace("_agent", "Agent").replace("_", ""))
@@ -255,7 +255,7 @@ class CrossAgentTrainer:
                 }
         except Exception as e:
             logger.warning(f"Could not load script {script_name}: {e}")
-        
+
         # Return capability info if agent not available
         return {
             "source": script_name,
@@ -264,7 +264,7 @@ class CrossAgentTrainer:
             "best_for": script_info.get("best_for", []),
             "timestamp": datetime.now().isoformat()
         }
-    
+
     def source_observe(
         self,
         source_agent_name: str,
@@ -273,25 +273,25 @@ class CrossAgentTrainer:
     ) -> Dict[str, Any]:
         """
         Have a source agent observe via a script.
-        
+
         Args:
             source_agent_name: Agent doing the observing
             via_script: Script to observe through
             context: Additional context
-            
+
         Returns:
             Observation result
         """
         logger.info(f"{source_agent_name} observing via {via_script}...")
-        
+
         # Load source agent
         source_agent = self.load_agent(source_agent_name)
         if not source_agent:
             return {"error": f"Could not load {source_agent_name}"}
-        
+
         # Get script data
         script_data = self.get_script_data(via_script)
-        
+
         # Have agent process the observation
         observation = {
             "observer": source_agent_name,
@@ -300,7 +300,7 @@ class CrossAgentTrainer:
             "timestamp": datetime.now().isoformat(),
             "insights": []
         }
-        
+
         # Generate insights based on agent capabilities
         if hasattr(source_agent, 'process'):
             try:
@@ -312,9 +312,9 @@ class CrossAgentTrainer:
                 observation["insights"].append(result)
             except Exception as e:
                 observation["insights"].append({"simulated": True, "note": f"Agent analysis: {e}"})
-        
+
         return observation
-    
+
     def articulate_to_target(
         self,
         source_observations: List[Dict[str, Any]],
@@ -323,28 +323,28 @@ class CrossAgentTrainer:
     ) -> Dict[str, Any]:
         """
         Have source agents articulate their observations to target.
-        
+
         Args:
             source_observations: List of observations from source agents
             target_agent_name: Agent receiving the articulations
             mode: Communication mode (articulate, observe, synthesize)
-            
+
         Returns:
             Articulation result
         """
         logger.info(f"Articulating {len(source_observations)} observations to {target_agent_name}...")
-        
+
         target_agent = self.load_agent(target_agent_name)
         if not target_agent:
             return {"error": f"Could not load {target_agent_name}"}
-        
+
         # Prepare articulation based on mode
         if mode == "synthesize":
             # Combine all observations into one synthesized message
             combined_insights = []
             for obs in source_observations:
                 combined_insights.extend(obs.get("insights", []))
-            
+
             articulation = {
                 "mode": "synthesized",
                 "from_agents": [obs.get("observer") for obs in source_observations],
@@ -358,14 +358,14 @@ class CrossAgentTrainer:
                 "individual_observations": source_observations,
                 "timestamp": datetime.now().isoformat()
             }
-        
+
         # Send to target agent
         communication = {
             "to": target_agent_name,
             "articulation": articulation,
             "received_at": datetime.now().isoformat()
         }
-        
+
         # Have target process the communication
         if hasattr(target_agent, 'process'):
             try:
@@ -377,36 +377,36 @@ class CrossAgentTrainer:
                 communication["target_response"] = result
             except Exception as e:
                 communication["target_response"] = {"processed": True, "note": str(e)}
-        
+
         # Log to communication bus
         self.communication_bus.append(communication)
-        
+
         return communication
-    
+
     def cross_train(
         self,
         config: CrossTrainingConfig
     ) -> CrossTrainingResult:
         """
         Execute cross-agent training.
-        
+
         Args:
             config: CrossTrainingConfig object
-            
+
         Returns:
             CrossTrainingResult
         """
         logger.info("="*60)
-        logger.info(f"CROSS-AGENT TRAINING")
+        logger.info("CROSS-AGENT TRAINING")
         logger.info(f"Sources: {', '.join(config.source_agents)}")
         logger.info(f"Target: {config.target_agent}")
         logger.info(f"Via: {config.via_script or config.via_agent or 'direct'}")
         logger.info("="*60)
-        
+
         errors = []
         communication_log = []
         insights_transferred = 0
-        
+
         # Check for synergies
         for i, agent1 in enumerate(config.source_agents):
             for agent2 in config.source_agents[i+1:]:
@@ -415,18 +415,18 @@ class CrossAgentTrainer:
                 synergy = self.AGENT_SYNERGIES.get(key) or self.AGENT_SYNERGIES.get(reverse_key)
                 if synergy:
                     logger.info(f"Synergy detected: {synergy['synergy']}")
-        
+
         try:
             for round_num in range(config.training_rounds):
                 logger.info(f"\n--- Round {round_num + 1}/{config.training_rounds} ---")
-                
+
                 # Step 1: Source agents observe via script
                 observations = []
                 for source_agent in config.source_agents:
                     via = config.via_script or config.via_agent or "data_agent"
                     obs = self.source_observe(source_agent, via)
                     observations.append(obs)
-                    
+
                     log_entry = {
                         "round": round_num + 1,
                         "step": "observe",
@@ -435,30 +435,30 @@ class CrossAgentTrainer:
                         "timestamp": datetime.now().isoformat()
                     }
                     communication_log.append(log_entry)
-                
+
                 # Step 2: Articulate to target
                 articulation = self.articulate_to_target(
                     observations,
                     config.target_agent,
                     config.communication_mode
                 )
-                
+
                 communication_log.append({
                     "round": round_num + 1,
                     "step": "articulate",
                     "to": config.target_agent,
                     "timestamp": datetime.now().isoformat()
                 })
-                
+
                 insights_transferred += len(observations)
-                
+
         except Exception as e:
             errors.append(str(e))
             logger.error(f"Cross-training error: {e}")
-        
+
         # Calculate improvement (simplified metric)
         target_improvement = 0.05 * config.training_rounds  # 5% per round
-        
+
         result = CrossTrainingResult(
             success=len(errors) == 0,
             source_agents=config.source_agents,
@@ -469,15 +469,15 @@ class CrossAgentTrainer:
             communication_log=communication_log,
             errors=errors
         )
-        
+
         self.training_history.append(result)
-        
+
         logger.info("="*60)
-        logger.info(f"CROSS-TRAINING COMPLETE")
+        logger.info("CROSS-TRAINING COMPLETE")
         logger.info(f"Insights Transferred: {insights_transferred}")
         logger.info(f"Target Improvement: {target_improvement:.1%}")
         logger.info("="*60)
-        
+
         return result
 
 
@@ -495,7 +495,7 @@ def cross_train_agents(
 ) -> Dict[str, Any]:
     """
     Convenience function for cross-agent training.
-    
+
     Args:
         source_agents: List of source agent names
         target_agent: Target agent name
@@ -503,7 +503,7 @@ def cross_train_agents(
         communication_mode: How sources communicate (articulate, observe, synthesize)
         training_rounds: Number of training rounds
         verbose: Enable verbose logging
-        
+
     Returns:
         Dictionary with training results
     """
@@ -515,10 +515,10 @@ def cross_train_agents(
         training_rounds=training_rounds,
         verbose=verbose
     )
-    
+
     trainer = CrossAgentTrainer(verbose=verbose)
     result = trainer.cross_train(config)
-    
+
     return result.to_dict()
 
 
@@ -536,48 +536,48 @@ Examples:
   # GHOST and SCOUT inform AUTHOR using capital_agent
   python -m src.agents.training.cross_agent_trainer \\
       --sources GHOST,SCOUT --target AUTHOR --via capital_agent
-  
+
   # HUNTER and BOOKMAKER inform GHOST using risk_agent
   python -m src.agents.training.cross_agent_trainer \\
       --sources HUNTER,BOOKMAKER --target GHOST --via risk_agent
-  
+
   # Use synthesize mode for combined insights
   python -m src.agents.training.cross_agent_trainer \\
       --sources GHOST,SCOUT,HUNTER --target AUTHOR \\
       --via data_agent --mode synthesize --rounds 20
-  
+
   # List available scripts
   python -m src.agents.training.cross_agent_trainer --list-scripts
-  
+
   # Show agent synergies
   python -m src.agents.training.cross_agent_trainer --show-synergies
         """
     )
-    
+
     parser.add_argument("--sources", "-s", type=str, required=False,
                        help="Source agents (comma-separated)")
     parser.add_argument("--target", "-t", type=str, required=False,
                        help="Target agent")
     parser.add_argument("--via", "-v", type=str, default="data_agent",
                        help="Script to use for observation")
-    parser.add_argument("--mode", "-m", type=str, 
+    parser.add_argument("--mode", "-m", type=str,
                        choices=["articulate", "observe", "synthesize"],
                        default="articulate", help="Communication mode")
     parser.add_argument("--rounds", "-r", type=int, default=10,
                        help="Number of training rounds")
     parser.add_argument("--verbose", action="store_true",
                        help="Verbose output")
-    
+
     # Info commands
     parser.add_argument("--list-scripts", action="store_true",
                        help="List available scripts")
     parser.add_argument("--show-synergies", action="store_true",
                        help="Show agent synergies")
-    
+
     args = parser.parse_args()
-    
+
     trainer = CrossAgentTrainer(verbose=args.verbose)
-    
+
     # Handle list scripts
     if args.list_scripts:
         print("\n" + "="*60)
@@ -589,7 +589,7 @@ Examples:
             print(f"  Best for: {', '.join(info['best_for'])}")
             print(f"  Description: {info['description']}")
         return
-    
+
     # Handle show synergies
     if args.show_synergies:
         print("\n" + "="*60)
@@ -600,12 +600,12 @@ Examples:
             print(f"  Synergy: {synergy['synergy']}")
             print(f"  Combined Insight: {synergy['combined_insight']}")
         return
-    
+
     # Validate required args for training
     if not args.sources or not args.target:
         parser.print_help()
         return
-    
+
     # Run cross-training
     source_list = [a.strip() for a in args.sources.split(",")]
     result = cross_train_agents(
@@ -616,7 +616,7 @@ Examples:
         training_rounds=args.rounds,
         verbose=args.verbose
     )
-    
+
     print("\n" + "="*60)
     print("CROSS-TRAINING RESULTS")
     print("="*60)

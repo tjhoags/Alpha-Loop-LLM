@@ -31,19 +31,19 @@ from src.config.settings import get_settings
 from src.database.connection import get_engine
 
 # Configuration
-POLYGON_BASE_URL = "https://api.polygon.io"
+MASSIVE_BASE_URL = "https://api.massive.com"  # Rebranded from Polygon.io
 BATCH_SIZE = 100  # Tickers per batch
 MAX_WORKERS = 8   # Parallel API calls
 RATE_LIMIT_DELAY = 0.25  # Seconds between calls
 
 
 class FullUniverseHydrator:
-    """Hydrates the full market universe from Polygon.
+    """Hydrates the full market universe from Massive.com (rebranded from Polygon.io).
     """
 
     def __init__(self):
         self.settings = get_settings()
-        self.api_key = self.settings.polygon_api_key
+        self.api_key = self.settings.polygon_api_key  # Still uses polygon_api_key env var for backward compatibility
         self.engine = get_engine()
 
         self.stats = {
@@ -72,7 +72,7 @@ class FullUniverseHydrator:
         Types: CS (common stock), ETF, ADRC, etc.
         """
         all_tickers = []
-        url = f"{POLYGON_BASE_URL}/v3/reference/tickers"
+        url = f"{MASSIVE_BASE_URL}/v3/reference/tickers"
 
         params = {
             "market": market,
@@ -156,7 +156,7 @@ class FullUniverseHydrator:
     def get_options_contracts(self, underlying: str) -> List[Dict]:
         """Get all options contracts for an underlying.
         """
-        url = f"{POLYGON_BASE_URL}/v3/reference/options/contracts"
+        url = f"{MASSIVE_BASE_URL}/v3/reference/options/contracts"
         params = {
             "underlying_ticker": underlying,
             "limit": 1000,
@@ -225,7 +225,7 @@ class FullUniverseHydrator:
         if to_date is None:
             to_date = datetime.now().strftime("%Y-%m-%d")
 
-        url = f"{POLYGON_BASE_URL}/v2/aggs/ticker/{ticker}/range/{multiplier}/{timespan}/{from_date}/{to_date}"
+        url = f"{MASSIVE_BASE_URL}/v2/aggs/ticker/{ticker}/range/{multiplier}/{timespan}/{from_date}/{to_date}"
         params = {
             "adjusted": "true",
             "sort": "asc",

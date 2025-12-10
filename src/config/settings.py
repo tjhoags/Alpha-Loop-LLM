@@ -40,13 +40,14 @@ class Settings(BaseSettings):
     # DATA APIS - Using os.getenv since dotenv is loaded above
     # ==========================================================================
     alpha_vantage_api_key: str = Field(default_factory=lambda: os.getenv("ALPHAVANTAGE_API_KEY", ""))
-    polygon_api_key: str = Field(default_factory=lambda: os.getenv("PolygonIO_API_KEY", ""))
+    # Massive.com (rebranded from Polygon.io) - API key for REST and WebSocket
+    massive_api_key: str = Field(default_factory=lambda: os.getenv("PolygonIO_API_KEY", ""))
     massive_access_key: str = Field(default_factory=lambda: os.getenv("MASSIVE_ACCESS_KEY", ""))
     massive_secret_key: str = Field(default_factory=lambda: os.getenv("MASSIVE_SECRET_KEY", ""))
-    massive_endpoint_url: str = Field(default_factory=lambda: os.getenv("MASSIVE_ENDPOINT_URL", "https://files.polygon.io"))
+    massive_endpoint_url: str = Field(default_factory=lambda: os.getenv("MASSIVE_ENDPOINT_URL", "https://files.massive.com"))
     coinbase_api_key: str = Field(default_factory=lambda: os.getenv("COINBASE_API_KEY", ""))
     coinbase_api_secret: str = Field(default_factory=lambda: os.getenv("COINBASE_API_SECRET", ""))
-    fred_api_key: str = Field(default_factory=lambda: os.getenv("FRED_API_KEY", ""))
+    fred_api_key: str = Field(default_factory=lambda: os.getenv("FRED_DATA_API", os.getenv("FRED_API_KEY", "")))
 
     # ==========================================================================
     # AI SERVICES
@@ -73,14 +74,14 @@ class Settings(BaseSettings):
     # ==========================================================================
     # DATA / ML CONFIG
     # ==========================================================================
-    # FULL UNIVERSE MODE - No hardcoded tickers, pulls ALL from Polygon/Massive
+    # FULL UNIVERSE MODE - No hardcoded tickers, pulls ALL from Massive.com
     # NO FILTERS - Get everything
     target_symbols: List[str] = Field(default_factory=list)  # Empty = use full universe
     use_full_universe: bool = Field(default=True)  # Pull ALL tickers
     train_test_split: float = Field(default=0.8)
     lookback_window: int = Field(default=60)
     time_granularity_minutes: int = Field(default=5)
-    polygon_lookback_hours: int = Field(default=240)
+    massive_lookback_hours: int = Field(default=240)
     coinbase_lookback_hours: int = Field(default=240)
     alpha_vantage_outputsize: str = Field(default="full")
 
@@ -127,6 +128,16 @@ class Settings(BaseSettings):
 
     # Use SQLite for local development (fast, no setup)
     use_sqlite: bool = Field(default=False)  # Using Azure SQL now!
+
+    @property
+    def polygon_api_key(self) -> str:
+        """Backward compatibility alias for massive_api_key."""
+        return self.massive_api_key
+
+    @property
+    def polygon_lookback_hours(self) -> int:
+        """Backward compatibility alias for massive_lookback_hours."""
+        return self.massive_lookback_hours
 
     @property
     def sqlalchemy_url(self) -> str:

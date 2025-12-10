@@ -4,7 +4,7 @@ from loguru import logger
 
 from src.config.settings_new import get_settings
 
-# Assuming we have a way to get VIX, e.g. from our FredClient or Polygon
+# Get VIX data from FRED
 from src.data_ingestion.sources.fred import FredClient
 
 

@@ -25,11 +25,11 @@ WHAT STRINGS DOES:
     signals, but not all signals are equal. STRINGS continuously optimizes
     how much weight to give each agent's signals based on their recent
     performance.
-    
+
     An agent that's been crushing it gets more weight. An agent that's
     been struggling gets less weight. This ensemble approach outperforms
     any single agent.
-    
+
     The name comes from "pulling the strings" - adjusting the invisible
     threads that control how signals combine.
 
@@ -37,45 +37,45 @@ KEY FUNCTIONS:
     1. optimize_weights() - Runs weight optimization using methods like
        Bayesian optimization, genetic algorithms, or grid search.
        Finds the optimal mix of agent weights.
-       
+
     2. evaluate_agent_performance() - Tracks each agent's accuracy,
        Sharpe ratio, win rate, and other metrics over time.
-       
+
     3. calculate_optimal_ensemble() - Given a set of agents, calculates
        the optimal weight combination to maximize risk-adjusted returns.
-       
+
     4. update_agent_weight() - Adjusts a specific agent's weight based
        on performance or manual override.
 
 RELATIONSHIPS WITH OTHER AGENTS:
     - HOAGS: Reports weight changes to HOAGS. Major reweightings require
       HOAGS approval to prevent unstable oscillations.
-      
+
     - ALL AGENTS: STRINGS monitors every agent that produces signals.
       It's the central hub for signal aggregation.
-      
+
     - BOOKMAKER: BOOKMAKER generates alpha, STRINGS determines how
       much of that alpha to include in the ensemble.
-      
+
     - KILLJOY: Weight changes must respect KILLJOY's risk limits.
       Can't weight an agent 100% even if it's performing well.
 
 PATHS OF GROWTH/TRANSFORMATION:
     1. REAL-TIME REWEIGHTING: Move from periodic optimization to
        continuous, real-time weight adjustment.
-       
+
     2. REGIME-CONDITIONAL WEIGHTS: Different weights for different
        market regimes (risk-on vs risk-off).
-       
+
     3. META-LEARNING: Learn which optimization methods work best
        in which conditions. Optimize the optimizer.
-       
+
     4. ATTRIBUTION ANALYSIS: Detailed breakdown of which agents
        contributed to P&L over any time period.
-       
+
     5. CORRELATION-AWARE: Consider correlations between agents
        when setting weights, not just individual performance.
-       
+
     6. DYNAMIC ENSEMBLE SIZE: Automatically add/remove agents
        from the ensemble based on performance.
 
@@ -86,37 +86,37 @@ TRAINING & EXECUTION
 TRAINING THIS AGENT:
     # Terminal Setup (Windows PowerShell):
     cd C:\\Users\\tom\\.cursor\\worktrees\\Alpha-Loop-LLM-1\\ycr
-    
+
     # Activate virtual environment:
     .\\venv\\Scripts\\activate
-    
+
     # Train STRINGS individually:
     python -m src.training.agent_training_utils --agent STRINGS
-    
+
     # Train with ML-related agents:
     python -m src.training.agent_training_utils --agents STRINGS,BOOKMAKER,SCOUT
-    
+
     # Cross-train: STRINGS and BOOKMAKER analyze, AUTHOR documents:
     python -m src.training.agent_training_utils --cross-train "STRINGS,BOOKMAKER:AUTHOR:agent_trainer"
 
 RUNNING THE AGENT:
     from src.agents.senior.strings_agent import get_strings
-    
+
     strings = get_strings()
-    
+
     # Optimize weights for a set of agents
     result = strings.process({
         "action": "optimize",
         "agents": ["BOOKMAKER", "SCOUT", "HUNTER"],
         "method": "bayesian"
     })
-    
+
     # Evaluate agent performance
     result = strings.process({
         "action": "evaluate_agent",
         "agent_id": "BOOKMAKER"
     })
-    
+
     # Get current weights
     result = strings.process({"action": "get_weights"})
 
@@ -153,7 +153,7 @@ class AgentWeights:
     decay_factor: float
     historical_accuracy: float
     last_updated: datetime = field(default_factory=datetime.now)
-    
+
     def to_dict(self) -> Dict:
         return {
             "agent_id": self.agent_id,
@@ -178,7 +178,7 @@ class OptimizationResult:
     improvement_pct: float
     validation_sharpe: float
     notes: str
-    
+
     def to_dict(self) -> Dict:
         return {
             "optimization_id": self.optimization_id,
@@ -194,11 +194,11 @@ class OptimizationResult:
 class StringsAgent(BaseAgent):
     """
     STRINGS Agent - The Weight Optimization Maestro
-    
+
     STRINGS continuously optimizes agent weights to maximize ensemble performance.
     It monitors each agent's accuracy, adjusts signal weights, and finds the
     optimal combination of skillsets.
-    
+
     Key Methods:
     - optimize_weights(): Run weight optimization
     - evaluate_agent_performance(): Track individual agent accuracy
@@ -206,7 +206,7 @@ class StringsAgent(BaseAgent):
     - update_agent_weight(): Adjust specific agent's weight
     - run_backtest_validation(): Validate new weights
     """
-    
+
     def __init__(self):
         super().__init__(
             name="STRINGS",
@@ -219,24 +219,24 @@ class StringsAgent(BaseAgent):
             ],
             user_id="TJH"
         )
-        
+
         self.agent_weights: Dict[str, AgentWeights] = {}
         self.optimization_history: List[OptimizationResult] = []
         self.default_weight = 1.0
         self.min_weight = 0.1
         self.max_weight = 3.0
-    
+
     def process(self, task: Dict[str, Any]) -> Dict[str, Any]:
         """Process a STRINGS task"""
         action = task.get("action", task.get("type", ""))
         params = task.get("parameters", task)
-        
+
         self.log_action(action, f"STRINGS processing: {action}")
-        
+
         gap = self.detect_capability_gap(task)
         if gap:
             self.logger.warning(f"Capability gap: {gap.missing_capabilities}")
-        
+
         handlers = {
             "optimize": self._handle_optimize,
             "evaluate_agent": self._handle_evaluate,
@@ -246,13 +246,13 @@ class StringsAgent(BaseAgent):
             "validate": self._handle_validate,
             "get_history": self._handle_get_history,
         }
-        
+
         handler = handlers.get(action, self._handle_unknown)
         return handler(params)
-    
+
     def get_capabilities(self) -> List[str]:
         return self.capabilities
-    
+
     def optimize_weights(
         self,
         agents: List[str] = None,
@@ -262,18 +262,18 @@ class StringsAgent(BaseAgent):
         """Run weight optimization for specified agents"""
         import hashlib
         import random
-        
+
         agents = agents or list(self.agent_weights.keys())
-        
+
         old_weights = {a: self.agent_weights.get(a, AgentWeights(a, 1.0, 1.0, 1.0, 0.95, 0.5)).base_weight for a in agents}
-        
+
         # Optimize (placeholder - would use actual optimization)
         new_weights = {}
         for agent in agents:
             current = old_weights.get(agent, 1.0)
             # Simulate optimization finding better weights
             new_weights[agent] = max(self.min_weight, min(self.max_weight, current * random.uniform(0.9, 1.1)))
-        
+
         # Update stored weights
         for agent, weight in new_weights.items():
             if agent not in self.agent_weights:
@@ -281,7 +281,7 @@ class StringsAgent(BaseAgent):
             else:
                 self.agent_weights[agent].base_weight = weight
                 self.agent_weights[agent].last_updated = datetime.now()
-        
+
         result = OptimizationResult(
             optimization_id=f"opt_{hashlib.sha256(str(datetime.now()).encode()).hexdigest()[:8]}",
             method=method,
@@ -293,16 +293,16 @@ class StringsAgent(BaseAgent):
             validation_sharpe=random.uniform(1.0, 2.5),
             notes=f"Optimized {len(agents)} agents using {method.value}"
         )
-        
+
         self.optimization_history.append(result)
         self.logger.info(f"STRINGS: Optimization complete - {result.improvement_pct:.1f}% improvement")
-        
+
         return result
-    
+
     def evaluate_agent_performance(self, agent_id: str, lookback_days: int = 30) -> Dict:
         """Evaluate an agent's recent performance"""
         import random
-        
+
         return {
             "agent_id": agent_id,
             "lookback_days": lookback_days,
@@ -313,43 +313,43 @@ class StringsAgent(BaseAgent):
             "signals_generated": random.randint(10, 100),
             "recommended_weight_adjustment": random.uniform(-0.2, 0.2)
         }
-    
+
     def update_agent_weight(self, agent_id: str, new_weight: float, reason: str = "") -> bool:
         """Update a specific agent's weight"""
         new_weight = max(self.min_weight, min(self.max_weight, new_weight))
-        
+
         if agent_id not in self.agent_weights:
             self.agent_weights[agent_id] = AgentWeights(agent_id, new_weight, new_weight, 1.0, 0.95, 0.5)
         else:
             self.agent_weights[agent_id].base_weight = new_weight
             self.agent_weights[agent_id].last_updated = datetime.now()
-        
+
         self.logger.info(f"STRINGS: Updated {agent_id} weight to {new_weight:.2f} - {reason}")
         return True
-    
+
     def calculate_optimal_ensemble(self, agents: List[str]) -> Dict[str, float]:
         """Calculate optimal weight combination for ensemble"""
         import random
-        
+
         total = sum(random.uniform(0.5, 2.0) for _ in agents)
         weights = {a: random.uniform(0.5, 2.0) / total for a in agents}
         return weights
-    
+
     def log_action(self, action: str, description: str):
         self.logger.info(f"[STRINGS] {action}: {description}")
-    
+
     # Task handlers
     def _handle_optimize(self, params: Dict) -> Dict:
         agents = params.get("agents")
         method = OptimizationMethod(params.get("method", "bayesian"))
         result = self.optimize_weights(agents, method)
         return {"status": "success", "result": result.to_dict()}
-    
+
     def _handle_evaluate(self, params: Dict) -> Dict:
         agent_id = params.get("agent_id", "")
         perf = self.evaluate_agent_performance(agent_id)
         return {"status": "success", "performance": perf}
-    
+
     def _handle_update_weight(self, params: Dict) -> Dict:
         success = self.update_agent_weight(
             params.get("agent_id", ""),
@@ -357,18 +357,18 @@ class StringsAgent(BaseAgent):
             params.get("reason", "")
         )
         return {"status": "success" if success else "error"}
-    
+
     def _handle_get_weights(self, params: Dict) -> Dict:
         return {
             "status": "success",
             "weights": {k: v.to_dict() for k, v in self.agent_weights.items()}
         }
-    
+
     def _handle_calculate_ensemble(self, params: Dict) -> Dict:
         agents = params.get("agents", [])
         weights = self.calculate_optimal_ensemble(agents)
         return {"status": "success", "optimal_weights": weights}
-    
+
     def _handle_validate(self, params: Dict) -> Dict:
         import random
         return {
@@ -376,13 +376,13 @@ class StringsAgent(BaseAgent):
             "validation_sharpe": random.uniform(1.0, 2.5),
             "validation_accuracy": random.uniform(0.5, 0.7)
         }
-    
+
     def _handle_get_history(self, params: Dict) -> Dict:
         return {
             "status": "success",
             "optimizations": [r.to_dict() for r in self.optimization_history[-10:]]
         }
-    
+
     def _handle_unknown(self, params: Dict) -> Dict:
         return {"status": "error", "message": "Unknown action"}
 

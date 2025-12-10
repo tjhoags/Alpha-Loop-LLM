@@ -30,7 +30,8 @@ class Settings(BaseSettings):
     # DATA APIS
     # ==========================================================================
     alpha_vantage_api_key: str = Field(default="", env="ALPHA_VANTAGE_API_KEY")
-    polygon_api_key: str = Field(default="", env="POLYGON_API_KEY")
+    # Massive.com (rebranded from Polygon.io)
+    massive_api_key: str = Field(default="", env="PolygonIO_API_KEY")
     massive_access_key: str = Field("", env="MASSIVE_ACCESS_KEY")
     massive_secret_key: str = Field("", env="MASSIVE_SECRET_KEY")
     massive_endpoint_url: str = Field("https://files.massive.com", env="MASSIVE_ENDPOINT_URL")
@@ -74,7 +75,7 @@ class Settings(BaseSettings):
     train_test_split: float = Field(default=0.8)
     lookback_window: int = Field(default=60)
     time_granularity_minutes: int = Field(default=5)
-    polygon_lookback_hours: int = Field(default=240)
+    massive_lookback_hours: int = Field(default=240)
     coinbase_lookback_hours: int = Field(default=240)
     alpha_vantage_outputsize: str = Field(default="full")
 

@@ -13,7 +13,7 @@ Reference style sources:
 
 Outputs:
 - Notion docs
-- Word docs  
+- Word docs
 - Training report summaries
 - Substack drafts (personal and ALC)
 - Twitter/X posts
@@ -37,7 +37,7 @@ WHAT THE_AUTHOR DOES:
     THE_AUTHOR is the voice of Alpha Loop Capital. It takes data, analysis,
     and insights from other agents and transforms them into compelling,
     human-readable content that matches Tom Hogan's distinctive writing style.
-    
+
     Think of THE_AUTHOR as the "communications director" of the agent ecosystem.
     While other agents crunch numbers and detect patterns, THE_AUTHOR makes
     those findings accessible and actionable.
@@ -45,32 +45,32 @@ WHAT THE_AUTHOR DOES:
 KEY FUNCTIONS:
     1. write() - Core writing function. Takes any topic/data and produces
        content in Tom's style. Can output tweets, articles, or reports.
-       
+
     2. summarize_training() - Creates human-readable summaries of training
        runs so Tom can quickly understand what the agents learned.
-       
+
     3. draft_substack() - Writes full Substack articles for either
        Tom's personal blog or the ALC Research publication.
-       
+
     4. compose_tweet() - Creates tweets/threads that match @hoags18's style.
        Direct, punchy, data-backed, with dry humor.
-       
+
     5. document_agent_updates() - Tracks and reports on improvements made
        to other agents, creating an audit trail of system evolution.
 
 RELATIONSHIPS WITH OTHER AGENTS:
     - HOAGS: THE_AUTHOR reports to HOAGS. All major publications require
       HOAGS approval. HOAGS can override tone/content decisions.
-      
+
     - SKILLS: Works closely with SKILLS to document skill assessments.
       SKILLS provides the data, THE_AUTHOR makes it readable.
-      
+
     - ORCHESTRATOR: Receives improvement proposals from ORCHESTRATOR
       and documents them in human-friendly format.
-      
+
     - GHOST: When GHOST detects important absences (what's NOT happening),
       THE_AUTHOR can write market commentary about these insights.
-      
+
     - ALL AGENTS: Any agent can request THE_AUTHOR to document their
       findings. THE_AUTHOR is the ecosystem's "scribe."
 
@@ -78,19 +78,19 @@ PATHS OF GROWTH/TRANSFORMATION:
     1. MULTI-VOICE CAPABILITY: Currently mimics only Tom's style. Could
        evolve to write in different voices (institutional, retail-friendly,
        technical, educational) while maintaining quality.
-       
+
     2. REAL-TIME COMMENTARY: Could evolve to provide live market commentary
        during trading hours, translating agent signals into prose.
-       
+
     3. VIDEO SCRIPT WRITING: Extend capabilities to write scripts for
        video content, maintaining Tom's style in spoken format.
-       
+
     4. AUTOMATED PUBLISHING: Could gain ability to auto-publish to
        platforms (with approval gates) rather than just drafting.
-       
+
     5. SENTIMENT FEEDBACK LOOP: Learn from engagement metrics (likes,
        retweets, comments) to refine what content resonates.
-       
+
     6. MULTI-LANGUAGE: Translate content while maintaining style nuances.
 
 ================================================================================
@@ -100,31 +100,31 @@ TRAINING & EXECUTION
 TRAINING THIS AGENT:
     # Terminal Setup (Windows PowerShell):
     cd C:\\Users\\tom\\.cursor\\worktrees\\Alpha-Loop-LLM-1\\ycr
-    
+
     # Activate virtual environment (if using):
     .\\venv\\Scripts\\activate
-    
+
     # Train THE_AUTHOR individually:
     python -m src.training.agent_training_utils --agent AUTHOR
-    
+
     # Train with related agents:
     python -m src.training.agent_training_utils --agents AUTHOR,SKILLS,ORCHESTRATOR
-    
+
     # Cross-train with other scripts:
     python -m src.training.agent_training_utils --cross-train "GHOST,SCOUT:AUTHOR:capital_agent"
     # (GHOST and SCOUT analyze, AUTHOR articulates findings)
 
 RUNNING THE AGENT:
     from src.agents.senior.author_agent import get_author
-    
+
     author = get_author()
-    
+
     # Write a training summary
     result = author.process({
         "action": "summarize_training",
         "training_data": {"sharpe": 2.1, "win_rate": 0.62}
     })
-    
+
     # Compose a tweet
     result = author.process({
         "action": "compose_tweet",
@@ -181,21 +181,21 @@ class WrittenDocument:
     content: str
     word_count: int
     target_platform: str
-    
+
     # Metadata
     created_at: datetime = field(default_factory=datetime.now)
     last_edited: datetime = field(default_factory=datetime.now)
     version: int = 1
     is_draft: bool = True
-    
+
     # Distribution
     published: bool = False
     published_at: Optional[datetime] = None
     published_url: Optional[str] = None
-    
+
     # Analytics
     engagement_metrics: Dict[str, Any] = field(default_factory=dict)
-    
+
     def to_dict(self) -> Dict:
         return {
             "doc_id": self.doc_id,
@@ -221,7 +221,7 @@ class AgentUpdateReport:
     improvements: List[Dict[str, Any]]
     performance_changes: Dict[str, float]
     narrative_summary: str
-    
+
     def to_dict(self) -> Dict:
         return {
             "report_id": self.report_id,
@@ -236,9 +236,9 @@ class AgentUpdateReport:
 class TheAuthorAgent(BaseAgent):
     """
     THE_AUTHOR Agent - Writing in Tom's Voice
-    
+
     THE_AUTHOR mimics Tom Hogan's writing style across all content types.
-    
+
     Tom's Writing Characteristics:
     - Direct and concise, no fluff
     - Data-driven with specific numbers
@@ -248,7 +248,7 @@ class TheAuthorAgent(BaseAgent):
     - References specific trades/positions
     - Honest about uncertainty
     - Explains the "why" behind ideas
-    
+
     Key Methods:
     - write(): Main writing function
     - summarize_training(): Create training report summaries
@@ -256,7 +256,7 @@ class TheAuthorAgent(BaseAgent):
     - compose_tweet(): Write tweets/threads
     - document_agent_updates(): Track agent improvements
     """
-    
+
     # Tom's signature phrases and patterns
     TOM_PATTERNS = {
         "transitions": [
@@ -295,7 +295,7 @@ class TheAuthorAgent(BaseAgent):
             "NFA, obviously.",
         ]
     }
-    
+
     def __init__(self):
         super().__init__(
             name="THE_AUTHOR",
@@ -305,23 +305,23 @@ class TheAuthorAgent(BaseAgent):
                 "natural_language_generation",
                 "style_mimicry",
                 "tone_adaptation",
-                
+
                 # Content types
                 "training_summaries",
                 "substack_drafting",
                 "twitter_composition",
                 "market_analysis_writing",
                 "stock_writeups",
-                
+
                 # Documentation
                 "notion_integration",
                 "word_doc_generation",
                 "version_control",
-                
+
                 # Agent tracking
                 "agent_update_documentation",
                 "performance_narratives",
-                
+
                 # Quality
                 "grammar_checking",
                 "fact_verification",
@@ -329,33 +329,33 @@ class TheAuthorAgent(BaseAgent):
             ],
             user_id="TJH"
         )
-        
+
         # Document storage
         self.documents: List[WrittenDocument] = []
         self.agent_reports: List[AgentUpdateReport] = []
-        
+
         # Statistics
         self.total_words_written = 0
         self.documents_published = 0
-        
+
         # Style settings
         self.default_tone = ToneStyle.ANALYTICAL
         self.use_humor = True
         self.max_tweet_length = 280
         self.max_thread_tweets = 15
-    
+
     def process(self, task: Dict[str, Any]) -> Dict[str, Any]:
         """Process a writing task"""
         action = task.get("action", task.get("type", ""))
         params = task.get("parameters", task)
-        
+
         self.log_action(action, f"THE_AUTHOR processing: {action}")
-        
+
         # Check for capability gaps (ACA)
         gap = self.detect_capability_gap(task)
         if gap:
             self.logger.warning(f"Capability gap: {gap.missing_capabilities}")
-        
+
         handlers = {
             "write": self._handle_write,
             "summarize_training": self._handle_summarize_training,
@@ -367,17 +367,17 @@ class TheAuthorAgent(BaseAgent):
             "get_documents": self._handle_get_documents,
             "publish": self._handle_publish,
         }
-        
+
         handler = handlers.get(action, self._handle_unknown)
         return handler(params)
-    
+
     def get_capabilities(self) -> List[str]:
         return self.capabilities
-    
+
     # =========================================================================
     # CORE WRITING METHODS
     # =========================================================================
-    
+
     def write(
         self,
         content_type: ContentType,
@@ -388,22 +388,21 @@ class TheAuthorAgent(BaseAgent):
     ) -> WrittenDocument:
         """
         Main writing function - produces content in Tom's style.
-        
+
         Args:
             content_type: Type of content to produce
             topic: Subject matter
             data: Supporting data to incorporate
             tone: Writing tone (defaults to analytical)
             max_words: Word limit
-        
+
         Returns:
             WrittenDocument object
         """
         import hashlib
-        import random
-        
+
         tone = tone or self.default_tone
-        
+
         # Generate content based on type
         if content_type == ContentType.TWITTER_POST:
             content = self._generate_tweet(topic, data, tone)
@@ -423,7 +422,7 @@ class TheAuthorAgent(BaseAgent):
         else:
             content = self._generate_general(topic, data, tone)
             max_words = max_words or 800
-        
+
         # Create document
         doc = WrittenDocument(
             doc_id=f"doc_{hashlib.sha256(f'{topic}{datetime.now()}'.encode()).hexdigest()[:8]}",
@@ -434,15 +433,15 @@ class TheAuthorAgent(BaseAgent):
             word_count=len(content.split()),
             target_platform=self._get_platform(content_type)
         )
-        
+
         # Store and track
         self.documents.append(doc)
         self.total_words_written += doc.word_count
-        
+
         self.logger.info(f"THE_AUTHOR: Created {content_type.value} - {doc.word_count} words")
-        
+
         return doc
-    
+
     def summarize_training(
         self,
         training_data: Dict[str, Any],
@@ -456,7 +455,7 @@ class TheAuthorAgent(BaseAgent):
             topic="Training Results",
             data=training_data
         )
-    
+
     def draft_substack(
         self,
         topic: str,
@@ -466,7 +465,7 @@ class TheAuthorAgent(BaseAgent):
     ) -> WrittenDocument:
         """
         Draft a Substack article.
-        
+
         Args:
             topic: Article topic
             thesis: Main argument/thesis
@@ -474,13 +473,13 @@ class TheAuthorAgent(BaseAgent):
             for_alc: True for ALC Research, False for personal
         """
         content_type = ContentType.SUBSTACK_ALC if for_alc else ContentType.SUBSTACK_PERSONAL
-        
+
         return self.write(
             content_type=content_type,
             topic=topic,
             data={"thesis": thesis, **(data or {})}
         )
-    
+
     def compose_tweet(
         self,
         topic: str,
@@ -495,7 +494,7 @@ class TheAuthorAgent(BaseAgent):
             topic=topic,
             data={"key_point": key_point, "include_data": include_data}
         )
-    
+
     def document_agent_updates(
         self,
         agents_updated: List[str],
@@ -506,14 +505,14 @@ class TheAuthorAgent(BaseAgent):
         Document agent improvements and changes.
         """
         import hashlib
-        
+
         # Generate narrative summary
         narrative = self._generate_agent_update({
             "agents": agents_updated,
             "improvements": improvements,
             "performance": performance_changes
         })
-        
+
         report = AgentUpdateReport(
             report_id=f"rpt_{hashlib.sha256(str(datetime.now()).encode()).hexdigest()[:8]}",
             timestamp=datetime.now(),
@@ -522,63 +521,63 @@ class TheAuthorAgent(BaseAgent):
             performance_changes=performance_changes,
             narrative_summary=narrative
         )
-        
+
         self.agent_reports.append(report)
-        
+
         # Also create as document
         self.write(
             content_type=ContentType.AGENT_UPDATE,
             topic="Agent Updates",
             data=report.to_dict()
         )
-        
+
         return report
-    
+
     # =========================================================================
     # CONTENT GENERATORS (Tom's Style)
     # =========================================================================
-    
+
     def _generate_tweet(self, topic: str, data: Dict, tone: ToneStyle) -> str:
         """Generate tweet in Tom's style"""
         import random
-        
+
         key_point = data.get("key_point", topic) if data else topic
-        
+
         # Tom's tweet patterns
         patterns = [
             f"{key_point}. {random.choice(self.TOM_PATTERNS['closings'])}",
             f"{random.choice(self.TOM_PATTERNS['transitions'])} {key_point}",
             f"{key_point} {random.choice(self.TOM_PATTERNS['humor_inserts'])}",
         ]
-        
+
         tweet = random.choice(patterns)
-        
+
         # Ensure within limit
         if len(tweet) > self.max_tweet_length:
             tweet = tweet[:self.max_tweet_length - 3] + "..."
-        
+
         return tweet
-    
+
     def _generate_thread(self, topic: str, data: Dict, tone: ToneStyle) -> str:
         """Generate Twitter thread in Tom's style"""
         import random
-        
+
         thread_parts = []
-        
+
         # Hook tweet
-        thread_parts.append(f"🧵 Thread on {topic}\n\nThis is important. Let me explain why:\n\n1/")
-        
+        thread_parts.append(f"[THREAD] Thread on {topic}\n\nThis is important. Let me explain why:\n\n1/")
+
         # Main points (3-5 tweets)
         main_points = data.get("points", [topic]) if data else [topic]
         for i, point in enumerate(main_points[:5], 2):
             transition = random.choice(self.TOM_PATTERNS['transitions'])
             thread_parts.append(f"{transition} {point}\n\n{i}/")
-        
+
         # Conclusion
         thread_parts.append(f"Bottom line: {topic} matters more than people think.\n\n{random.choice(self.TOM_PATTERNS['closings'])}")
-        
+
         return "\n\n---\n\n".join(thread_parts)
-    
+
     def _generate_substack(
         self,
         topic: str,
@@ -588,11 +587,11 @@ class TheAuthorAgent(BaseAgent):
     ) -> str:
         """Generate Substack article in Tom's style"""
         import random
-        
+
         thesis = data.get("thesis", f"Why {topic} matters") if data else f"Why {topic} matters"
-        
+
         sections = []
-        
+
         # Intro - hook the reader
         intro = f"""# {topic}
 
@@ -602,7 +601,7 @@ class TheAuthorAgent(BaseAgent):
 
 """
         sections.append(intro)
-        
+
         # Body - the argument
         body = f"""{random.choice(self.TOM_PATTERNS['transitions'])}
 
@@ -626,7 +625,7 @@ Based on this analysis, here's how I'm positioned...
 
 """
         sections.append(body)
-        
+
         # Conclusion
         conclusion = f"""**Bottom Line**
 
@@ -639,15 +638,15 @@ Based on this analysis, here's how I'm positioned...
 *This is not financial advice. Do your own research. NFA.*
 """
         sections.append(conclusion)
-        
+
         return "".join(sections)
-    
+
     def _generate_training_summary(self, topic: str, data: Dict) -> str:
         """Generate training summary"""
         import random
-        
+
         metrics = data or {}
-        
+
         summary = f"""## Training Report Summary
 
 **Date:** {datetime.now().strftime('%Y-%m-%d %H:%M')}
@@ -655,17 +654,17 @@ Based on this analysis, here's how I'm positioned...
 ### Key Results
 
 """
-        
+
         if metrics:
             for key, value in metrics.items():
                 summary += f"- **{key}:** {value}\n"
-        
+
         summary += f"""
 ### Analysis
 
 {random.choice(self.TOM_PATTERNS['data_references'])}
 
-The training run shows [improvement/regression] in key metrics. 
+The training run shows [improvement/regression] in key metrics.
 
 ### Next Steps
 
@@ -675,15 +674,15 @@ The training run shows [improvement/regression] in key metrics.
 
 {random.choice(self.TOM_PATTERNS['closings'])}
 """
-        
+
         return summary
-    
+
     def _generate_agent_update(self, data: Dict) -> str:
         """Generate agent update narrative"""
         agents = data.get("agents", [])
         improvements = data.get("improvements", [])
         performance = data.get("performance", {})
-        
+
         narrative = f"""## Agent Update Report
 
 **Timestamp:** {datetime.now().strftime('%Y-%m-%d %H:%M')}
@@ -691,39 +690,39 @@ The training run shows [improvement/regression] in key metrics.
 ### Agents Modified
 
 """
-        
+
         for agent in agents:
             narrative += f"- {agent}\n"
-        
-        narrative += f"""
+
+        narrative += """
 ### Improvements Made
 
 """
-        
+
         for imp in improvements:
             narrative += f"- {imp.get('description', str(imp))}\n"
-        
-        narrative += f"""
+
+        narrative += """
 ### Performance Impact
 
 """
-        
+
         for metric, change in performance.items():
             direction = "↑" if change > 0 else "↓" if change < 0 else "→"
             narrative += f"- {metric}: {direction} {abs(change):.1%}\n"
-        
-        narrative += f"""
+
+        narrative += """
 ---
 
 All changes logged and tracked. More updates to come.
 """
-        
+
         return narrative
-    
+
     def _generate_general(self, topic: str, data: Dict, tone: ToneStyle) -> str:
         """Generate general content"""
         import random
-        
+
         return f"""{random.choice(self.TOM_PATTERNS['transitions'])}
 
 {topic}
@@ -734,7 +733,7 @@ All changes logged and tracked. More updates to come.
 
 {random.choice(self.TOM_PATTERNS['closings'])}
 """
-    
+
     def _generate_title(self, topic: str, content_type: ContentType) -> str:
         """Generate title for content"""
         if content_type == ContentType.TWITTER_POST:
@@ -745,7 +744,7 @@ All changes logged and tracked. More updates to come.
             return topic
         else:
             return f"{content_type.value}: {topic[:40]}"
-    
+
     def _get_platform(self, content_type: ContentType) -> str:
         """Get target platform for content type"""
         platforms = {
@@ -761,28 +760,28 @@ All changes logged and tracked. More updates to come.
             ContentType.STOCK_WRITEUP: "internal",
         }
         return platforms.get(content_type, "internal")
-    
+
     def log_action(self, action: str, description: str):
         """Log an action"""
         self.logger.info(f"[THE_AUTHOR] {action}: {description}")
-    
+
     # =========================================================================
     # TASK HANDLERS
     # =========================================================================
-    
+
     def _handle_write(self, params: Dict) -> Dict:
         content_type = ContentType(params.get("content_type", "notion_doc"))
         topic = params.get("topic", "")
         data = params.get("data")
         tone = ToneStyle(params.get("tone", "analytical")) if params.get("tone") else None
-        
+
         doc = self.write(content_type, topic, data, tone)
         return {"status": "success", "document": doc.to_dict()}
-    
+
     def _handle_summarize_training(self, params: Dict) -> Dict:
         doc = self.summarize_training(params.get("training_data", {}))
         return {"status": "success", "document": doc.to_dict()}
-    
+
     def _handle_draft_substack(self, params: Dict) -> Dict:
         doc = self.draft_substack(
             topic=params.get("topic", ""),
@@ -791,7 +790,7 @@ All changes logged and tracked. More updates to come.
             for_alc=params.get("for_alc", False)
         )
         return {"status": "success", "document": doc.to_dict()}
-    
+
     def _handle_compose_tweet(self, params: Dict) -> Dict:
         doc = self.compose_tweet(
             topic=params.get("topic", ""),
@@ -799,7 +798,7 @@ All changes logged and tracked. More updates to come.
             include_data=params.get("include_data", True)
         )
         return {"status": "success", "document": doc.to_dict()}
-    
+
     def _handle_compose_thread(self, params: Dict) -> Dict:
         doc = self.write(
             content_type=ContentType.TWITTER_THREAD,
@@ -807,7 +806,7 @@ All changes logged and tracked. More updates to come.
             data=params.get("data")
         )
         return {"status": "success", "document": doc.to_dict()}
-    
+
     def _handle_document_agents(self, params: Dict) -> Dict:
         report = self.document_agent_updates(
             agents_updated=params.get("agents", []),
@@ -815,7 +814,7 @@ All changes logged and tracked. More updates to come.
             performance_changes=params.get("performance", {})
         )
         return {"status": "success", "report": report.to_dict()}
-    
+
     def _handle_create_notion(self, params: Dict) -> Dict:
         doc = self.write(
             content_type=ContentType.NOTION_DOC,
@@ -823,7 +822,7 @@ All changes logged and tracked. More updates to come.
             data=params.get("data")
         )
         return {"status": "success", "document": doc.to_dict()}
-    
+
     def _handle_get_documents(self, params: Dict) -> Dict:
         content_type = params.get("content_type")
         docs = self.documents
@@ -835,7 +834,7 @@ All changes logged and tracked. More updates to come.
             "total": len(self.documents),
             "total_words": self.total_words_written
         }
-    
+
     def _handle_publish(self, params: Dict) -> Dict:
         doc_id = params.get("doc_id")
         doc = next((d for d in self.documents if d.doc_id == doc_id), None)
@@ -846,7 +845,7 @@ All changes logged and tracked. More updates to come.
             self.documents_published += 1
             return {"status": "success", "published": True, "doc_id": doc_id}
         return {"status": "error", "message": "Document not found"}
-    
+
     def _handle_unknown(self, params: Dict) -> Dict:
         return {"status": "error", "message": "Unknown action"}
 

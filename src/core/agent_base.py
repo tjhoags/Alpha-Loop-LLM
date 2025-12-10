@@ -35,7 +35,7 @@ from collections import deque
 from dataclasses import dataclass, field
 from datetime import datetime
 from enum import Enum
-from typing import Any, Dict, List, Optional, Set, Tuple
+from typing import Any, Dict, List, Optional, Set, Tuple, ClassVar
 
 
 class AgentTier(Enum):
@@ -103,33 +103,9 @@ class AgentToughness(Enum):
     TOM_HOGAN = 5     # Maximum toughness - built like the founder
 
 
-# =========================================================================
-# REFACTOR-X OPTIMIZATION - DAY 0
-# Optimized for Python 3.10+ Slot usage for memory efficiency
-# =========================================================================
-class AgentProposal:
-    """Proposal for ACA (Agent Creating Agent)."""
-
-    __slots__ = ["proposal_id", "agent_name", "role", "tier", "capabilities", "justification", "parent_agent", "priority", "status", "created_at"]
-
-    def __init__(self, agent_name: str, role: str, tier: AgentTier,
-                 capabilities: List[str], justification: str, parent_agent: str,
-                 priority: str = "normal"):
-        self.proposal_id = str(uuid.uuid4())
-        self.agent_name = agent_name
-        self.role = role
-        self.tier = tier
-        self.capabilities = capabilities
-        self.justification = justification
-        self.parent_agent = parent_agent
-        self.priority = priority
-        self.status = "pending"
-        self.created_at = datetime.now()
-
-
-@dataclass
+@dataclass(slots=True)
 class LearningOutcome:
-    """Record of learning - we track EVERYTHING."""
+    """Record of learning - we track EVERYTHING. Uses slots for memory efficiency."""
 
     outcome_id: str = field(default_factory=lambda: str(uuid.uuid4())[:8])
     timestamp: datetime = field(default_factory=datetime.now)
@@ -143,9 +119,9 @@ class LearningOutcome:
     compute_used: str = "maximum"  # Always maximum
 
 
-@dataclass
+@dataclass(slots=True)
 class CreativeInsight:
-    """A creative insight - the edge that beats competition."""
+    """A creative insight - the edge that beats competition. Uses slots for memory efficiency."""
 
     insight_id: str = field(default_factory=lambda: str(uuid.uuid4())[:8])
     timestamp: datetime = field(default_factory=datetime.now)
@@ -159,9 +135,9 @@ class CreativeInsight:
     edge_magnitude: float = 0.0  # How much edge does this provide?
 
 
-@dataclass
+@dataclass(slots=True)
 class AgentProposal:
-    """Proposal for new agent - ACA system."""
+    """Proposal for new agent - ACA system. Uses slots for memory efficiency."""
 
     proposal_id: str = field(default_factory=lambda: str(uuid.uuid4())[:8])
     proposed_by: str = ""
@@ -189,6 +165,7 @@ class CapabilityGap:
     missing_capabilities: List[str] = field(default_factory=list)
     severity: str = "medium"
     context: Dict[str, Any] = field(default_factory=dict)
+    # Note: Not using slots here due to mutable default dict
 
 
 class BaseAgent(ABC):
@@ -232,14 +209,17 @@ class BaseAgent(ABC):
     ============================================================================
     """
 
-    # Class-level registry
-    _global_capabilities: Set[str] = set()
-    _capability_owners: Dict[str, List[str]] = {}
+    # Class-level registry with proper type hints
+    _global_capabilities: ClassVar[Set[str]] = set()
+    _capability_owners: ClassVar[Dict[str, List[str]]] = {}
 
     # Institutional configuration - NO LIMITS
-    COMPUTE_LIMIT = None  # NO LIMIT
-    MAX_MODELS = None     # NO LIMIT
-    MAX_MEMORY = None     # NO LIMIT
+    COMPUTE_LIMIT: ClassVar[None] = None  # NO LIMIT
+    MAX_MODELS: ClassVar[None] = None     # NO LIMIT
+    MAX_MEMORY: ClassVar[None] = None     # NO LIMIT
+
+    # Pre-defined constants for calibration - avoid repeated allocations
+    _CALIBRATION_BUCKETS: ClassVar[tuple] = tuple(range(0, 100, 10))
 
     def __init__(
         self,
@@ -858,19 +838,26 @@ class BaseAgent(ABC):
         self._learning_outcomes.append(outcome)
         return outcome
 
-    def _update_confidence_calibration(self):
-        """Calibrate confidence - institutional precision required."""
-        if len(self._calibration_history) < 50:
+    def _update_confidence_calibration(self) -> None:
+        """Calibrate confidence - institutional precision required.
+
+        Optimized with pre-computed bucket ranges and efficient iteration.
+        """
+        cal_len = len(self._calibration_history)
+        if cal_len < 50:
             return
 
-        recent = self._calibration_history[-500:]
+        # Use slicing for efficiency - deque supports efficient slicing
+        recent = list(self._calibration_history)[-500:] if cal_len > 500 else list(self._calibration_history)
+        recent_len = len(recent)
 
-        buckets = {i: [] for i in range(0, 100, 10)}
+        # Use pre-defined buckets for efficiency
+        buckets: Dict[int, List[bool]] = {i: [] for i in self._CALIBRATION_BUCKETS}
         for conf, correct in recent:
             bucket = min(int(conf * 100) // 10 * 10, 90)
             buckets[bucket].append(correct)
 
-        total_error = 0
+        total_error = 0.0
         for bucket, outcomes in buckets.items():
             if outcomes:
                 expected_rate = (bucket + 5) / 100
@@ -878,8 +865,9 @@ class BaseAgent(ABC):
                 total_error += abs(expected_rate - actual_rate)
 
         if total_error > 0.15:  # Stricter threshold for institutional
-            avg_conf = sum(c for c, _ in recent) / len(recent)
-            actual_accuracy = sum(c for _, c in recent) / len(recent)
+            # Use generator expressions for memory efficiency
+            avg_conf = sum(c for c, _ in recent) / recent_len
+            actual_accuracy = sum(c for _, c in recent) / recent_len
 
             if avg_conf > actual_accuracy:
                 self._confidence_adjustment *= 0.97  # Overconfident

@@ -24,3 +24,5 @@ torch
 boto3
 fredapi
 scipy
+dropbox
+openpyxl

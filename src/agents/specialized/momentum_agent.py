@@ -30,38 +30,38 @@ TRAINING & EXECUTION
 TRAINING THIS AGENT:
     # Terminal Setup (Windows PowerShell):
     cd C:\\Users\\tom\\.cursor\\worktrees\\Alpha-Loop-LLM-1\\ycr
-    
+
     # Activate virtual environment:
     .\\venv\\Scripts\\activate
-    
+
     # Train MOMENTUM individually:
     python -m src.training.agent_training_utils --agent MOMENTUM
-    
+
     # Train with related strategy agents:
     python -m src.training.agent_training_utils --agents MOMENTUM,VALUE,MEAN_REVERSION
-    
+
     # Cross-train: MOMENTUM observes, AUTHOR articulates:
     python -m src.training.agent_training_utils --cross-train "MOMENTUM,SCOUT:AUTHOR:agent_trainer"
 
 RUNNING THE AGENT:
     from src.agents.specialized.momentum_agent import MomentumAgent
-    
+
     momentum = MomentumAgent()
-    
+
     # Analyze earnings momentum
     result = momentum.process({
         "type": "earnings_momentum",
         "ticker": "NVDA",
         "data": {"eps_revisions": {"up": 15, "down": 2}}
     })
-    
+
     # Generate creative momentum signal
     result = momentum.process({
         "type": "generate_signal",
         "ticker": "AAPL",
         "data": {...}
     })
-    
+
     # Check regime-adapted approach
     result = momentum.process({
         "type": "regime_momentum",
@@ -72,15 +72,17 @@ RUNNING THE AGENT:
 """
 
 import sys
+from functools import cached_property
 from pathlib import Path
+from typing import Any, Callable, Dict, List
+
 sys.path.append(str(Path(__file__).parent.parent.parent.parent))
 
-from src.core.agent_base import BaseAgent, AgentTier, ThinkingMode, LearningMethod
-from typing import Dict, Any, List, Optional, Tuple
-from datetime import datetime
 from dataclasses import dataclass
+from datetime import datetime
 from enum import Enum
-import math
+
+from src.core.agent_base import BaseAgent, AgentTier, ThinkingMode, LearningMethod
 
 
 class MomentumEdgeType(Enum):
@@ -114,53 +116,53 @@ class MomentumSignal:
 class MomentumAgent(BaseAgent):
     """
     SPECIALIZED Momentum Agent - Creative Momentum Strategies
-    
+
     THIS IS NOT BASIC TREND FOLLOWING.
-    
+
     Basic momentum (what doesn't work):
     - Simple 12-month price return
     - Moving average crossovers
     - RSI overbought/oversold
     - Following the trend blindly
-    
+
     Creative momentum (what this agent does):
-    
+
     1. EARNINGS MOMENTUM
        - EPS revision breadth and magnitude
        - Estimate dispersion changes
        - Surprise patterns
        - Quality of beats (revenue vs cost cuts)
-    
+
     2. RELATIVE MOMENTUM
        - Not just "is it going up"
        - Is it going up MORE than alternatives?
        - Sector rotation signals
        - Style rotation signals
-    
+
     3. CROSS-ASSET SIGNALS
        - What are credit spreads saying?
        - Commodity signals for equities
        - Currency signals
        - Volatility surface information
-    
+
     4. SECOND DERIVATIVE
        - Not just momentum, but acceleration
        - Rate of change of rate of change
        - Inflection point detection
-    
+
     5. MOMENTUM DECAY DETECTION
        - Recognize when momentum is exhausting
        - Volume divergences
        - Breadth divergences
        - Internal decay before price breaks
-    
+
     6. REGIME ADAPTATION
        - Momentum works differently in different regimes
        - Risk-on: ride momentum
        - Risk-off: momentum crashes
        - Transition periods: most dangerous
     """
-    
+
     def __init__(self, user_id: str = "TJH"):
         """Initialize with creative momentum capabilities."""
         super().__init__(
@@ -199,7 +201,7 @@ class MomentumAgent(BaseAgent):
                 LearningMethod.META,            # Learn which momentum type works when
             ]
         )
-        
+
         # Track momentum type performance by regime
         self._regime_momentum_performance: Dict[str, Dict[str, float]] = {
             'risk_on': {'earnings': 0.6, 'price': 0.5, 'relative': 0.7},
@@ -207,20 +209,19 @@ class MomentumAgent(BaseAgent):
             'normal': {'earnings': 0.5, 'price': 0.4, 'relative': 0.5},
             'crisis': {'earnings': 0.2, 'price': 0.1, 'relative': 0.3},
         }
-        
+
         # Track reversal signals
         self._reversal_warnings: Dict[str, List[Dict[str, Any]]] = {}
-        
+
         # Track momentum crashes for learning
         self._momentum_crash_history: List[Dict[str, Any]] = []
-        
+
         self.logger.info("MomentumAgent initialized - CREATIVE momentum, NOT basic trend following")
-    
-    def process(self, task: Dict[str, Any]) -> Dict[str, Any]:
-        """Process momentum analysis task creatively."""
-        task_type = task.get('type', 'unknown')
-        
-        handlers = {
+
+    @cached_property
+    def _handlers(self) -> Dict[str, Callable[[Dict[str, Any]], Dict[str, Any]]]:
+        """Cached handler dispatch table for O(1) lookup."""
+        return {
             'earnings_momentum': self._analyze_earnings_momentum,
             'relative_momentum': self._analyze_relative_momentum,
             'cross_asset': self._analyze_cross_asset_signals,
@@ -230,45 +231,48 @@ class MomentumAgent(BaseAgent):
             'full_analysis': self._full_creative_analysis,
             'generate_signal': self._generate_creative_signal,
         }
-        
-        handler = handlers.get(task_type, self._full_creative_analysis)
+
+    def process(self, task: Dict[str, Any]) -> Dict[str, Any]:
+        """Process momentum analysis task creatively."""
+        task_type = task.get('type', 'unknown')
+        handler = self._handlers.get(task_type, self._full_creative_analysis)
         return handler(task)
-    
+
     def _analyze_earnings_momentum(self, task: Dict[str, Any]) -> Dict[str, Any]:
         """
         Earnings momentum - the REAL momentum signal.
-        
+
         Price momentum is just a shadow of earnings momentum.
         This is what institutional investors actually trade.
         """
         ticker = task.get('ticker', '')
         data = task.get('data', {})
-        
+
         # EPS revision analysis
         eps_revisions = data.get('eps_revisions', {})
         current_eps = data.get('current_eps_estimate', 0)
         eps_3m_ago = data.get('eps_estimate_3m_ago', current_eps)
         eps_revision = (current_eps - eps_3m_ago) / abs(eps_3m_ago) if eps_3m_ago else 0
-        
+
         # Revision breadth (how many analysts revising up vs down)
         revisions_up = eps_revisions.get('up', 0)
         revisions_down = eps_revisions.get('down', 0)
         total_revisions = revisions_up + revisions_down
         revision_breadth = (revisions_up - revisions_down) / total_revisions if total_revisions > 0 else 0
-        
+
         # Surprise pattern
         last_4_surprises = data.get('last_4_surprises', [0, 0, 0, 0])
         beat_rate = sum(1 for s in last_4_surprises if s > 0) / len(last_4_surprises)
         avg_surprise_magnitude = sum(last_4_surprises) / len(last_4_surprises)
-        
+
         # Quality of beats (revenue-driven vs cost-driven)
         revenue_beats = data.get('revenue_beat_rate', 0.5)
         quality_score = 0.7 * revenue_beats + 0.3 * beat_rate
-        
+
         # Estimate dispersion (conviction of analysts)
         estimate_dispersion = data.get('eps_estimate_std', 0) / abs(current_eps) if current_eps else 0
         conviction_score = 1 - min(estimate_dispersion, 1)  # Lower dispersion = higher conviction
-        
+
         # Calculate earnings momentum score
         earnings_momentum_score = (
             0.35 * eps_revision +
@@ -277,9 +281,9 @@ class MomentumAgent(BaseAgent):
             0.10 * quality_score +
             0.10 * conviction_score
         )
-        
+
         signal_strength = max(-1, min(1, earnings_momentum_score * 5))  # Scale to -1 to 1
-        
+
         return {
             'success': True,
             'ticker': ticker,
@@ -298,7 +302,7 @@ class MomentumAgent(BaseAgent):
             'methodology': 'HOGAN MODEL - Earnings Momentum',
             'note': 'This is fundamental momentum, not price momentum',
         }
-    
+
     def _analyze_relative_momentum(self, task: Dict[str, Any]) -> Dict[str, Any]:
         """
         Relative momentum - it's not enough to be going up.
@@ -307,18 +311,18 @@ class MomentumAgent(BaseAgent):
         ticker = task.get('ticker', '')
         data = task.get('data', {})
         universe = task.get('universe', [])
-        
+
         # Calculate relative strength
         ticker_return = data.get('return_6m', 0)
         sector_return = data.get('sector_return_6m', 0)
         market_return = data.get('market_return_6m', 0)
-        
+
         # Relative to sector
         sector_relative = ticker_return - sector_return
-        
+
         # Relative to market
         market_relative = ticker_return - market_return
-        
+
         # Rank within universe
         universe_returns = {t: d.get('return_6m', 0) for t, d in universe}
         if universe_returns:
@@ -327,19 +331,19 @@ class MomentumAgent(BaseAgent):
             percentile_rank = 1 - (rank / len(sorted_returns))
         else:
             percentile_rank = 0.5
-        
+
         # Calculate relative momentum score
         rel_momentum_score = (
             0.30 * (percentile_rank - 0.5) * 2 +  # Scale to -1 to 1
             0.35 * sector_relative * 10 +          # Scale
             0.35 * market_relative * 10            # Scale
         )
-        
+
         signal_strength = max(-1, min(1, rel_momentum_score))
-        
+
         # Determine if this is a rotation candidate
         is_rotation_candidate = percentile_rank > 0.8 or percentile_rank < 0.2
-        
+
         return {
             'success': True,
             'ticker': ticker,
@@ -357,19 +361,19 @@ class MomentumAgent(BaseAgent):
             'edge_type': MomentumEdgeType.RELATIVE_MOMENTUM.value,
             'methodology': 'HOGAN MODEL - Relative Momentum',
         }
-    
+
     def _analyze_cross_asset_signals(self, task: Dict[str, Any]) -> Dict[str, Any]:
         """
         Cross-asset signals - what are OTHER markets telling us?
-        
+
         Markets are connected. Credit, FX, commodities, and vol
         often lead equity moves.
         """
         ticker = task.get('ticker', '')
         data = task.get('data', {})
-        
+
         cross_asset_signals = {}
-        
+
         # Credit spread signal
         credit_spread = data.get('credit_spread', 1.5)  # %
         credit_spread_change = data.get('credit_spread_change_3m', 0)
@@ -377,7 +381,7 @@ class MomentumAgent(BaseAgent):
             cross_asset_signals['credit'] = {'direction': 'bullish', 'strength': 0.6, 'desc': 'Credit spreads tightening'}
         elif credit_spread_change > 0.3:
             cross_asset_signals['credit'] = {'direction': 'bearish', 'strength': 0.7, 'desc': 'Credit spreads widening - risk off'}
-        
+
         # VIX signal
         vix = data.get('vix', 20)
         vix_change = data.get('vix_change_1m', 0)
@@ -385,7 +389,7 @@ class MomentumAgent(BaseAgent):
             cross_asset_signals['volatility'] = {'direction': 'bullish', 'strength': 0.5, 'desc': 'Low and falling vol'}
         elif vix > 25:
             cross_asset_signals['volatility'] = {'direction': 'bearish', 'strength': 0.6, 'desc': 'Elevated volatility'}
-        
+
         # Sector-specific commodity signals
         sector = data.get('sector', '')
         if sector == 'energy':
@@ -402,7 +406,7 @@ class MomentumAgent(BaseAgent):
                 'strength': abs(copper_momentum) * 5,
                 'desc': f"Copper momentum: {copper_momentum:.1%}"
             }
-        
+
         # FX signal (for multinationals)
         if data.get('fx_sensitive', False):
             dxy_change = data.get('dxy_change_3m', 0)
@@ -412,7 +416,7 @@ class MomentumAgent(BaseAgent):
                 'strength': abs(dxy_change) * 10,
                 'desc': f"DXY change: {dxy_change:.1%}"
             }
-        
+
         # Yield curve signal
         yield_curve = data.get('2s10s_spread', 0)
         if yield_curve < 0:
@@ -421,19 +425,19 @@ class MomentumAgent(BaseAgent):
                 'strength': 0.5,
                 'desc': 'Inverted yield curve - recession risk'
             }
-        
+
         # Calculate composite signal
         bullish_count = sum(1 for s in cross_asset_signals.values() if s['direction'] == 'bullish')
         bearish_count = sum(1 for s in cross_asset_signals.values() if s['direction'] == 'bearish')
         total_signals = len(cross_asset_signals)
-        
+
         if total_signals > 0:
             composite_direction = 'bullish' if bullish_count > bearish_count else 'bearish' if bearish_count > bullish_count else 'mixed'
             composite_strength = abs(bullish_count - bearish_count) / total_signals
         else:
             composite_direction = 'neutral'
             composite_strength = 0
-        
+
         return {
             'success': True,
             'ticker': ticker,
@@ -444,38 +448,38 @@ class MomentumAgent(BaseAgent):
             'edge_type': MomentumEdgeType.CROSS_ASSET.value,
             'methodology': 'HOGAN MODEL - Cross-Asset Momentum',
         }
-    
+
     def _analyze_second_derivative(self, task: Dict[str, Any]) -> Dict[str, Any]:
         """
         Second derivative analysis - rate of change of rate of change.
-        
+
         This catches inflection points BEFORE they become obvious.
         """
         ticker = task.get('ticker', '')
         data = task.get('data', {})
-        
+
         # Price momentum (first derivative)
         return_1m = data.get('return_1m', 0)
         return_2m = data.get('return_2m', 0)
         return_3m = data.get('return_3m', 0)
-        
+
         # Second derivative (acceleration/deceleration)
         acceleration_1m = return_1m - return_2m
         acceleration_2m = return_2m - return_3m
-        
+
         # Third derivative (jerk - change in acceleration)
         jerk = acceleration_1m - acceleration_2m
-        
+
         # Volume second derivative
         volume_1m = data.get('volume_change_1m', 0)
         volume_2m = data.get('volume_change_2m', 0)
         volume_acceleration = volume_1m - volume_2m
-        
+
         # Breadth second derivative
         breadth_1w = data.get('breadth_change_1w', 0)
         breadth_2w = data.get('breadth_change_2w', 0)
         breadth_acceleration = breadth_1w - breadth_2w
-        
+
         # Determine signal type
         if acceleration_1m > 0 and jerk > 0:
             signal_type = "accelerating_up"
@@ -492,10 +496,10 @@ class MomentumAgent(BaseAgent):
         else:
             signal_type = "neutral"
             signal_strength = 0
-        
+
         # Inflection point detection
         is_inflection = (acceleration_1m * acceleration_2m < 0)  # Sign change
-        
+
         return {
             'success': True,
             'ticker': ticker,
@@ -514,33 +518,33 @@ class MomentumAgent(BaseAgent):
             'methodology': 'HOGAN MODEL - Second Derivative Momentum',
             'note': 'Catches inflection points before they become obvious',
         }
-    
+
     def _check_reversal_signals(self, task: Dict[str, Any]) -> Dict[str, Any]:
         """
         Detect momentum exhaustion / reversal signals.
-        
+
         Momentum doesn't last forever. Detect when it's failing.
         """
         ticker = task.get('ticker', '')
         data = task.get('data', {})
-        
+
         reversal_warnings = []
         reversal_score = 0
-        
+
         # 1. Volume divergence
         price_trend = data.get('price_trend', 'up')  # 'up' or 'down'
         volume_trend = data.get('volume_trend', 'up')
         if price_trend == 'up' and volume_trend == 'down':
             reversal_warnings.append("Volume divergence - price up on declining volume")
             reversal_score += 0.2
-        
+
         # 2. Breadth divergence
         index_making_highs = data.get('index_making_highs', False)
         breadth_confirming = data.get('breadth_confirming', True)
         if index_making_highs and not breadth_confirming:
             reversal_warnings.append("Breadth divergence - highs not confirmed by breadth")
             reversal_score += 0.25
-        
+
         # 3. Overbought/oversold extremes
         rsi = data.get('rsi', 50)
         if rsi > 80:
@@ -549,7 +553,7 @@ class MomentumAgent(BaseAgent):
         elif rsi < 20:
             reversal_warnings.append(f"RSI extreme oversold: {rsi}")
             reversal_score += 0.15
-        
+
         # 4. Sentiment extremes
         sentiment = data.get('sentiment_score', 0.5)
         if sentiment > 0.9:
@@ -558,19 +562,19 @@ class MomentumAgent(BaseAgent):
         elif sentiment < 0.1:
             reversal_warnings.append("Sentiment extreme bearish - potential bottom")
             reversal_score += 0.2
-        
+
         # 5. Momentum decay (from second derivative)
         acceleration = data.get('momentum_acceleration', 0)
         if data.get('in_uptrend', False) and acceleration < -0.05:
             reversal_warnings.append("Momentum decaying in uptrend")
             reversal_score += 0.15
-        
+
         # 6. Sector rotation away
         sector_flow = data.get('sector_fund_flow', 0)
         if sector_flow < -0.05:
             reversal_warnings.append("Money rotating out of sector")
             reversal_score += 0.1
-        
+
         # Store warnings
         if ticker not in self._reversal_warnings:
             self._reversal_warnings[ticker] = []
@@ -579,7 +583,7 @@ class MomentumAgent(BaseAgent):
             'warnings': reversal_warnings,
             'score': reversal_score
         })
-        
+
         return {
             'success': True,
             'ticker': ticker,
@@ -589,18 +593,18 @@ class MomentumAgent(BaseAgent):
             'edge_type': MomentumEdgeType.REVERSAL_WARNING.value,
             'methodology': 'HOGAN MODEL - Reversal Detection',
         }
-    
+
     def _regime_adapted_momentum(self, task: Dict[str, Any]) -> Dict[str, Any]:
         """
         Adapt momentum strategy to current market regime.
-        
+
         Momentum behaves VERY differently in different regimes.
         """
         data = task.get('data', {})
-        
+
         # Detect current regime
         regime, regime_confidence = self.detect_regime_change(data.get('market_data', {}))
-        
+
         # Get regime-specific recommendations
         regime_config = {
             'risk_on': {
@@ -639,12 +643,12 @@ class MomentumAgent(BaseAgent):
                 'note': 'Diversification doesn\'t work - be cautious'
             }
         }
-        
+
         config = regime_config.get(regime, regime_config['normal'])
-        
+
         # Check historical performance of momentum types in this regime
         historical_perf = self._regime_momentum_performance.get(regime, {})
-        
+
         return {
             'success': True,
             'current_regime': regime,
@@ -655,12 +659,12 @@ class MomentumAgent(BaseAgent):
             'edge_type': MomentumEdgeType.REGIME_ADAPTIVE.value,
             'methodology': 'HOGAN MODEL - Regime-Adaptive Momentum',
         }
-    
+
     def _generate_creative_signal(self, task: Dict[str, Any]) -> Dict[str, Any]:
         """Generate comprehensive creative momentum signal."""
         ticker = task.get('ticker', '')
         data = task.get('data', {})
-        
+
         # Run all analyses
         earnings = self._analyze_earnings_momentum({'ticker': ticker, 'data': data})
         relative = self._analyze_relative_momentum({'ticker': ticker, 'data': data, 'universe': task.get('universe', {})})
@@ -668,10 +672,10 @@ class MomentumAgent(BaseAgent):
         second_deriv = self._analyze_second_derivative({'ticker': ticker, 'data': data})
         reversal = self._check_reversal_signals({'ticker': ticker, 'data': data})
         regime = self._regime_adapted_momentum({'data': data})
-        
+
         # Weight signals by regime
         regime_weight = regime['recommendation']['momentum_weight']
-        
+
         # Composite signal
         composite_score = (
             0.30 * earnings['signal_strength'] +
@@ -680,10 +684,10 @@ class MomentumAgent(BaseAgent):
             0.15 * second_deriv['signal_strength'] +
             0.10 * (1 - reversal['reversal_probability']) * (1 if earnings['signal_strength'] > 0 else -1)
         )
-        
+
         # Apply regime adjustment
         adjusted_score = composite_score * regime_weight
-        
+
         # Determine final signal
         if adjusted_score > 0.3:
             direction = 'long'
@@ -691,7 +695,7 @@ class MomentumAgent(BaseAgent):
             direction = 'short'
         else:
             direction = 'neutral'
-        
+
         # Build signal object
         signal = MomentumSignal(
             ticker=ticker,
@@ -710,7 +714,7 @@ class MomentumAgent(BaseAgent):
             volatility_adjusted=True,
             regime_alignment=regime_weight
         )
-        
+
         # Learn from signal generation
         self.learn_from_outcome(
             prediction=f"Momentum signal for {ticker}: {direction}",
@@ -718,7 +722,7 @@ class MomentumAgent(BaseAgent):
             confidence=signal.confidence,
             context={'ticker': ticker, 'regime': regime['current_regime']}
         )
-        
+
         return {
             'success': True,
             'ticker': ticker,
@@ -743,11 +747,11 @@ class MomentumAgent(BaseAgent):
             'should_trade': regime['should_trade_momentum'] and reversal['reversal_probability'] < 0.5,
             'methodology': 'HOGAN MODEL - Creative Momentum',
         }
-    
+
     def _full_creative_analysis(self, task: Dict[str, Any]) -> Dict[str, Any]:
         """Full creative momentum analysis."""
         return self._generate_creative_signal(task)
-    
+
     def get_capabilities(self) -> List[str]:
         """Return specialized capabilities."""
         return self.capabilities

@@ -32,40 +32,40 @@ WHAT ORCHESTRATOR DOES:
     GHOST handles autonomous operations and HOAGS makes final decisions,
     ORCHESTRATOR focuses on creative problem-solving and continuous
     improvement of all agents.
-    
+
     It draws on psychology, sociology, game theory, military strategy,
     and other disciplines to find novel approaches that competitors
     aren't using. It's the "innovation lab" of the ecosystem.
-    
+
     Think of ORCHESTRATOR as the "chief strategy officer" who ensures
     every agent is working on the right thing and continuously improving.
 
 KEY FUNCTIONS:
     1. orchestrate() - Routes tasks to optimal agents. Considers
        capabilities, workload, and creative synergies.
-       
+
     2. improve_agent() - Proposes improvements to any agent using
        creative frameworks. "What if SCOUT applied game theory?"
-       
+
     3. apply_creative_framework() - Applies specific frameworks
        (psychology, sociology, etc.) to generate novel solutions.
-       
+
     4. coordinate_resources() - Allocates resources across agents
        for complex multi-agent tasks.
-       
+
     5. brief_author() - Prepares documentation for THE_AUTHOR on
        all improvements and creative approaches.
 
 RELATIONSHIPS WITH OTHER AGENTS:
     - HOAGS: Reports to HOAGS. Creative improvements need HOAGS
       approval before implementation.
-      
+
     - GHOST: Works with GHOST on workflow coordination. ORCHESTRATOR
       handles creative routing, GHOST handles autonomous execution.
-      
+
     - THE_AUTHOR: Close collaboration. ORCHESTRATOR generates ideas,
       THE_AUTHOR documents them in human-readable format.
-      
+
     - ALL AGENTS: ORCHESTRATOR can propose improvements to any agent.
       It's the continuous improvement engine.
 
@@ -80,16 +80,16 @@ CREATIVE FRAMEWORKS USED:
 PATHS OF GROWTH/TRANSFORMATION:
     1. AUTO-IMPROVEMENT: Automatically detect when agents need
        improvement based on performance metrics.
-       
+
     2. CROSS-POLLINATION: Transfer successful approaches from one
        agent to another automatically.
-       
+
     3. A/B TESTING: Run controlled experiments on agent improvements
        to measure actual impact.
-       
+
     4. EXTERNAL LEARNING: Learn from external sources (papers, news)
        to bring new ideas into the ecosystem.
-       
+
     5. MULTI-AGENT CREATIVITY: Facilitate brainstorming sessions
        between multiple agents for novel solutions.
 
@@ -100,46 +100,50 @@ TRAINING & EXECUTION
 TRAINING THIS AGENT:
     # Terminal Setup (Windows PowerShell):
     cd C:\\Users\\tom\\.cursor\\worktrees\\Alpha-Loop-LLM-1\\ycr
-    
+
     # Activate virtual environment:
     .\\venv\\Scripts\\activate
-    
+
     # Train ORCHESTRATOR individually:
     python -m src.training.agent_training_utils --agent ORCHESTRATOR
-    
+
     # Train with coordination agents:
     python -m src.training.agent_training_utils --agents ORCHESTRATOR,GHOST,SKILLS
-    
+
     # Cross-train: ORCHESTRATOR coordinates, AUTHOR documents:
     python -m src.training.agent_training_utils --cross-train "ORCHESTRATOR,GHOST:AUTHOR:agent_trainer"
 
 RUNNING THE AGENT:
     from src.agents.orchestrator_agent.orchestrator_agent import get_orchestrator
-    
+
     orchestrator = get_orchestrator()
-    
+
     # Orchestrate a task to the best agent
     result = orchestrator.process({
         "action": "orchestrate",
         "task": {"type": "alpha_generation", "priority": 1}
     })
-    
+
     # Propose improvement for an agent
     result = orchestrator.process({
         "action": "improve_agent",
         "target_agent": "SCOUT",
         "framework": "game_theory"
     })
-    
+
     # Get creative ideas
     result = orchestrator.process({"action": "get_creative_ideas"})
 
 ================================================================================
 """
 
+import hashlib
 import logging
+import random
 from datetime import datetime
-from typing import Dict, List, Optional, Any
+from functools import cached_property
+from typing import Any, Callable, Dict, List, Optional
+
 from dataclasses import dataclass, field
 from enum import Enum
 
@@ -175,7 +179,7 @@ class AgentImprovement:
     implementation_notes: str
     status: str = "proposed"  # proposed, approved, implemented
     created_at: datetime = field(default_factory=datetime.now)
-    
+
     def to_dict(self) -> Dict:
         return {
             "improvement_id": self.improvement_id,
@@ -200,7 +204,7 @@ class TaskAssignment:
     resources_allocated: List[str]
     deadline: Optional[datetime]
     creative_approach: Optional[str]
-    
+
     def to_dict(self) -> Dict:
         return {
             "task_id": self.task_id,
@@ -215,14 +219,14 @@ class TaskAssignment:
 class OrchestratorAgent(BaseAgent):
     """
     ORCHESTRATOR Agent - Creative Coordinator & Agent Improver
-    
+
     ORCHESTRATOR uses creative, out-of-the-box thinking from psychology,
     sociology, and unconventional disciplines to:
     1. Optimally route tasks to the right agents
     2. Continuously improve agents with new skillsets
     3. Generate novel approaches others aren't considering
     4. Articulate improvements clearly to THE_AUTHOR
-    
+
     Key Methods:
     - orchestrate(): Route tasks optimally
     - improve_agent(): Propose new skills/capabilities
@@ -230,7 +234,7 @@ class OrchestratorAgent(BaseAgent):
     - coordinate_resources(): Allocate agent resources
     - brief_author(): Prepare documentation for THE_AUTHOR
     """
-    
+
     # Creative thinking frameworks with their applications
     CREATIVE_APPLICATIONS = {
         CreativeFramework.PSYCHOLOGY: {
@@ -288,7 +292,7 @@ class OrchestratorAgent(BaseAgent):
             ]
         }
     }
-    
+
     def __init__(self):
         super().__init__(
             name="ORCHESTRATOR",
@@ -300,7 +304,7 @@ class OrchestratorAgent(BaseAgent):
                 "agent_coordination",
                 "priority_management",
                 "workflow_optimization",
-                
+
                 # Creative thinking (NEW)
                 "creative_thinking",
                 "psychological_analysis",
@@ -310,13 +314,13 @@ class OrchestratorAgent(BaseAgent):
                 "unconventional_approaches",
                 "first_principles_reasoning",
                 "inversion_thinking",
-                
+
                 # Agent improvement (NEW)
                 "agent_skill_enhancement",
                 "capability_gap_filling",
                 "novel_approach_generation",
                 "continuous_improvement",
-                
+
                 # Communication
                 "author_briefing",
                 "improvement_articulation",
@@ -324,30 +328,22 @@ class OrchestratorAgent(BaseAgent):
             ],
             user_id="TJH"
         )
-        
+
         # Improvement tracking
         self.improvements_proposed: List[AgentImprovement] = []
         self.improvements_implemented: List[AgentImprovement] = []
-        
+
         # Task tracking
         self.active_assignments: Dict[str, TaskAssignment] = {}
         self.completed_tasks = 0
-        
+
         # Agent capability registry
         self.agent_capabilities: Dict[str, List[str]] = {}
-    
-    def process(self, task: Dict[str, Any]) -> Dict[str, Any]:
-        """Process an ORCHESTRATOR task"""
-        action = task.get("action", task.get("type", ""))
-        params = task.get("parameters", task)
-        
-        self.log_action(action, f"ORCHESTRATOR processing: {action}")
-        
-        gap = self.detect_capability_gap(task)
-        if gap:
-            self.logger.warning(f"Capability gap: {gap.missing_capabilities}")
-        
-        handlers = {
+
+    @cached_property
+    def _handlers(self) -> Dict[str, Callable[[Dict], Dict]]:
+        """Cached handler dispatch table for O(1) lookup."""
+        return {
             "orchestrate": self._handle_orchestrate,
             "improve_agent": self._handle_improve_agent,
             "apply_framework": self._handle_apply_framework,
@@ -357,17 +353,28 @@ class OrchestratorAgent(BaseAgent):
             "route_task": self._handle_route_task,
             "get_improvements": self._handle_get_improvements,
         }
-        
-        handler = handlers.get(action, self._handle_unknown)
+
+    def process(self, task: Dict[str, Any]) -> Dict[str, Any]:
+        """Process an ORCHESTRATOR task"""
+        action = task.get("action", task.get("type", ""))
+        params = task.get("parameters", task)
+
+        self.log_action(action, f"ORCHESTRATOR processing: {action}")
+
+        gap = self.detect_capability_gap(task)
+        if gap:
+            self.logger.warning(f"Capability gap: {gap.missing_capabilities}")
+
+        handler = self._handlers.get(action, self._handle_unknown)
         return handler(params)
-    
+
     def get_capabilities(self) -> List[str]:
         return self.capabilities
-    
+
     # =========================================================================
     # CORE ORCHESTRATOR METHODS
     # =========================================================================
-    
+
     def orchestrate(
         self,
         task: Dict[str, Any],
@@ -375,24 +382,22 @@ class OrchestratorAgent(BaseAgent):
     ) -> TaskAssignment:
         """
         Orchestrate a task to the optimal agent(s).
-        
+
         Considers:
         - Agent capabilities
         - Current workload
         - Task requirements
         - Creative approaches
         """
-        import hashlib
-        
         task_type = task.get("type", "general")
         priority = task.get("priority", 5)
-        
+
         # Determine best agent(s)
         best_agent = self._select_best_agent(task_type, available_agents)
-        
+
         # Generate creative approach if applicable
         creative_approach = self._generate_creative_approach(task)
-        
+
         assignment = TaskAssignment(
             task_id=f"task_{hashlib.sha256(str(datetime.now()).encode()).hexdigest()[:8]}",
             task_type=task_type,
@@ -402,13 +407,13 @@ class OrchestratorAgent(BaseAgent):
             deadline=task.get("deadline"),
             creative_approach=creative_approach
         )
-        
+
         self.active_assignments[assignment.task_id] = assignment
-        
+
         self.logger.info(f"ORCHESTRATOR: Assigned {task_type} to {best_agent}")
-        
+
         return assignment
-    
+
     def improve_agent(
         self,
         target_agent: str,
@@ -418,13 +423,11 @@ class OrchestratorAgent(BaseAgent):
         """
         Propose an improvement for an agent using creative thinking.
         """
-        import hashlib
-        
         framework = framework or self._select_best_framework(target_agent, context)
-        
+
         # Generate improvement using creative framework
         improvement_idea = self._generate_improvement(target_agent, framework, context)
-        
+
         improvement = AgentImprovement(
             improvement_id=f"imp_{hashlib.sha256(str(datetime.now()).encode()).hexdigest()[:8]}",
             target_agent=target_agent,
@@ -435,16 +438,16 @@ class OrchestratorAgent(BaseAgent):
             expected_benefit=improvement_idea["expected_benefit"],
             implementation_notes=improvement_idea["implementation"]
         )
-        
+
         self.improvements_proposed.append(improvement)
-        
+
         # Notify THE_AUTHOR
         self._notify_author(improvement)
-        
+
         self.logger.info(f"ORCHESTRATOR: Proposed improvement for {target_agent} using {framework.value}")
-        
+
         return improvement
-    
+
     def apply_creative_framework(
         self,
         framework: CreativeFramework,
@@ -455,11 +458,11 @@ class OrchestratorAgent(BaseAgent):
         Apply a creative thinking framework to generate novel solutions.
         """
         framework_data = self.CREATIVE_APPLICATIONS.get(framework, {})
-        
+
         # Generate ideas using the framework
         ideas = []
         applications = framework_data.get("market_applications", [])
-        
+
         for app in applications:
             ideas.append({
                 "approach": app,
@@ -467,11 +470,11 @@ class OrchestratorAgent(BaseAgent):
                 "novelty_score": self._assess_novelty(app, problem),
                 "feasibility": "high" if "detect" in app.lower() or "identify" in app.lower() else "medium"
             })
-        
+
         # Add custom generated ideas
         custom_ideas = self._brainstorm_custom(framework, problem, context)
         ideas.extend(custom_ideas)
-        
+
         return {
             "framework": framework.value,
             "problem": problem,
@@ -480,7 +483,7 @@ class OrchestratorAgent(BaseAgent):
             "top_recommendation": ideas[0] if ideas else None,
             "disciplines_applied": framework_data.get("disciplines", [])
         }
-    
+
     def coordinate_resources(
         self,
         task: Dict[str, Any],
@@ -496,19 +499,19 @@ class OrchestratorAgent(BaseAgent):
             "communication_protocol": "async_message_passing",
             "creative_synergies": []
         }
-        
+
         for agent in agents:
             coordination["resource_allocation"][agent] = {
                 "cpu_priority": "normal",
                 "data_access": "full",
                 "output_channel": "shared_bus"
             }
-        
+
         # Identify creative synergies
         coordination["creative_synergies"] = self._identify_synergies(agents)
-        
+
         return coordination
-    
+
     def brief_author(
         self,
         improvements: List[AgentImprovement] = None
@@ -517,7 +520,7 @@ class OrchestratorAgent(BaseAgent):
         Prepare a brief for THE_AUTHOR documenting improvements.
         """
         improvements = improvements or self.improvements_proposed[-10:]
-        
+
         brief = {
             "timestamp": datetime.now().isoformat(),
             "total_improvements": len(improvements),
@@ -526,13 +529,13 @@ class OrchestratorAgent(BaseAgent):
             "for_publication": True,
             "tone_guidance": "analytical with dry humor (Tom's style)"
         }
-        
+
         return brief
-    
+
     # =========================================================================
     # PRIVATE METHODS
     # =========================================================================
-    
+
     def _select_best_agent(self, task_type: str, available: List[str] = None) -> str:
         """Select the best agent for a task type"""
         agent_mappings = {
@@ -547,18 +550,18 @@ class OrchestratorAgent(BaseAgent):
             "research": "ResearchAgent",
         }
         return agent_mappings.get(task_type, "HoagsAgent")
-    
+
     def _generate_creative_approach(self, task: Dict) -> Optional[str]:
         """Generate a creative approach for the task"""
         task_type = task.get("type", "")
-        
+
         approaches = {
             "alpha_generation": "Apply inversion: What would make us lose money? Avoid that.",
             "risk": "Use OODA loop: Observe market state, Orient to regime, Decide on hedges, Act quickly",
             "execution": "Apply military flanking: Don't compete on price, compete on timing/venue",
         }
         return approaches.get(task_type)
-    
+
     def _allocate_resources(self, task: Dict) -> List[str]:
         """Allocate resources for a task"""
         priority = task.get("priority", 5)
@@ -567,7 +570,7 @@ class OrchestratorAgent(BaseAgent):
         elif priority <= 5:
             return ["standard_compute", "batch_data"]
         return ["minimal_compute"]
-    
+
     def _select_best_framework(self, agent: str, context: Dict = None) -> CreativeFramework:
         """Select best creative framework for an agent"""
         agent_frameworks = {
@@ -577,7 +580,7 @@ class OrchestratorAgent(BaseAgent):
             "HUNTER": CreativeFramework.MILITARY_STRATEGY,
         }
         return agent_frameworks.get(agent, CreativeFramework.FIRST_PRINCIPLES)
-    
+
     def _generate_improvement(
         self,
         agent: str,
@@ -585,8 +588,6 @@ class OrchestratorAgent(BaseAgent):
         context: Dict = None
     ) -> Dict:
         """Generate an improvement idea"""
-        import random
-        
         framework_ideas = {
             CreativeFramework.PSYCHOLOGY: {
                 "type": "new_skill",
@@ -610,7 +611,7 @@ class OrchestratorAgent(BaseAgent):
                 "implementation": "Pre-mortem analysis before every major decision"
             }
         }
-        
+
         return framework_ideas.get(framework, {
             "type": "enhancement",
             "description": f"General improvement for {agent}",
@@ -618,12 +619,11 @@ class OrchestratorAgent(BaseAgent):
             "expected_benefit": "Better performance",
             "implementation": "Incremental updates"
         })
-    
+
     def _assess_novelty(self, approach: str, problem: str) -> float:
         """Assess how novel an approach is"""
-        import random
         return random.uniform(0.5, 0.95)
-    
+
     def _brainstorm_custom(
         self,
         framework: CreativeFramework,
@@ -637,7 +637,7 @@ class OrchestratorAgent(BaseAgent):
             "novelty_score": 0.8,
             "feasibility": "medium"
         }]
-    
+
     def _identify_synergies(self, agents: List[str]) -> List[str]:
         """Identify creative synergies between agents"""
         synergies = []
@@ -646,50 +646,50 @@ class OrchestratorAgent(BaseAgent):
         if "BOOKMAKER" in agents and "SCOUT" in agents:
             synergies.append("BOOKMAKER alpha + SCOUT arbitrage = execution optimization")
         return synergies
-    
+
     def _generate_summary(self, improvements: List[AgentImprovement]) -> str:
         """Generate summary for THE_AUTHOR"""
         return f"ORCHESTRATOR proposed {len(improvements)} improvements using creative frameworks including psychology, game theory, and inversion thinking."
-    
+
     def _notify_author(self, improvement: AgentImprovement):
         """Notify THE_AUTHOR of a new improvement"""
         self.logger.info(f"ORCHESTRATOR → THE_AUTHOR: New improvement for {improvement.target_agent}")
-    
+
     def log_action(self, action: str, description: str):
         self.logger.info(f"[ORCHESTRATOR] {action}: {description}")
-    
+
     # =========================================================================
     # TASK HANDLERS
     # =========================================================================
-    
+
     def _handle_orchestrate(self, params: Dict) -> Dict:
         task = params.get("task", params)
         agents = params.get("available_agents")
         assignment = self.orchestrate(task, agents)
         return {"status": "success", "assignment": assignment.to_dict()}
-    
+
     def _handle_improve_agent(self, params: Dict) -> Dict:
         agent = params.get("target_agent", "")
         framework = CreativeFramework(params.get("framework", "first_principles")) if params.get("framework") else None
         improvement = self.improve_agent(agent, framework, params.get("context"))
         return {"status": "success", "improvement": improvement.to_dict()}
-    
+
     def _handle_apply_framework(self, params: Dict) -> Dict:
         framework = CreativeFramework(params.get("framework", "inversion"))
         problem = params.get("problem", "")
         result = self.apply_creative_framework(framework, problem, params.get("context"))
         return {"status": "success", "result": result}
-    
+
     def _handle_coordinate(self, params: Dict) -> Dict:
         task = params.get("task", {})
         agents = params.get("agents", [])
         coordination = self.coordinate_resources(task, agents)
         return {"status": "success", "coordination": coordination}
-    
+
     def _handle_brief_author(self, params: Dict) -> Dict:
         brief = self.brief_author()
         return {"status": "success", "brief": brief}
-    
+
     def _handle_get_creative(self, params: Dict) -> Dict:
         frameworks = [f.value for f in CreativeFramework]
         return {
@@ -697,12 +697,12 @@ class OrchestratorAgent(BaseAgent):
             "frameworks": frameworks,
             "applications": {f.value: self.CREATIVE_APPLICATIONS.get(f, {}) for f in CreativeFramework}
         }
-    
+
     def _handle_route_task(self, params: Dict) -> Dict:
         task_type = params.get("task_type", "")
         best_agent = self._select_best_agent(task_type)
         return {"status": "success", "recommended_agent": best_agent}
-    
+
     def _handle_get_improvements(self, params: Dict) -> Dict:
         return {
             "status": "success",
@@ -710,7 +710,7 @@ class OrchestratorAgent(BaseAgent):
             "implemented": len(self.improvements_implemented),
             "recent": [i.to_dict() for i in self.improvements_proposed[-10:]]
         }
-    
+
     def _handle_unknown(self, params: Dict) -> Dict:
         return {"status": "error", "message": "Unknown action"}
 
