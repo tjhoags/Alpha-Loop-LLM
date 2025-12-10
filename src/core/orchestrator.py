@@ -1,10 +1,15 @@
+"""================================================================================
+SYSTEM ORCHESTRATOR - Dynamic Resource Allocation
+================================================================================
+Manages system resources based on market regime and system load.
+Adjusts polling intervals and pauses non-essential tasks during high volatility.
+================================================================================
+"""
 
 import psutil
 from loguru import logger
 
-from src.config.settings_new import get_settings
-
-# Assuming we have a way to get VIX, e.g. from our FredClient or Polygon
+from src.config.settings import get_settings
 from src.data_ingestion.sources.fred import FredClient
 
 

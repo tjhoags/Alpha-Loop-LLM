@@ -201,13 +201,13 @@ class ExecutionEngine:
         """Get last price from database (for simulation)."""
         try:
             engine = get_engine()
-            query = f"""
-            SELECT TOP 1 close
+            query = """
+            SELECT TOP 1 [close]
             FROM price_bars
-            WHERE symbol = '{symbol}'
+            WHERE symbol = :symbol
             ORDER BY timestamp DESC
             """
-            result = pd.read_sql(query, engine)
+            result = pd.read_sql(query, engine, params={"symbol": symbol})
             if not result.empty:
                 return float(result.iloc[0]["close"])
         except Exception as e:
@@ -218,14 +218,14 @@ class ExecutionEngine:
         """Get historical price data for signal generation."""
         try:
             engine = get_engine()
-            query = f"""
-            SELECT symbol, timestamp, open, high, low, close, volume
+            query = """
+            SELECT symbol, timestamp, [open], high, low, [close], volume
             FROM price_bars
-            WHERE symbol = '{symbol}'
-              AND timestamp >= DATEADD(day, -{days}, GETDATE())
+            WHERE symbol = :symbol
+              AND timestamp >= DATEADD(day, :days, GETDATE())
             ORDER BY timestamp ASC
             """
-            return pd.read_sql(query, engine)
+            return pd.read_sql(query, engine, params={"symbol": symbol, "days": -abs(days)})
         except Exception as e:
             logger.error(f"Failed to get historical data for {symbol}: {e}")
             return pd.DataFrame()

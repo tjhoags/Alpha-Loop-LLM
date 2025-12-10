@@ -1,3 +1,13 @@
+"""================================================================================
+SETTINGS - Centralized Configuration Management
+================================================================================
+All application settings loaded from environment variables with sensible defaults.
+Uses Pydantic for validation and type safety.
+
+IMPORTANT: Never commit credentials to source control. Use .env files.
+================================================================================
+"""
+
 import os
 from functools import lru_cache
 from pathlib import Path
@@ -7,16 +17,29 @@ from dotenv import load_dotenv
 from pydantic import Field, field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
-# Load .env from your OneDrive location FIRST
-ENV_PATH = r"C:\Users\tom\OneDrive\Alpha Loop LLM\API - Dec 2025.env"
-if os.path.exists(ENV_PATH):
-    load_dotenv(ENV_PATH, override=True)
-else:
-    load_dotenv()  # Fallback to default .env
+# Load environment variables from multiple possible locations
+_env_paths = [
+    Path(os.getenv("ALC_ENV_PATH", "")),  # Custom env path from environment
+    Path(__file__).resolve().parents[2] / ".env",  # Project root .env
+    Path.home() / ".alc" / ".env",  # User home config
+]
+
+_env_loaded = False
+for env_path in _env_paths:
+    if env_path.exists():
+        load_dotenv(env_path, override=True)
+        _env_loaded = True
+        break
+
+if not _env_loaded:
+    load_dotenv()  # Fallback to default .env discovery
 
 
 class Settings(BaseSettings):
     """Application settings loaded from environment variables.
+
+    All credentials and paths should be set via environment variables.
+    See .env.example for required variables.
     """
 
     model_config = SettingsConfigDict(
@@ -29,11 +52,11 @@ class Settings(BaseSettings):
     # ==========================================================================
     # DATABASE - Azure SQL Server
     # ==========================================================================
-    database_url: Optional[str] = Field(default=None)
-    sql_server: str = Field(default_factory=lambda: os.getenv("SQL_SERVER", "alc-sql-server.database.windows.net"))
+    database_url: Optional[str] = Field(default=None, description="Full SQLAlchemy URL (overrides components)")
+    sql_server: str = Field(default_factory=lambda: os.getenv("SQL_SERVER", ""))
     sql_db: str = Field(default_factory=lambda: os.getenv("SQL_DB", "alc_market_data"))
-    db_username: str = Field(default_factory=lambda: os.getenv("DB_USERNAME", "CloudSAb3fcbb35"))
-    db_password: str = Field(default_factory=lambda: os.getenv("DB_PASSWORD", "ALCadmin27!"))
+    db_username: str = Field(default_factory=lambda: os.getenv("DB_USERNAME", ""))
+    db_password: str = Field(default_factory=lambda: os.getenv("DB_PASSWORD", ""))
     db_odbc_driver: str = Field(default="ODBC Driver 17 for SQL Server")
 
     # ==========================================================================
@@ -87,10 +110,8 @@ class Settings(BaseSettings):
     # Research ingestion / NLP
     research_paths: List[str] = Field(
         default_factory=lambda: [
-            r"C:\Users\tom\Alphaloopcapital Dropbox\Tom Hogan\Archives",
-            r"C:\Users\tom\Alphaloopcapital Dropbox\Tom Hogan\Current",
-            r"C:\Users\tom\Alphaloopcapital Dropbox\ALC Internal Only\Agents",
-        ],
+            p for p in os.getenv("RESEARCH_PATHS", "").split(";") if p
+        ] or [],
     )
     embedding_model_name: str = Field(default="sentence-transformers/all-MiniLM-L6-v2")
     max_chunk_size: int = Field(default=1200)
@@ -126,31 +147,58 @@ class Settings(BaseSettings):
         return v
 
     # Use SQLite for local development (fast, no setup)
-    use_sqlite: bool = Field(default=False)  # Using Azure SQL now!
+    use_sqlite: bool = Field(default=False)
 
     @property
     def sqlalchemy_url(self) -> str:
+        """Build SQLAlchemy connection URL with fallback to SQLite."""
         if self.database_url:
             return self.database_url
 
-        # USE SQLITE FOR NOW (faster, no network issues)
-        if self.use_sqlite:
+        # Fallback to SQLite for local development
+        if self.use_sqlite or not self.sql_server:
             sqlite_path = self.data_dir / "market_data.db"
             return f"sqlite:///{sqlite_path}"
 
-        # Azure SQL
+        # Azure SQL Server
         db_name = self.sql_db.split("/")[-1] if "/" in self.sql_db else self.sql_db
         server = self.sql_server
 
-        if not server.endswith(".database.windows.net"):
+        if server and not server.endswith(".database.windows.net"):
             server = f"{server}.database.windows.net"
 
         driver = self.db_odbc_driver.replace(" ", "+")
 
         if self.db_username and self.db_password:
-            return f"mssql+pyodbc://{self.db_username}:{self.db_password}@{server}/{db_name}?driver={driver}"
+            # URL-encode password to handle special characters
+            from urllib.parse import quote_plus
+            encoded_pwd = quote_plus(self.db_password)
+            return f"mssql+pyodbc://{self.db_username}:{encoded_pwd}@{server}/{db_name}?driver={driver}"
         else:
             return f"mssql+pyodbc://@{server}/{db_name}?driver={driver}&Authentication=ActiveDirectoryInteractive"
+
+    def validate_required_apis(self) -> dict[str, bool]:
+        """Check which APIs are configured. Returns dict of api_name -> is_configured."""
+        return {
+            "database": bool(self.sql_server and self.db_username) or self.use_sqlite,
+            "polygon": bool(self.polygon_api_key),
+            "alpha_vantage": bool(self.alpha_vantage_api_key),
+            "coinbase": bool(self.coinbase_api_key),
+            "fred": bool(self.fred_api_key),
+            "openai": bool(self.openai_api_key),
+            "anthropic": bool(self.anthropic_api_key),
+        }
+
+    def log_configuration_status(self) -> None:
+        """Log which APIs are configured (for startup diagnostics)."""
+        from loguru import logger
+        api_status = self.validate_required_apis()
+        configured = [k for k, v in api_status.items() if v]
+        missing = [k for k, v in api_status.items() if not v]
+
+        logger.info(f"Configured APIs: {', '.join(configured) or 'None'}")
+        if missing:
+            logger.warning(f"Missing API keys: {', '.join(missing)}")
 
 
 @lru_cache
