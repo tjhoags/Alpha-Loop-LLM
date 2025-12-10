@@ -754,7 +754,7 @@ class InflectionDetector(BaseAgent):
     def _escalate_to_hoags(self, detection: InflectionDetection):
         """Escalate high conviction detection to HOAGS."""
         self.logger.critical(
-            f"🚨 INFLECTION DETECTION → HOAGS 🚨\n"
+            f"INFLECTION DETECTION -> HOAGS\n"
             f"Ticker: {detection.ticker}\n"
             f"Type: {detection.inflection_type.value}\n"
             f"Direction: {detection.direction.upper()}\n"

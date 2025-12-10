@@ -215,12 +215,12 @@ class SleuthMaster:
             f"Alpha Loop Capital | {datetime.now().strftime('%B %d, %Y %H:%M')}",
             "=" * 60,
             "",
-            f"📊 STATUS: {report['summary']['status']}",
-            f"⚠️ ACTIONS: {report['action_count']} total",
+            f"STATUS: {report['summary']['status']}",
+            f"ACTIONS: {report['action_count']} total",
             f"   Critical: {report['summary']['critical_actions']}",
             f"   High: {report['summary']['high_priority_actions']}",
             "",
-            "🎯 PRIORITY ACTIONS:",
+            "PRIORITY ACTIONS:",
         ]
 
         for i, action in enumerate(report["actions"][:5], 1):
@@ -229,8 +229,8 @@ class SleuthMaster:
 
         lines.extend([
             "",
-            f"📈 FLOW REGIME: {report['flow_regime']}",
-            f"⚡ STRESS INDEX: {report['stress_index']:.1f}/100",
+            f"FLOW REGIME: {report['flow_regime']}",
+            f"STRESS INDEX: {report['stress_index']:.1f}/100",
             "",
             "=" * 60,
         ])

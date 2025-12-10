@@ -1,0 +1,267 @@
+{
+  "Comment": "Alpha Loop Capital - Incremental Live Training (Scheduled/Triggered)",
+  "StartAt": "CheckMarketHours",
+  "States": {
+    "CheckMarketHours": {
+      "Type": "Task",
+      "Resource": "arn:aws:lambda:us-east-1:${AWS::AccountId}:function:alc-check-market-hours",
+      "Parameters": {
+        "timezone": "America/New_York",
+        "extended_hours": true
+      },
+      "ResultPath": "$.market_status",
+      "Next": "MarketOpenDecision"
+    },
+
+    "MarketOpenDecision": {
+      "Type": "Choice",
+      "Choices": [
+        {
+          "Variable": "$.market_status.is_open",
+          "BooleanEquals": true,
+          "Next": "FetchRecentData"
+        }
+      ],
+      "Default": "SkipTraining"
+    },
+
+    "SkipTraining": {
+      "Type": "Succeed",
+      "Comment": "Market closed - skip incremental training"
+    },
+
+    "FetchRecentData": {
+      "Type": "Task",
+      "Resource": "arn:aws:lambda:us-east-1:${AWS::AccountId}:function:alc-fetch-recent-data",
+      "Parameters": {
+        "lookback_minutes": 15,
+        "symbols.$": "$.config.symbols",
+        "include_options": true,
+        "include_news": true
+      },
+      "ResultPath": "$.recent_data",
+      "Next": "DetectRegimeChange",
+      "TimeoutSeconds": 120
+    },
+
+    "DetectRegimeChange": {
+      "Type": "Task",
+      "Resource": "arn:aws:lambda:us-east-1:${AWS::AccountId}:function:alc-detect-regime",
+      "Parameters": {
+        "data.$": "$.recent_data",
+        "indicators": ["volatility", "correlation", "momentum", "volume_profile"],
+        "sensitivity": 0.7
+      },
+      "ResultPath": "$.regime",
+      "Next": "RegimeChangeDecision"
+    },
+
+    "RegimeChangeDecision": {
+      "Type": "Choice",
+      "Choices": [
+        {
+          "Variable": "$.regime.significant_change",
+          "BooleanEquals": true,
+          "Next": "AggressiveUpdate"
+        },
+        {
+          "Variable": "$.regime.minor_change",
+          "BooleanEquals": true,
+          "Next": "StandardUpdate"
+        }
+      ],
+      "Default": "MinimalUpdate"
+    },
+
+    "AggressiveUpdate": {
+      "Type": "Parallel",
+      "Comment": "Significant regime change - update all critical agents",
+      "Branches": [
+        {
+          "StartAt": "UpdateGHOST_Aggressive",
+          "States": {
+            "UpdateGHOST_Aggressive": {
+              "Type": "Task",
+              "Resource": "arn:aws:lambda:us-east-1:${AWS::AccountId}:function:alc-incremental-train",
+              "Parameters": {
+                "agent": "GHOST",
+                "mode": "online",
+                "learning_rate": 0.001,
+                "steps": 100,
+                "priority": "high"
+              },
+              "End": true
+            }
+          }
+        },
+        {
+          "StartAt": "UpdateKILLJOY_Aggressive",
+          "States": {
+            "UpdateKILLJOY_Aggressive": {
+              "Type": "Task",
+              "Resource": "arn:aws:lambda:us-east-1:${AWS::AccountId}:function:alc-incremental-train",
+              "Parameters": {
+                "agent": "KILLJOY",
+                "mode": "online",
+                "learning_rate": 0.001,
+                "steps": 100,
+                "priority": "high",
+                "adjust_risk_params": true
+              },
+              "End": true
+            }
+          }
+        },
+        {
+          "StartAt": "UpdateSTRINGS_Aggressive",
+          "States": {
+            "UpdateSTRINGS_Aggressive": {
+              "Type": "Task",
+              "Resource": "arn:aws:lambda:us-east-1:${AWS::AccountId}:function:alc-incremental-train",
+              "Parameters": {
+                "agent": "STRINGS",
+                "mode": "online",
+                "learning_rate": 0.001,
+                "steps": 100,
+                "recalibrate_weights": true
+              },
+              "End": true
+            }
+          }
+        }
+      ],
+      "ResultPath": "$.aggressive_updates",
+      "Next": "ValidateUpdates"
+    },
+
+    "StandardUpdate": {
+      "Type": "Parallel",
+      "Comment": "Minor regime change - update key agents",
+      "Branches": [
+        {
+          "StartAt": "UpdateGHOST_Standard",
+          "States": {
+            "UpdateGHOST_Standard": {
+              "Type": "Task",
+              "Resource": "arn:aws:lambda:us-east-1:${AWS::AccountId}:function:alc-incremental-train",
+              "Parameters": {
+                "agent": "GHOST",
+                "mode": "online",
+                "learning_rate": 0.0005,
+                "steps": 50
+              },
+              "End": true
+            }
+          }
+        },
+        {
+          "StartAt": "UpdateSCOUT_Standard",
+          "States": {
+            "UpdateSCOUT_Standard": {
+              "Type": "Task",
+              "Resource": "arn:aws:lambda:us-east-1:${AWS::AccountId}:function:alc-incremental-train",
+              "Parameters": {
+                "agent": "SCOUT",
+                "mode": "online",
+                "learning_rate": 0.0005,
+                "steps": 50
+              },
+              "End": true
+            }
+          }
+        }
+      ],
+      "ResultPath": "$.standard_updates",
+      "Next": "ValidateUpdates"
+    },
+
+    "MinimalUpdate": {
+      "Type": "Task",
+      "Resource": "arn:aws:lambda:us-east-1:${AWS::AccountId}:function:alc-incremental-train",
+      "Comment": "No significant change - minimal GHOST update only",
+      "Parameters": {
+        "agent": "GHOST",
+        "mode": "online",
+        "learning_rate": 0.0001,
+        "steps": 10
+      },
+      "ResultPath": "$.minimal_update",
+      "Next": "ValidateUpdates"
+    },
+
+    "ValidateUpdates": {
+      "Type": "Task",
+      "Resource": "arn:aws:lambda:us-east-1:${AWS::AccountId}:function:alc-quick-validate",
+      "Parameters": {
+        "validation_type": "sanity_check",
+        "metrics": ["prediction_drift", "confidence_calibration"],
+        "max_drift_threshold": 0.1
+      },
+      "ResultPath": "$.validation",
+      "Next": "ValidationDecision"
+    },
+
+    "ValidationDecision": {
+      "Type": "Choice",
+      "Choices": [
+        {
+          "Variable": "$.validation.passed",
+          "BooleanEquals": true,
+          "Next": "CommitUpdates"
+        }
+      ],
+      "Default": "RollbackUpdates"
+    },
+
+    "CommitUpdates": {
+      "Type": "Task",
+      "Resource": "arn:aws:lambda:us-east-1:${AWS::AccountId}:function:alc-commit-updates",
+      "Parameters": {
+        "update_type": "incremental",
+        "timestamp.$": "$$.Execution.StartTime"
+      },
+      "ResultPath": "$.commit",
+      "Next": "LogMetrics"
+    },
+
+    "RollbackUpdates": {
+      "Type": "Task",
+      "Resource": "arn:aws:lambda:us-east-1:${AWS::AccountId}:function:alc-rollback",
+      "Parameters": {
+        "reason": "Validation failed",
+        "preserve_logs": true
+      },
+      "ResultPath": "$.rollback",
+      "Next": "NotifyRollback"
+    },
+
+    "NotifyRollback": {
+      "Type": "Task",
+      "Resource": "arn:aws:lambda:us-east-1:${AWS::AccountId}:function:alc-notify",
+      "Parameters": {
+        "notification_type": "rollback",
+        "details.$": "$.rollback"
+      },
+      "Next": "LogMetrics"
+    },
+
+    "LogMetrics": {
+      "Type": "Task",
+      "Resource": "arn:aws:lambda:us-east-1:${AWS::AccountId}:function:alc-log-metrics",
+      "Parameters": {
+        "metric_namespace": "ALC/IncrementalTraining",
+        "metrics": {
+          "regime_change.$": "$.regime.change_magnitude",
+          "agents_updated.$": "States.ArrayLength($.*.updates)",
+          "validation_passed.$": "$.validation.passed"
+        }
+      },
+      "Next": "IncrementalTrainingComplete"
+    },
+
+    "IncrementalTrainingComplete": {
+      "Type": "Succeed"
+    }
+  },
+  "TimeoutSeconds": 600
+}

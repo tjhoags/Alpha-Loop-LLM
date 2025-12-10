@@ -1,0 +1,15 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(find:*)",
+      "Bash(.venvScriptsactivate)",
+      "Bash(python -m src.training.live_data_trainer:*)",
+      "Bash(cd:*)",
+      "Bash(dir:*)",
+      "Bash(del \"c:\\Users\\tom\\OneDrive\\Alpha Loop LLM\\alpha-loop-llm\\Alpha-Loop-LLM\\src\\config\\settings_new.py\")",
+      "Bash(git add:*)",
+      "Bash(git commit -m \"$(cat <<''EOF''\nRefactor and optimize trading algorithm core components\n\n- Consolidate settings into single module with env-based configuration\n- Remove hardcoded credentials, use environment variables\n- Fix SQL injection vulnerabilities with parameterized queries\n- Add rate limiting to data collection (respect API limits)\n- Improve error handling with specific exception types\n- Add startup configuration validation and logging\n- Add .env.example template for required environment variables\n- Update .gitignore to protect credentials\n- Delete redundant settings_new.py (now using settings.py only)\n- Fix orchestrator import to use correct settings module\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)\n\nCo-Authored-By: Claude Opus 4.5 <noreply@anthropic.com>\nEOF\n)\")",
+      "Bash(git push:*)"
+    ]
+  }
+}

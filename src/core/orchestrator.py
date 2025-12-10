@@ -55,7 +55,7 @@ class SystemOrchestrator:
         logger.info(f"Orchestrator Status: Regime={regime} | CPU={cpu_usage}% | RAM={ram_usage}%")
 
         if regime == "CRISIS":
-            logger.warning("🚨 MARKET IN CRISIS MODE. Optimizing for SURVIVAL.")
+            logger.warning("MARKET IN CRISIS MODE. Optimizing for SURVIVAL.")
             # 1. Accelerate Risk Checks
             self.polling_intervals["risk"] = 5  # Check every 5 seconds
             # 2. Accelerate Execution
@@ -65,7 +65,7 @@ class SystemOrchestrator:
             self.pause_task("research")
 
         elif regime == "VOLATILE":
-            logger.info("⚠️ High Volatility. Increasing responsiveness.")
+            logger.info("High Volatility. Increasing responsiveness.")
             self.polling_intervals["risk"] = 30
             self.polling_intervals["execution"] = 30
 

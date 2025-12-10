@@ -630,7 +630,7 @@ class SECEdgarClient:
             if cluster_count >= 2:  # 3+ total purchases
                 txn.cluster_member = True
                 txn.signal_strength = "strong"
-                self.logger.info(f"🚨 CLUSTER BUYING detected for {ticker}: {cluster_count + 1} insiders buying")
+                self.logger.info(f"CLUSTER BUYING detected for {ticker}: {cluster_count + 1} insiders buying")
 
     # =========================================================================
     # FORM 13F - INSTITUTIONAL HOLDINGS

@@ -823,7 +823,7 @@ class HoagsAgent(BaseAgent):
         ]
         
         for step in workflow_steps:
-            self.logger.info(f"✓ {step}")
+            self.logger.info(f"[OK] {step}")
         
         # Review any pending ACA proposals
         aca_review = self._review_aca_proposals({})

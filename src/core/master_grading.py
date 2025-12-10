@@ -973,19 +973,19 @@ class MasterGradingSystem:
         print("STRENGTHS")
         print("-" * 70)
         for s in overall.strengths:
-            print(f"  ✓ {s}")
+            print(f"  [+] {s}")
 
         print("\n" + "-" * 70)
         print("AREAS FOR IMPROVEMENT")
         print("-" * 70)
         for w in overall.weaknesses:
-            print(f"  ✗ {w}")
+            print(f"  [-] {w}")
 
         print("\n" + "-" * 70)
         print("ACTION ITEMS")
         print("-" * 70)
         for a in overall.action_items:
-            print(f"  → {a}")
+            print(f"  [>] {a}")
 
         print("\n" + "=" * 70)
         print("NOTE: Grades are benchmarked against institutional hedge funds.")

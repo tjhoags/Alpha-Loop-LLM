@@ -645,7 +645,7 @@ class ScoutAgent(BaseAgent):
     def _report_immediately(self, opportunity: ScalpOpportunity):
         """Send immediate notification to HOAGS"""
         self.logger.critical(
-            f"🚨 SCOUT IMMEDIATE ALERT 🚨\n"
+            f"SCOUT IMMEDIATE ALERT\n"
             f"Ticker: {opportunity.ticker}\n"
             f"Type: {opportunity.inefficiency_type.value}\n"
             f"Edge: {opportunity.edge_cents:.0f}¢ ({opportunity.edge_pct:.1%})\n"

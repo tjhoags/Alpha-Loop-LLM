@@ -727,7 +727,7 @@ class UnconventionalDataAgent(BaseAgent):
     def _escalate_to_hoags(self, inflection: InflectionSignal):
         """Escalate high-conviction inflection to HOAGS."""
         self.logger.critical(
-            f"🚨 INFLECTION ALERT → HOAGS 🚨\n"
+            f"INFLECTION ALERT -> HOAGS\n"
             f"Ticker: {inflection.ticker}\n"
             f"Type: {inflection.inflection_type}\n"
             f"Score: {inflection.composite_score:.0f}/100\n"

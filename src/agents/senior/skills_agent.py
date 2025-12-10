@@ -200,7 +200,7 @@ class AgentSkillProfile:
         return {
             "Agent": self.agent_name,
             "Score": self.overall_score,
-            "Trend": "📈" if self.trend == "improving" else "📉" if self.trend == "declining" else "➡️",
+            "Trend": "UP" if self.trend == "improving" else "DOWN" if self.trend == "declining" else "FLAT",
             "Top Strength": self.strengths[0] if self.strengths else "-",
             "Focus Area": self.improvement_areas[0] if self.improvement_areas else "-",
             "Last Test": self.last_tested.strftime("%Y-%m-%d")

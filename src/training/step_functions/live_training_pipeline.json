@@ -1,0 +1,591 @@
+{
+  "Comment": "Alpha Loop Capital - Live Data Training Pipeline with Step Functions",
+  "StartAt": "InitializeTrainingSession",
+  "States": {
+    "InitializeTrainingSession": {
+      "Type": "Task",
+      "Resource": "arn:aws:lambda:us-east-1:${AWS::AccountId}:function:alc-init-training",
+      "Parameters": {
+        "session_id.$": "$$.Execution.Id",
+        "timestamp.$": "$$.Execution.StartTime",
+        "config": {
+          "symbols": ["SPY", "QQQ", "IWM", "VIX", "AAPL", "MSFT", "NVDA"],
+          "data_sources": ["polygon", "alpaca"],
+          "include_options": true,
+          "include_news": true,
+          "buffer_size": 10000
+        }
+      },
+      "ResultPath": "$.session",
+      "Next": "StartDataStreams",
+      "Catch": [
+        {
+          "ErrorEquals": ["States.ALL"],
+          "Next": "NotifyFailure",
+          "ResultPath": "$.error"
+        }
+      ]
+    },
+
+    "StartDataStreams": {
+      "Type": "Task",
+      "Resource": "arn:aws:lambda:us-east-1:${AWS::AccountId}:function:alc-start-streams",
+      "Parameters": {
+        "session_id.$": "$.session.session_id",
+        "polygon_config": {
+          "api_key_secret": "alc/polygon/api_key",
+          "websocket": true,
+          "channels": ["T", "Q", "A"]
+        },
+        "alpaca_config": {
+          "api_key_secret": "alc/alpaca/api_key",
+          "paper_trading": true
+        }
+      },
+      "ResultPath": "$.streams",
+      "Next": "WaitForDataBuffer",
+      "TimeoutSeconds": 60
+    },
+
+    "WaitForDataBuffer": {
+      "Type": "Wait",
+      "Seconds": 120,
+      "Comment": "Wait 2 minutes to collect initial data buffer",
+      "Next": "CollectTrainingData"
+    },
+
+    "CollectTrainingData": {
+      "Type": "Task",
+      "Resource": "arn:aws:lambda:us-east-1:${AWS::AccountId}:function:alc-collect-data",
+      "Parameters": {
+        "session_id.$": "$.session.session_id",
+        "duration_seconds": 300,
+        "batch_size": 5000,
+        "include_derived_features": true,
+        "feature_engineering": {
+          "technical_indicators": ["RSI", "MACD", "BB", "ATR", "VWAP"],
+          "volatility_features": ["realized_vol", "iv_percentile", "skew"],
+          "flow_features": ["order_imbalance", "trade_intensity"]
+        }
+      },
+      "ResultPath": "$.training_data",
+      "Next": "TrainMasterAgents",
+      "TimeoutSeconds": 600
+    },
+
+    "TrainMasterAgents": {
+      "Type": "Parallel",
+      "Comment": "Train MASTER tier agents in parallel (GHOST, HOAGS, NOBUS)",
+      "Branches": [
+        {
+          "StartAt": "TrainGHOST",
+          "States": {
+            "TrainGHOST": {
+              "Type": "Task",
+              "Resource": "arn:aws:lambda:us-east-1:${AWS::AccountId}:function:alc-train-agent",
+              "Parameters": {
+                "agent_name": "GHOST",
+                "tier": "MASTER",
+                "training_config": {
+                  "mode": "streaming",
+                  "epochs": 15,
+                  "batch_size": 64,
+                  "learning_rate": 0.0001,
+                  "optimizer": "adamw",
+                  "scheduler": "cosine_annealing",
+                  "early_stopping": true,
+                  "patience": 5
+                },
+                "model_config": {
+                  "architecture": "transformer",
+                  "hidden_dim": 256,
+                  "num_heads": 8,
+                  "num_layers": 4,
+                  "dropout": 0.1
+                },
+                "data_path.$": "$.training_data.s3_path",
+                "checkpoint_bucket": "alc-model-checkpoints"
+              },
+              "ResultPath": "$.ghost_result",
+              "TimeoutSeconds": 1800,
+              "Retry": [
+                {
+                  "ErrorEquals": ["Lambda.ServiceException", "Lambda.TooManyRequestsException"],
+                  "IntervalSeconds": 60,
+                  "MaxAttempts": 3,
+                  "BackoffRate": 2
+                }
+              ],
+              "End": true
+            }
+          }
+        },
+        {
+          "StartAt": "TrainHOAGS",
+          "States": {
+            "TrainHOAGS": {
+              "Type": "Task",
+              "Resource": "arn:aws:lambda:us-east-1:${AWS::AccountId}:function:alc-train-agent",
+              "Parameters": {
+                "agent_name": "HOAGS",
+                "tier": "MASTER",
+                "training_config": {
+                  "mode": "online",
+                  "epochs": 10,
+                  "batch_size": 32,
+                  "learning_rate": 0.0001
+                },
+                "data_path.$": "$.training_data.s3_path"
+              },
+              "ResultPath": "$.hoags_result",
+              "TimeoutSeconds": 1800,
+              "End": true
+            }
+          }
+        }
+      ],
+      "ResultPath": "$.master_results",
+      "Next": "ValidateMasterTier"
+    },
+
+    "ValidateMasterTier": {
+      "Type": "Task",
+      "Resource": "arn:aws:lambda:us-east-1:${AWS::AccountId}:function:alc-validate-models",
+      "Parameters": {
+        "agents": ["GHOST", "HOAGS"],
+        "validation_data.$": "$.training_data.validation_path",
+        "metrics": ["accuracy", "precision", "recall", "f1", "sharpe_ratio", "max_drawdown"],
+        "thresholds": {
+          "min_accuracy": 0.6,
+          "min_sharpe": 0.5,
+          "max_drawdown": 0.15
+        }
+      },
+      "ResultPath": "$.master_validation",
+      "Next": "CheckMasterValidation"
+    },
+
+    "CheckMasterValidation": {
+      "Type": "Choice",
+      "Choices": [
+        {
+          "Variable": "$.master_validation.all_passed",
+          "BooleanEquals": true,
+          "Next": "TrainSeniorAgents"
+        }
+      ],
+      "Default": "RetrainFailedMasters"
+    },
+
+    "RetrainFailedMasters": {
+      "Type": "Task",
+      "Resource": "arn:aws:lambda:us-east-1:${AWS::AccountId}:function:alc-retrain-failed",
+      "Parameters": {
+        "failed_agents.$": "$.master_validation.failed_agents",
+        "additional_epochs": 10,
+        "adjust_learning_rate": true
+      },
+      "ResultPath": "$.retrain_master_results",
+      "Next": "ValidateMasterTier"
+    },
+
+    "TrainSeniorAgents": {
+      "Type": "Parallel",
+      "Comment": "Train SENIOR tier agents in parallel",
+      "Branches": [
+        {
+          "StartAt": "TrainBOOKMAKER",
+          "States": {
+            "TrainBOOKMAKER": {
+              "Type": "Task",
+              "Resource": "arn:aws:lambda:us-east-1:${AWS::AccountId}:function:alc-train-agent",
+              "Parameters": {
+                "agent_name": "BOOKMAKER",
+                "tier": "SENIOR",
+                "training_config": {
+                  "mode": "hybrid",
+                  "epochs": 20,
+                  "batch_size": 64,
+                  "learning_rate": 0.0005,
+                  "specialization": "alpha_generation"
+                },
+                "data_path.$": "$.training_data.s3_path"
+              },
+              "End": true
+            }
+          }
+        },
+        {
+          "StartAt": "TrainSCOUT",
+          "States": {
+            "TrainSCOUT": {
+              "Type": "Task",
+              "Resource": "arn:aws:lambda:us-east-1:${AWS::AccountId}:function:alc-train-agent",
+              "Parameters": {
+                "agent_name": "SCOUT",
+                "tier": "SENIOR",
+                "training_config": {
+                  "mode": "streaming",
+                  "epochs": 20,
+                  "specialization": "arbitrage_detection"
+                },
+                "data_path.$": "$.training_data.s3_path"
+              },
+              "End": true
+            }
+          }
+        },
+        {
+          "StartAt": "TrainAUTHOR",
+          "States": {
+            "TrainAUTHOR": {
+              "Type": "Task",
+              "Resource": "arn:aws:lambda:us-east-1:${AWS::AccountId}:function:alc-train-agent",
+              "Parameters": {
+                "agent_name": "AUTHOR",
+                "tier": "SENIOR",
+                "training_config": {
+                  "mode": "batch",
+                  "epochs": 15,
+                  "specialization": "narrative_synthesis"
+                },
+                "data_path.$": "$.training_data.s3_path"
+              },
+              "End": true
+            }
+          }
+        },
+        {
+          "StartAt": "TrainHUNTER",
+          "States": {
+            "TrainHUNTER": {
+              "Type": "Task",
+              "Resource": "arn:aws:lambda:us-east-1:${AWS::AccountId}:function:alc-train-agent",
+              "Parameters": {
+                "agent_name": "HUNTER",
+                "tier": "SENIOR",
+                "training_config": {
+                  "mode": "online",
+                  "epochs": 15,
+                  "specialization": "algorithm_detection"
+                },
+                "data_path.$": "$.training_data.s3_path"
+              },
+              "End": true
+            }
+          }
+        },
+        {
+          "StartAt": "TrainSTRINGS",
+          "States": {
+            "TrainSTRINGS": {
+              "Type": "Task",
+              "Resource": "arn:aws:lambda:us-east-1:${AWS::AccountId}:function:alc-train-agent",
+              "Parameters": {
+                "agent_name": "STRINGS",
+                "tier": "SENIOR",
+                "training_config": {
+                  "mode": "batch",
+                  "epochs": 25,
+                  "specialization": "weight_optimization"
+                },
+                "data_path.$": "$.training_data.s3_path"
+              },
+              "End": true
+            }
+          }
+        },
+        {
+          "StartAt": "TrainKILLJOY",
+          "States": {
+            "TrainKILLJOY": {
+              "Type": "Task",
+              "Resource": "arn:aws:lambda:us-east-1:${AWS::AccountId}:function:alc-train-agent",
+              "Parameters": {
+                "agent_name": "KILLJOY",
+                "tier": "SENIOR",
+                "training_config": {
+                  "mode": "streaming",
+                  "epochs": 20,
+                  "specialization": "risk_management"
+                },
+                "data_path.$": "$.training_data.s3_path"
+              },
+              "End": true
+            }
+          }
+        }
+      ],
+      "ResultPath": "$.senior_results",
+      "Next": "CrossTrainSynergisticPairs"
+    },
+
+    "CrossTrainSynergisticPairs": {
+      "Type": "Parallel",
+      "Comment": "Cross-train agent pairs with known synergies",
+      "Branches": [
+        {
+          "StartAt": "CrossTrain_GHOST_SCOUT_to_AUTHOR",
+          "States": {
+            "CrossTrain_GHOST_SCOUT_to_AUTHOR": {
+              "Type": "Task",
+              "Resource": "arn:aws:lambda:us-east-1:${AWS::AccountId}:function:alc-cross-train",
+              "Parameters": {
+                "source_agents": ["GHOST", "SCOUT"],
+                "target_agent": "AUTHOR",
+                "synergy": "Absence detection + Arbitrage -> Narrative",
+                "communication_mode": "synthesize",
+                "training_rounds": 5,
+                "data_path.$": "$.training_data.s3_path"
+              },
+              "End": true
+            }
+          }
+        },
+        {
+          "StartAt": "CrossTrain_HUNTER_BOOKMAKER_to_GHOST",
+          "States": {
+            "CrossTrain_HUNTER_BOOKMAKER_to_GHOST": {
+              "Type": "Task",
+              "Resource": "arn:aws:lambda:us-east-1:${AWS::AccountId}:function:alc-cross-train",
+              "Parameters": {
+                "source_agents": ["HUNTER", "BOOKMAKER"],
+                "target_agent": "GHOST",
+                "synergy": "Algorithm intelligence + Alpha -> Master coordination",
+                "communication_mode": "synthesize",
+                "training_rounds": 5,
+                "data_path.$": "$.training_data.s3_path"
+              },
+              "End": true
+            }
+          }
+        },
+        {
+          "StartAt": "CrossTrain_STRINGS_SKILLS",
+          "States": {
+            "CrossTrain_STRINGS_SKILLS": {
+              "Type": "Task",
+              "Resource": "arn:aws:lambda:us-east-1:${AWS::AccountId}:function:alc-cross-train",
+              "Parameters": {
+                "source_agents": ["STRINGS"],
+                "target_agent": "SKILLS",
+                "synergy": "Weight optimization -> Skill assessment",
+                "communication_mode": "articulate",
+                "training_rounds": 3,
+                "data_path.$": "$.training_data.s3_path"
+              },
+              "End": true
+            }
+          }
+        },
+        {
+          "StartAt": "CrossTrain_KILLJOY_RISK",
+          "States": {
+            "CrossTrain_KILLJOY_RISK": {
+              "Type": "Task",
+              "Resource": "arn:aws:lambda:us-east-1:${AWS::AccountId}:function:alc-cross-train",
+              "Parameters": {
+                "source_agents": ["KILLJOY"],
+                "target_agent": "RISK_AGENT",
+                "synergy": "Capital guardrails -> Risk assessment",
+                "communication_mode": "observe",
+                "training_rounds": 3,
+                "data_path.$": "$.training_data.s3_path"
+              },
+              "End": true
+            }
+          }
+        }
+      ],
+      "ResultPath": "$.cross_train_results",
+      "Next": "TrainStrategyAgents"
+    },
+
+    "TrainStrategyAgents": {
+      "Type": "Parallel",
+      "Comment": "Train specialized strategy agents",
+      "Branches": [
+        {
+          "StartAt": "TrainMOMENTUM",
+          "States": {
+            "TrainMOMENTUM": {
+              "Type": "Task",
+              "Resource": "arn:aws:lambda:us-east-1:${AWS::AccountId}:function:alc-train-agent",
+              "Parameters": {
+                "agent_name": "MOMENTUM",
+                "tier": "STRATEGY",
+                "training_config": {
+                  "mode": "streaming",
+                  "epochs": 30,
+                  "specialization": "trend_following"
+                }
+              },
+              "End": true
+            }
+          }
+        },
+        {
+          "StartAt": "TrainVALUE",
+          "States": {
+            "TrainVALUE": {
+              "Type": "Task",
+              "Resource": "arn:aws:lambda:us-east-1:${AWS::AccountId}:function:alc-train-agent",
+              "Parameters": {
+                "agent_name": "VALUE",
+                "tier": "STRATEGY",
+                "training_config": {
+                  "mode": "batch",
+                  "epochs": 30,
+                  "specialization": "fundamental_analysis"
+                }
+              },
+              "End": true
+            }
+          }
+        },
+        {
+          "StartAt": "TrainCONVERSION_REVERSAL",
+          "States": {
+            "TrainCONVERSION_REVERSAL": {
+              "Type": "Task",
+              "Resource": "arn:aws:lambda:us-east-1:${AWS::AccountId}:function:alc-train-agent",
+              "Parameters": {
+                "agent_name": "CONVERSION_REVERSAL",
+                "tier": "STRATEGY",
+                "training_config": {
+                  "mode": "streaming",
+                  "epochs": 25,
+                  "specialization": "options_arbitrage"
+                }
+              },
+              "End": true
+            }
+          }
+        }
+      ],
+      "ResultPath": "$.strategy_results",
+      "Next": "FinalValidation"
+    },
+
+    "FinalValidation": {
+      "Type": "Task",
+      "Resource": "arn:aws:lambda:us-east-1:${AWS::AccountId}:function:alc-validate-models",
+      "Parameters": {
+        "agents": "ALL",
+        "validation_type": "comprehensive",
+        "backtesting": {
+          "start_date": "2024-01-01",
+          "end_date": "2024-12-01",
+          "initial_capital": 100000
+        },
+        "metrics": ["sharpe_ratio", "sortino_ratio", "max_drawdown", "win_rate", "profit_factor"]
+      },
+      "ResultPath": "$.final_validation",
+      "Next": "CheckFinalValidation"
+    },
+
+    "CheckFinalValidation": {
+      "Type": "Choice",
+      "Choices": [
+        {
+          "Variable": "$.final_validation.deployment_ready",
+          "BooleanEquals": true,
+          "Next": "SaveAndDeployModels"
+        }
+      ],
+      "Default": "ManualReviewRequired"
+    },
+
+    "SaveAndDeployModels": {
+      "Type": "Task",
+      "Resource": "arn:aws:lambda:us-east-1:${AWS::AccountId}:function:alc-save-deploy",
+      "Parameters": {
+        "session_id.$": "$.session.session_id",
+        "checkpoint_bucket": "alc-model-checkpoints",
+        "production_bucket": "alc-production-models",
+        "versioning": true,
+        "deployment_config": {
+          "canary_percentage": 10,
+          "monitoring_duration_minutes": 60
+        }
+      },
+      "ResultPath": "$.deployment",
+      "Next": "StopDataStreams"
+    },
+
+    "ManualReviewRequired": {
+      "Type": "Task",
+      "Resource": "arn:aws:lambda:us-east-1:${AWS::AccountId}:function:alc-notify",
+      "Parameters": {
+        "notification_type": "manual_review",
+        "session_id.$": "$.session.session_id",
+        "validation_results.$": "$.final_validation",
+        "recipients": ["tom@alphaloopcapital.com"]
+      },
+      "ResultPath": "$.notification",
+      "Next": "StopDataStreams"
+    },
+
+    "StopDataStreams": {
+      "Type": "Task",
+      "Resource": "arn:aws:lambda:us-east-1:${AWS::AccountId}:function:alc-stop-streams",
+      "Parameters": {
+        "session_id.$": "$.session.session_id"
+      },
+      "Next": "GenerateReport"
+    },
+
+    "GenerateReport": {
+      "Type": "Task",
+      "Resource": "arn:aws:lambda:us-east-1:${AWS::AccountId}:function:alc-generate-report",
+      "Parameters": {
+        "session_id.$": "$.session.session_id",
+        "include_sections": [
+          "training_summary",
+          "validation_metrics",
+          "cross_training_results",
+          "model_performance",
+          "recommendations"
+        ],
+        "output_format": "pdf",
+        "s3_bucket": "alc-training-reports"
+      },
+      "ResultPath": "$.report",
+      "Next": "TrainingComplete"
+    },
+
+    "TrainingComplete": {
+      "Type": "Succeed",
+      "Comment": "Live training pipeline completed successfully"
+    },
+
+    "NotifyFailure": {
+      "Type": "Task",
+      "Resource": "arn:aws:lambda:us-east-1:${AWS::AccountId}:function:alc-notify",
+      "Parameters": {
+        "notification_type": "failure",
+        "error.$": "$.error",
+        "session_id.$": "$.session.session_id",
+        "recipients": ["tom@alphaloopcapital.com", "alerts@alphaloopcapital.com"]
+      },
+      "Next": "CleanupOnFailure"
+    },
+
+    "CleanupOnFailure": {
+      "Type": "Task",
+      "Resource": "arn:aws:lambda:us-east-1:${AWS::AccountId}:function:alc-cleanup",
+      "Parameters": {
+        "session_id.$": "$.session.session_id",
+        "preserve_logs": true
+      },
+      "Next": "TrainingFailed"
+    },
+
+    "TrainingFailed": {
+      "Type": "Fail",
+      "Error": "TrainingPipelineFailure",
+      "Cause": "Live training pipeline encountered an error"
+    }
+  },
+  "TimeoutSeconds": 14400
+}

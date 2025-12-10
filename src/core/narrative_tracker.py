@@ -418,16 +418,16 @@ class NarrativeTracker:
         ]
 
         for signal in self.get_all_signals():
-            emoji = {
-                "entry": "🟢",
-                "hold_add": "🟡",
-                "reduce": "🟠",
-                "exit": "🔴",
-                "short": "⚫",
-            }.get(signal["signal"], "⚪")
+            indicator = {
+                "entry": "[ENTRY]",
+                "hold_add": "[HOLD+]",
+                "reduce": "[REDUCE]",
+                "exit": "[EXIT]",
+                "short": "[SHORT]",
+            }.get(signal["signal"], "[--]")
 
             lines.extend([
-                f"{emoji} {signal['narrative_name'].upper()}",
+                f"{indicator} {signal['narrative_name'].upper()}",
                 f"   Stage: {signal['stage']} | Signal: {signal['signal'].upper()}",
                 f"   Weekly Mentions: {signal['weekly_mentions']} | Sentiment: {signal['sentiment']}",
                 f"   Tickers: {', '.join(signal['primary_tickers'][:5])}",
