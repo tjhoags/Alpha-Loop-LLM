@@ -24,13 +24,19 @@ from src.data_ingestion.sources.alpha_vantage_premium import get_av_premium
 
 
 # Major indices
-MAJOR_INDICES = ["SPX", "NDX", "DJI", "VIX"]
+MAJOR_INDICES = ["SPX", "NDX", "DJI", "VIX", "RUT", "VXX", "SPY", "QQQ", "IWM", "DIA"]
 
 # Major forex pairs
 FOREX_PAIRS = [
     ("USD", "EUR"), ("USD", "GBP"), ("USD", "JPY"), ("USD", "CHF"),
     ("USD", "CAD"), ("USD", "AUD"), ("EUR", "GBP"), ("EUR", "JPY"),
-    ("GBP", "JPY"), ("AUD", "USD"), ("NZD", "USD"),
+    ("GBP", "JPY"), ("AUD", "USD"), ("NZD", "USD"), ("USD", "CHF"), 
+    ("USD", "MXN"), ("USD", "BRL"), ("USD", "ARS"), ("USD", "CLP"), 
+    ("USD", "COP"), ("USD", "PEN"), ("USD", "MXN"), ("USD", "BRL"), 
+    ("USD", "ARS"), ("USD", "CLP"), ("USD", "COP"), ("USD", "PEN"),
+    ("USD", "MXN"), ("USD", "BRL"), ("USD", "ARS"), ("USD", "CLP"), 
+    ("USD", "COP"), ("USD", "PEN"), ("USD", "MXN"), ("USD", "BRL"), 
+
 ]
 
 # Extended stock universe (add your small/mid-cap focus here)

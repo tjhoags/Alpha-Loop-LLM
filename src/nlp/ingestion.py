@@ -8,7 +8,10 @@ from loguru import logger
 from pypdf import PdfReader
 from sentence_transformers import SentenceTransformer
 
-from src.config.settings_new import get_settings
+try:
+    from src.config.settings import get_settings
+except ImportError:
+    from src.config.settings_new import get_settings
 from src.nlp.vectorstore import SimpleFaissStore
 
 try:

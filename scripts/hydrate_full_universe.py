@@ -34,7 +34,7 @@ from src.database.connection import get_engine
 # Configuration
 POLYGON_BASE_URL = "https://api.polygon.io"
 BATCH_SIZE = 100  # Tickers per batch
-MAX_WORKERS = 5   # Parallel API calls
+MAX_WORKERS = 8   # Parallel API calls
 RATE_LIMIT_DELAY = 0.25  # Seconds between calls
 
 
