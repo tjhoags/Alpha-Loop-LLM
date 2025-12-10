@@ -140,8 +140,8 @@ def load_price_data(
     start_date = datetime.now() - timedelta(days=lookback_days)
     start_date_str = start_date.strftime("%Y-%m-%d %H:%M:%S")
 
-    # Get connection string for parallel workers
-    connection_string = f"mssql+pyodbc://{settings.db_user}:{settings.db_password}@{settings.db_host}/{settings.db_name}?driver=ODBC+Driver+17+for+SQL+Server"
+    # Get connection string for parallel workers - use settings.sqlalchemy_url or build from components
+    connection_string = settings.sqlalchemy_url
 
     all_data = []
 
@@ -570,7 +570,7 @@ def main():
     parser.add_argument("--continuous", action="store_true", help="Run continuously")
     parser.add_argument("--symbols", type=str, help="Comma-separated symbols")
     parser.add_argument("--options", action="store_true", help="Include options training")
-    parser.add_argument("--interval", type=int, default=3600, help="Training interval (seconds)")
+    parser.add_argument("--interval", type=int, default=15, help="Training interval (seconds)")
 
     # New high-compute options
     parser.add_argument("--workers", type=int, default=8, help="Number of parallel workers for data loading")
