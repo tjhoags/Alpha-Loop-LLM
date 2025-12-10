@@ -1,4 +1,5 @@
 import json
+import os
 from pathlib import Path
 from typing import Dict, Iterable, List
 
@@ -65,7 +66,35 @@ def _iter_files(paths: Iterable[Path]) -> Iterable[Path]:
                     yield p
 
 
+def _read_and_chunk_single(path: Path, max_size: int, overlap: int) -> List[Dict]:
+    """Read a single file and return chunk dicts (thread-safe helper)."""
+    if path.suffix.lower() in {".txt", ".md"}:
+        text = _read_text_file(path)
+    elif path.suffix.lower() == ".pdf":
+        text = _read_pdf(path)
+    elif path.suffix.lower() == ".docx":
+        text = _read_docx(path)
+    elif path.suffix.lower() == ".csv":
+        text = _read_csv(path)
+    else:
+        return []
+
+    chunks = _chunk_text(text, max_size, overlap)
+    return [
+        {
+            "text": chunk,
+            "source_path": str(path),
+            "chunk_id": i,
+            "suffix": path.suffix.lower(),
+        }
+        for i, chunk in enumerate(chunks)
+    ]
+
+
 def load_and_chunk_documents() -> List[Dict]:
+    """Load all research documents concurrently and chunk them."""
+    from concurrent.futures import ThreadPoolExecutor, as_completed
+
     settings = get_settings()
     max_size = settings.max_chunk_size
     overlap = settings.chunk_overlap
@@ -74,34 +103,22 @@ def load_and_chunk_documents() -> List[Dict]:
     paths = [Path(p) for p in raw_paths]
 
     supported_suffixes = {".txt", ".md", ".pdf", ".docx", ".csv"}
-    docs: List[Dict] = []
 
-    for path in _iter_files(paths):
-        if path.suffix.lower() not in supported_suffixes:
-            continue
-        try:
-            if path.suffix.lower() in {".txt", ".md"}:
-                text = _read_text_file(path)
-            elif path.suffix.lower() == ".pdf":
-                text = _read_pdf(path)
-            elif path.suffix.lower() == ".docx":
-                text = _read_docx(path)
-            elif path.suffix.lower() == ".csv":
-                text = _read_csv(path)
-            else:
-                continue
-            chunks = _chunk_text(text, max_size, overlap)
-            for i, chunk in enumerate(chunks):
-                docs.append(
-                    {
-                        "text": chunk,
-                        "source_path": str(path),
-                        "chunk_id": i,
-                        "suffix": path.suffix.lower(),
-                    },
-                )
-        except Exception as exc:  # noqa: BLE001
-            logger.error(f"Failed to read {path}: {exc}")
+    # Collect candidate files first (cheap)
+    candidate_files = [p for p in _iter_files(paths) if p.suffix.lower() in supported_suffixes]
+
+    docs: List[Dict] = []
+    with ThreadPoolExecutor(max_workers=min(32, os.cpu_count() or 4)) as executor:
+        futures = {
+            executor.submit(_read_and_chunk_single, p, max_size, overlap): p for p in candidate_files
+        }
+        for fut in as_completed(futures):
+            path = futures[fut]
+            try:
+                docs.extend(fut.result())
+            except Exception as exc:  # noqa: BLE001
+                logger.error(f"Failed to process {path}: {exc}")
+
     logger.info(f"Prepared {len(docs)} text chunks from research corpus.")
     return docs
 

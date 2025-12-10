@@ -1,526 +1,526 @@
-# 🖥️ Terminal Commands Reference
-## Quick Reference for Windows & Mac Operations
+# ️ erminal ommands eference
+## uick eference for indows & ac perations
 
-> **For detailed explanations, see [`CROSS_PLATFORM_COMMANDS.md`](CROSS_PLATFORM_COMMANDS.md)**
+ **or detailed explanations, see `__.md`](__.md)**
 
 ---
 
-## 📊 Current System Status
+##  urrent ystem tatus
 
-| Component | Status | Notes |
+| omponent | tatus | otes |
 |-----------|--------|-------|
-| **Data in Azure SQL** | 3,400+ symbols, 1.4M+ rows | Continuously updating |
-| **Models Trained** | Check `models/` folder | Retrained hourly |
-| **Trading Engine** | Ready | Start at 9:15 AM ET |
+| **ata in zure ** | ,+ symbols, .+ rows | ontinuously updating |
+| **odels rained** | heck `models/` folder | etrained hourly |
+| **rading ngine** | eady | tart at    |
 
 ---
 
-## 🚀 Quick Start Commands
+##  uick tart ommands
 
-### Initial Setup (One-Time)
+### nitial etup (ne-ime)
 
-<table>
-<tr>
-<th>🪟 Windows (PowerShell)</th>
-<th>🍎 MacBook Pro (Terminal)</th>
-</tr>
-<tr>
-<td>
+table
+tr
+th🪟 indows (owerhell)/th
+th acook ro (erminal)/th
+/tr
+tr
+td
 
 ```powershell
-# Step 1: Open terminal
-# Press Windows + X → Terminal
+# tep  pen terminal
+# ress indows +  → erminal
 
-# Step 2: Navigate to project
-cd "C:\Users\tom\.cursor\worktrees\Alpha-Loop-LLM-1\sii"
+# tep  avigate to project
+cd "serstom.cursorworktreeslpha-oop--sii"
 
-# Step 3: Create virtual environment
+# tep  reate virtual environment
 python -m venv venv
 
-# Step 4: Activate it
-.\venv\Scripts\Activate.ps1
+# tep  ctivate it
+.venvcriptsctivate.ps
 
-# Step 5: Install packages
+# tep  nstall packages
 pip install -r requirements.txt
 
-# Step 6: Copy environment file
-Copy-Item "C:\Users\tom\OneDrive\Alpha Loop LLM\API - Dec 2025.env" -Destination ".env"
+# tep  opy environment file
+opy-tem "serstomlphaloopcapital ropbox ech gents - ec .env" -estination ".env"
 
-# Step 7: Test database
+# tep  est database
 python scripts/test_db_connection.py
 ```
 
-</td>
-<td>
+/td
+td
 
 ```bash
-# Step 1: Open terminal
-# Press Cmd + Space → type "Terminal"
+# tep  pen terminal
+# ress md + pace → type "erminal"
 
-# Step 2: Navigate to project
-cd ~/Alpha-Loop-LLM/Alpha-Loop-LLM-1/sii
+# tep  avigate to project
+cd ~/lpha-oop-/lpha-oop--/sii
 
-# Step 3: Create virtual environment
-python3 -m venv venv
+# tep  reate virtual environment
+python -m venv venv
 
-# Step 4: Activate it
+# tep  ctivate it
 source venv/bin/activate
 
-# Step 5: Install packages
+# tep  nstall packages
 pip install -r requirements.txt
 
-# Step 6: Copy environment file
-cp ~/OneDrive/Alpha\ Loop\ LLM/API\ -\ Dec\ 2025.env .env
+# tep  opy environment file
+cp ~/lphaloopcapital ropbox/ ech gents/ - ec .env .env
 
-# Step 7: Test database
+# tep  est database
 python scripts/test_db_connection.py
 ```
 
-</td>
-</tr>
-</table>
+/td
+/tr
+/table
 
 ---
 
-## 🌙 Overnight Training (5+ Terminals)
+##  vernight raining (+ erminals)
 
-### Terminal Configuration
+### erminal onfiguration
 
-| Terminal | Windows | Mac | Purpose |
+| erminal | indows | ac | urpose |
 |----------|---------|-----|---------|
-| **T1** | Data Hydration | Data Hydration | Pull market data |
-| **T2** | ML Training | ML Training | Train models |
-| **T3** | Monitor | Monitor | Dashboard |
-| **T4** | - | Research | Mac-specific data |
-| **T5** | - | Backup Training | Redundancy |
+| **** | ata ydration | ata ydration | ull market data |
+| **** |  raining |  raining | rain models |
+| **** | onitor | onitor | ashboard |
+| **** | - | esearch | ac-specific data |
+| **** | - | ackup raining | edundancy |
 
-### Terminal 1: Data Hydration
+### erminal  ata ydration
 
-<table>
-<tr>
-<th>🪟 Windows</th>
-<th>🍎 Mac</th>
-</tr>
-<tr>
-<td>
+table
+tr
+th🪟 indows/th
+th ac/th
+/tr
+tr
+td
 
 ```powershell
-cd "C:\Users\tom\.cursor\worktrees\Alpha-Loop-LLM-1\sii"
-.\venv\Scripts\Activate.ps1
-python scripts/hydrate_full_universe.py 2>&1 | Tee-Object -FilePath logs/hydration.log
+cd "serstom.cursorworktreeslpha-oop--sii"
+.venvcriptsctivate.ps
+python scripts/hydrate_full_universe.py & | ee-bject -ileath logs/hydration.log
 ```
 
-</td>
-<td>
+/td
+td
 
 ```bash
-cd ~/Alpha-Loop-LLM/Alpha-Loop-LLM-1/sii
+cd ~/lpha-oop-/lpha-oop--/sii
 source venv/bin/activate
-caffeinate -d python scripts/hydrate_full_universe.py 2>&1 | tee logs/hydration.log
+caffeinate -d python scripts/hydrate_full_universe.py & | tee logs/hydration.log
 ```
 
-</td>
-</tr>
-</table>
+/td
+/tr
+/table
 
-### Terminal 2: Model Training
+### erminal  odel raining
 
-<table>
-<tr>
-<th>🪟 Windows</th>
-<th>🍎 Mac</th>
-</tr>
-<tr>
-<td>
+table
+tr
+th🪟 indows/th
+th ac/th
+/tr
+tr
+td
 
 ```powershell
-cd "C:\Users\tom\.cursor\worktrees\Alpha-Loop-LLM-1\sii"
-.\venv\Scripts\Activate.ps1
-python -c "from src.ml.advanced_training import run_overnight_training; run_overnight_training()" 2>&1 | Tee-Object -FilePath logs/training.log
+cd "serstom.cursorworktreeslpha-oop--sii"
+.venvcriptsctivate.ps
+python -c "from src.ml.advanced_training import run_overnight_training run_overnight_training()" & | ee-bject -ileath logs/training.log
 ```
 
-</td>
-<td>
+/td
+td
 
 ```bash
-cd ~/Alpha-Loop-LLM/Alpha-Loop-LLM-1/sii
+cd ~/lpha-oop-/lpha-oop--/sii
 source venv/bin/activate
-caffeinate -d python -c "from src.ml.advanced_training import run_overnight_training; run_overnight_training()" 2>&1 | tee logs/training.log
+caffeinate -d python -c "from src.ml.advanced_training import run_overnight_training run_overnight_training()" & | tee logs/training.log
 ```
 
-</td>
-</tr>
-</table>
+/td
+/tr
+/table
 
-### Terminal 3: Monitor Dashboard
+### erminal  onitor ashboard
 
-<table>
-<tr>
-<th>🪟 Windows</th>
-<th>🍎 Mac</th>
-</tr>
-<tr>
-<td>
+table
+tr
+th🪟 indows/th
+th ac/th
+/tr
+tr
+td
 
 ```powershell
-cd "C:\Users\tom\.cursor\worktrees\Alpha-Loop-LLM-1\sii"
-.\venv\Scripts\Activate.ps1
+cd "serstom.cursorworktreeslpha-oop--sii"
+.venvcriptsctivate.ps
 
-# Check hydration progress
-Get-Content logs/hydration.log -Tail 10
+# heck hydration progress
+et-ontent logs/hydration.log -ail 
 
-# Check training progress
-Get-Content logs/training.log -Tail 10
+# heck training progress
+et-ontent logs/training.log -ail 
 
-# Model count
-(Get-ChildItem models\*.pkl -ErrorAction SilentlyContinue).Count
+# odel count
+(et-hildtem models*.pkl -rrorction ilentlyontinue).ount
 
-# Full dashboard
+# ull dashboard
 python scripts/model_dashboard.py
 ```
 
-</td>
-<td>
+/td
+td
 
 ```bash
-cd ~/Alpha-Loop-LLM/Alpha-Loop-LLM-1/sii
+cd ~/lpha-oop-/lpha-oop--/sii
 source venv/bin/activate
 
-# Check hydration progress
-tail -10 logs/hydration.log
+# heck hydration progress
+tail - logs/hydration.log
 
-# Check training progress
-tail -10 logs/training.log
+# heck training progress
+tail - logs/training.log
 
-# Model count
-ls models/*.pkl 2>/dev/null | wc -l
+# odel count
+ls models/*.pkl /dev/null | wc -l
 
-# Full dashboard
+# ull dashboard
 python scripts/model_dashboard.py
 ```
 
-</td>
-</tr>
-</table>
+/td
+/tr
+/table
 
-### Terminal 4 (Mac Only): Research Ingestion
+### erminal  (ac nly) esearch ngestion
 
 ```bash
-cd ~/Alpha-Loop-LLM/Alpha-Loop-LLM-1/sii
+cd ~/lpha-oop-/lpha-oop--/sii
 source venv/bin/activate
-caffeinate -d python scripts/ingest_research.py 2>&1 | tee logs/research.log
+caffeinate -d python scripts/ingest_research.py & | tee logs/research.log
 ```
 
-### Terminal 5 (Mac Only): Backup Training
+### erminal  (ac nly) ackup raining
 
 ```bash
-cd ~/Alpha-Loop-LLM/Alpha-Loop-LLM-1/sii
+cd ~/lpha-oop-/lpha-oop--/sii
 source venv/bin/activate
-caffeinate -d python src/ml/train_models.py 2>&1 | tee logs/training_backup.log
+caffeinate -d python src/ml/train_models.py & | tee logs/training_backup.log
 ```
 
 ---
 
-## ☀️ Morning Trading (9:15 AM ET)
+## ️ orning rading (  )
 
-<table>
-<tr>
-<th>🪟 Windows</th>
-<th>🍎 Mac</th>
-</tr>
-<tr>
-<td>
+table
+tr
+th🪟 indows/th
+th ac/th
+/tr
+tr
+td
 
 ```powershell
-cd "C:\Users\tom\.cursor\worktrees\Alpha-Loop-LLM-1\sii"
-.\venv\Scripts\Activate.ps1
+cd "serstom.cursorworktreeslpha-oop--sii"
+.venvcriptsctivate.ps
 python src/trading/execution_engine.py
 ```
 
-</td>
-<td>
+/td
+td
 
 ```bash
-cd ~/Alpha-Loop-LLM/Alpha-Loop-LLM-1/sii
+cd ~/lpha-oop-/lpha-oop--/sii
 source venv/bin/activate
 python src/trading/execution_engine.py
 ```
 
-</td>
-</tr>
-</table>
+/td
+/tr
+/table
 
-**Prerequisites:** IBKR TWS/Gateway running (Paper: 7497, Live: 7496)
+**rerequisites**  /ateway running (aper , ive )
 
 ---
 
-## 📊 Status Check Commands
+##  tatus heck ommands
 
-### Quick Status
+### uick tatus
 
-<table>
-<tr>
-<th>🪟 Windows</th>
-<th>🍎 Mac</th>
-</tr>
-<tr>
-<td>
+table
+tr
+th🪟 indows/th
+th ac/th
+/tr
+tr
+td
 
 ```powershell
-# How many models trained?
-(Get-ChildItem models\*.pkl).Count
+# ow many models trained
+(et-hildtem models*.pkl).ount
 
-# Last 5 log entries
-Get-Content logs\training.log -Tail 5
+# ast  log entries
+et-ontent logstraining.log -ail 
 
-# Database row count
-python -c "from src.database.connection import get_engine; import pandas as pd; print(pd.read_sql('SELECT COUNT(*) FROM price_bars', get_engine()))"
+# atabase row count
+python -c "from src.database.connection import get_engine import pandas as pd print(pd.read_sql(' (*)  price_bars', get_engine()))"
 ```
 
-</td>
-<td>
+/td
+td
 
 ```bash
-# How many models trained?
+# ow many models trained
 ls models/*.pkl | wc -l
 
-# Last 5 log entries
-tail -5 logs/training.log
+# ast  log entries
+tail - logs/training.log
 
-# Database row count
-python -c "from src.database.connection import get_engine; import pandas as pd; print(pd.read_sql('SELECT COUNT(*) FROM price_bars', get_engine()))"
+# atabase row count
+python -c "from src.database.connection import get_engine import pandas as pd print(pd.read_sql(' (*)  price_bars', get_engine()))"
 ```
 
-</td>
-</tr>
-</table>
+/td
+/tr
+/table
 
 ---
 
-## 🔧 Utility Commands
+##  tility ommands
 
-### Data Operations
+### ata perations
 
-<table>
-<tr>
-<th>🪟 Windows</th>
-<th>🍎 Mac</th>
-</tr>
-<tr>
-<td>
+table
+tr
+th🪟 indows/th
+th ac/th
+/tr
+tr
+td
 
 ```powershell
-# Test DB connection
+# est  connection
 python scripts/test_db_connection.py
 
-# Quick data hydration
-.\scripts\HYDRATE_QUICK.bat
+# uick data hydration
+.scripts_.bat
 
-# Full universe hydration
-.\scripts\HYDRATE_FULL_UNIVERSE.bat
+# ull universe hydration
+.scripts__.bat
 
-# Ingest research
-.\scripts\INGEST_RESEARCH.bat
+# ngest research
+.scripts_.bat
 ```
 
-</td>
-<td>
+/td
+td
 
 ```bash
-# Test DB connection
+# est  connection
 python scripts/test_db_connection.py
 
-# Quick data hydration
+# uick data hydration
 bash scripts/mac_data_collection.sh
 
-# Full overnight training
+# ull overnight training
 bash scripts/mac_overnight_training.sh
 
-# Ingest research
+# ngest research
 python scripts/ingest_research.py
 ```
 
-</td>
-</tr>
-</table>
+/td
+/tr
+/table
 
-### Agent Operations
+### gent perations
 
-<table>
-<tr>
-<th>🪟 Windows</th>
-<th>🍎 Mac</th>
-</tr>
-<tr>
-<td>
+table
+tr
+th🪟 indows/th
+th ac/th
+/tr
+tr
+td
 
 ```powershell
-# Start agent chat
-.\scripts\START_AGENT_CHAT.bat
+# tart agent chat
+.scripts__.bat
 
-# Train all agents
-.\scripts\TRAIN_ALL_AGENTS.bat
+# rain all agents
+.scripts__.bat
 
-# Check model grades
-.\scripts\CHECK_MODEL_GRADES.bat
+# heck model grades
+.scripts__.bat
 ```
 
-</td>
-<td>
+/td
+td
 
 ```bash
-# Start agent chat
+# tart agent chat
 python src/interfaces/agent_chat.py
 
-# Train all agents
+# rain all agents
 python src/training/train_all_agents.py
 
-# Check model grades
+# heck model grades
 python scripts/training_status.py
 ```
 
-</td>
-</tr>
-</table>
+/td
+/tr
+/table
 
-### Code Review
+### ode eview
 
-<table>
-<tr>
-<th>🪟 Windows</th>
-<th>🍎 Mac</th>
-</tr>
-<tr>
-<td>
+table
+tr
+th🪟 indows/th
+th ac/th
+/tr
+tr
+td
 
 ```powershell
-# Run code review
-.\scripts\REVIEW_CODE.bat
+# un code review
+.scripts_.bat
 
-# Or directly
+# r directly
 python -m src.review.orchestrator
 
-# Issue scanner
+# ssue scanner
 python -m src.review.issue_scanner
 ```
 
-</td>
-<td>
+/td
+td
 
 ```bash
-# Run code review
+# un code review
 python -m src.review.orchestrator
 
-# Issue scanner
+# ssue scanner
 python -m src.review.issue_scanner
 ```
 
-</td>
-</tr>
-</table>
+/td
+/tr
+/table
 
 ---
 
-## 📈 Training Timeline
+##  raining imeline
 
-| Time | Activity | Status |
+| ime | ctivity | tatus |
 |------|----------|--------|
-| Now | Start hydration + training | 🔄 Running |
-| +1 hour | First models complete | ✅ Check |
-| +3 hours | 500+ models trained | ✅ Check |
-| +6 hours | Most stocks complete | ✅ Check |
-| 9:00 AM | Check model grades | 📊 Review |
-| 9:15 AM | Start trading engine | 🚀 Go |
-| 9:30 AM | Market open | 💰 Trading |
+| ow | tart hydration + training |  unning |
+| + hour | irst models complete |  heck |
+| + hours | + models trained |  heck |
+| + hours | ost stocks complete |  heck |
+|   | heck model grades |  eview |
+|   | tart trading engine |  o |
+|   | arket open |  rading |
 
 ---
 
-## ⚠️ Troubleshooting
+## ️ roubleshooting
 
-### Common Issues
+### ommon ssues
 
-| Problem | Windows Fix | Mac Fix |
+| roblem | indows ix | ac ix |
 |---------|-------------|---------|
-| "Module not found" | `.\venv\Scripts\Activate.ps1` | `source venv/bin/activate` |
-| "Execution policy" | `Set-ExecutionPolicy RemoteSigned -Scope CurrentUser` | N/A |
-| "python not found" | Use `python` | Use `python3` |
-| Mac sleeps | N/A | `caffeinate -d` |
-| DB connection fails | Check `.env` file | Check `.env` file |
+| "odule not found" | `.venvcriptsctivate.ps` | `source venv/bin/activate` |
+| "xecution policy" | `et-xecutionolicy emoteigned -cope urrentser` | / |
+| "python not found" | se `python` | se `python` |
+| ac sleeps | / | `caffeinate -d` |
+|  connection fails | heck `.env` file | heck `.env` file |
 
-### Verify Environment
+### erify nvironment
 
-<table>
-<tr>
-<th>🪟 Windows</th>
-<th>🍎 Mac</th>
-</tr>
-<tr>
-<td>
+table
+tr
+th🪟 indows/th
+th ac/th
+/tr
+tr
+td
 
 ```powershell
-# Check Python version
+# heck ython version
 python --version
 
-# Check venv is active
-Get-Command python
+# heck venv is active
+et-ommand python
 
-# Check .env exists
-Test-Path ".env"
+# heck .env exists
+est-ath ".env"
 
-# View .env (first 5 lines)
-Get-Content ".env" | Select -First 5
+# iew .env (first  lines)
+et-ontent ".env" | elect -irst 
 ```
 
-</td>
-<td>
+/td
+td
 
 ```bash
-# Check Python version
+# heck ython version
 python --version
 
-# Check venv is active
+# heck venv is active
 which python
 
-# Check .env exists
+# heck .env exists
 ls -la .env
 
-# View .env (first 5 lines)
-head -5 .env
+# iew .env (first  lines)
+head - .env
 ```
 
-</td>
-</tr>
-</table>
+/td
+/tr
+/table
 
 ---
 
-## 🎯 One-Line Commands (Copy-Paste Ready)
+##  ne-ine ommands (opy-aste eady)
 
-### Windows - Start Everything
+### indows - tart verything
 
 ```powershell
-cd "C:\Users\tom\.cursor\worktrees\Alpha-Loop-LLM-1\sii"; .\venv\Scripts\Activate.ps1; .\scripts\start_full_throttle_training.ps1
+cd "serstom.cursorworktreeslpha-oop--sii" .venvcriptsctivate.ps .scriptsstart_full_throttle_training.ps
 ```
 
-### Mac - Start Everything
+### ac - tart verything
 
 ```bash
-cd ~/Alpha-Loop-LLM/Alpha-Loop-LLM-1/sii && source venv/bin/activate && bash scripts/start_full_throttle_training.sh
+cd ~/lpha-oop-/lpha-oop--/sii && source venv/bin/activate && bash scripts/start_full_throttle_training.sh
 ```
 
 ---
 
-## 📚 Documentation Links
+##  ocumentation inks
 
-| Document | Description |
+| ocument | escription |
 |----------|-------------|
-| [CROSS_PLATFORM_COMMANDS.md](CROSS_PLATFORM_COMMANDS.md) | Detailed natural language guide |
-| [SETUP_WINDOWS.md](SETUP_WINDOWS.md) | Windows-specific setup |
-| [SETUP_MAC.md](SETUP_MAC.md) | Mac-specific setup |
-| [FULL_THROTTLE_SETUP.md](FULL_THROTTLE_SETUP.md) | Maximum data ingestion |
-| [TRAINING_GUIDE.md](TRAINING_GUIDE.md) | ML training details |
-| [AGENT_ARCHITECTURE.md](AGENT_ARCHITECTURE.md) | Agent system overview |
+| __.md](__.md) | etailed natural language guide |
+| _.md](_.md) | indows-specific setup |
+| _.md](_.md) | ac-specific setup |
+| __.md](__.md) | aximum data ingestion |
+| _.md](_.md) |  training details |
+| _.md](_.md) | gent system overview |
 
 ---
 
-**Alpha Loop Capital - Institutional-Grade Trading System**
+**lpha oop apital - nstitutional-rade rading ystem**

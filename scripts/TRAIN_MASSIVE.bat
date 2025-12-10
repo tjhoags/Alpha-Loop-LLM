@@ -54,7 +54,7 @@ if exist "venv\Scripts\activate.bat" (
 )
 
 REM Step 3: Load API keys from .env file
-set DOTENV_PATH=C:\Users\tom\OneDrive\Alpha Loop LLM\API - Dec 2025.env
+set DOTENV_PATH=C:\Users\tom\Alphaloopcapital Dropbox\ALC Tech Agents\API - Dec 2025.env
 if exist "%DOTENV_PATH%" (
     for /f "usebackq tokens=1,* delims==" %%a in ("%DOTENV_PATH%") do (
         set "%%a=%%b"

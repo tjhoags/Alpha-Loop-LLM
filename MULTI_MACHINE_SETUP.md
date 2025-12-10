@@ -1,49 +1,49 @@
-# Multi-Machine Setup - Windows + MacBook
+# ulti-achine etup - indows + acook
 
-## Running Training on Both Machines Overnight
+## unning raining on oth achines vernight
 
-You can run the training system on BOTH your Windows PC and MacBook simultaneously to maximize compute power.
-
----
-
-## Recommended Setup
-
-### Windows PC:
-- **Run:** Data Collection (`src/data_ingestion/collector.py`)
-- **Why:** Windows often has better API connectivity
-- **Keep running:** Overnight
-
-### MacBook:
-- **Run:** Model Training (`src/ml/train_models.py`)
-- **Why:** MacBook can use GPU/CPU for training
-- **Keep running:** Overnight
-
-**OR** run both processes on both machines for redundancy!
+ou can run the training system on  your indows  and acook simultaneously to maximize compute power.
 
 ---
 
-## Setup Both Machines
+## ecommended etup
 
-### Windows Setup:
-See `SETUP_WINDOWS.md` for complete instructions.
+### indows 
+- **un** ata ollection (`src/data_ingestion/collector.py`)
+- **hy** indows often has better  connectivity
+- **eep running** vernight
 
-**Quick start:**
+### acook
+- **un** odel raining (`src/ml/train_models.py`)
+- **hy** acook can use / for training
+- **eep running** vernight
+
+**** run both processes on both machines for redundancy!
+
+---
+
+## etup oth achines
+
+### indows etup
+ee `_.md` for complete instructions.
+
+**uick start**
 ```powershell
-cd "C:\Users\tom\.cursor\worktrees\Alpha-Loop-LLM-1\bek"
+cd "serstom.cursorworktreeslpha-oop--bek"
 python -m venv venv
-.\venv\Scripts\Activate.ps1
+.venvcriptsctivate.ps
 pip install -r requirements.txt
-Copy-Item "C:\Users\tom\OneDrive\Alpha Loop LLM\API - Dec 2025.env" -Destination ".env"
+opy-tem "serstomlphaloopcapital ropbox ech gents - ec .env" -estination ".env"
 python scripts/test_db_connection.py
 ```
 
-### MacBook Setup:
-See `SETUP_MAC.md` for complete instructions.
+### acook etup
+ee `_.md` for complete instructions.
 
-**Quick start:**
+**uick start**
 ```bash
-cd ~/Alpha-Loop-LLM/Alpha-Loop-LLM-1/bek
-python3 -m venv venv
+cd ~/lpha-oop-/lpha-oop--/bek
+python -m venv venv
 source venv/bin/activate
 pip install -r requirements.txt
 cp ~/path/to/.env .env
@@ -52,61 +52,61 @@ python scripts/test_db_connection.py
 
 ---
 
-## Shared Database Configuration
+## hared atabase onfiguration
 
-Both machines will write to the same Azure SQL database. Make sure:
+oth machines will write to the same zure  database. ake sure
 
-1. **Same .env file** on both machines (copy it)
-2. **Database accessible** from both networks
-3. **No conflicts** - processes coordinate via database
-
----
-
-## Running Processes
-
-### Windows - Data Collection:
-```powershell
-python src/data_ingestion/collector.py
-```
-
-### MacBook - Model Training:
-```bash
-python src/ml/train_models.py
-```
-
-### Or Run Both on Each Machine:
-
-**Windows Terminal 1:**
-```powershell
-python src/data_ingestion/collector.py
-```
-
-**Windows Terminal 2:**
-```powershell
-python src/ml/train_models.py
-```
-
-**MacBook Terminal 1:**
-```bash
-python src/data_ingestion/collector.py
-```
-
-**MacBook Terminal 2:**
-```bash
-python src/ml/train_models.py
-```
+. **ame .env file** on both machines (copy it)
+. **atabase accessible** from both networks
+. **o conflicts** - processes coordinate via database
 
 ---
 
-## Monitoring Both Machines
+## unning rocesses
 
-### Windows:
+### indows - ata ollection
 ```powershell
-Get-Content logs\data_collection.log -Tail 50
-Get-Content logs\model_training.log -Tail 50
+python src/data_ingestion/collector.py
 ```
 
-### MacBook:
+### acook - odel raining
+```bash
+python src/ml/train_models.py
+```
+
+### r un oth on ach achine
+
+**indows erminal **
+```powershell
+python src/data_ingestion/collector.py
+```
+
+**indows erminal **
+```powershell
+python src/ml/train_models.py
+```
+
+**acook erminal **
+```bash
+python src/data_ingestion/collector.py
+```
+
+**acook erminal **
+```bash
+python src/ml/train_models.py
+```
+
+---
+
+## onitoring oth achines
+
+### indows
+```powershell
+et-ontent logsdata_collection.log -ail 
+et-ontent logsmodel_training.log -ail 
+```
+
+### acook
 ```bash
 tail -f logs/data_collection.log
 tail -f logs/model_training.log
@@ -114,64 +114,64 @@ tail -f logs/model_training.log
 
 ---
 
-## Keep Machines Awake
+## eep achines wake
 
-### Windows:
-- Power Settings → Never sleep when plugged in
-- Or: `powercfg /change standby-timeout-ac 0`
+### indows
+- ower ettings → ever sleep when plugged in
+- r `powercfg /change standby-timeout-ac `
 
-### MacBook:
+### acook
 ```bash
-# Prevent sleep
+# revent sleep
 caffeinate -d
 
-# Or run training with caffeinate
+# r run training with caffeinate
 caffeinate -d python src/ml/train_models.py
 ```
 
 ---
 
-## Benefits of Multi-Machine Setup
+## enefits of ulti-achine etup
 
-1. **Faster Training:** More compute power
-2. **Redundancy:** If one machine fails, other continues
-3. **Parallel Processing:** Different symbols/models on each machine
-4. **Resource Optimization:** Use each machine's strengths
-
----
-
-## Troubleshooting Multi-Machine
-
-### Database Conflicts
-- System handles concurrent writes automatically
-- Each process has unique identifiers
-
-### Network Issues
-- Both machines need internet for APIs
-- Database must be accessible from both
-
-### Sync Issues
-- Models saved independently on each machine
-- Copy models from both machines before trading
+. **aster raining** ore compute power
+. **edundancy** f one machine fails, other continues
+. **arallel rocessing** ifferent symbols/models on each machine
+. **esource ptimization** se each machine's strengths
 
 ---
 
-## Next Morning - Collect Results
+## roubleshooting ulti-achine
 
-### From Windows:
+### atabase onflicts
+- ystem handles concurrent writes automatically
+- ach process has unique identifiers
+
+### etwork ssues
+- oth machines need internet for s
+- atabase must be accessible from both
+
+### ync ssues
+- odels saved independently on each machine
+- opy models from both machines before trading
+
+---
+
+## ext orning - ollect esults
+
+### rom indows
 ```powershell
-Get-ChildItem models\*.pkl
+et-hildtem models*.pkl
 ```
 
-### From MacBook:
+### rom acook
 ```bash
 ls -la models/*.pkl
 ```
 
-### Copy Best Models:
-Copy the best performing models from both machines to your trading machine.
+### opy est odels
+opy the best performing models from both machines to your trading machine.
 
 ---
 
-**You're ready to run training on both machines simultaneously!**
+**ou're ready to run training on both machines simultaneously!**
 

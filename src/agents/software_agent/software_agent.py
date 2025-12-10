@@ -303,7 +303,7 @@ class SoftwareAgent(BaseAgent):
                 enabled=True,
                 api_endpoint="https://graph.microsoft.com/v1.0",
                 auth_type="oauth",
-                features=["email", "calendar", "teams", "onedrive"],
+                features=["email", "calendar", "teams", "dropbox"],
                 status=IntegrationStatus.PENDING
             ),
         }

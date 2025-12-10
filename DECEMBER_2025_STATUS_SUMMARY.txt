@@ -1,0 +1,382 @@
+================================================================================
+ALPHA LOOP CAPITAL - DECEMBER 2025 STATUS SUMMARY
+================================================================================
+Author: Tom Hogan | Alpha Loop Capital, LLC
+Date: December 10, 2025
+
+This document provides a comprehensive summary of the current system state,
+agent grades, findings, and the training plan going forward.
+
+================================================================================
+EXECUTIVE SUMMARY
+================================================================================
+
+CHANGES COMPLETED:
+------------------
+1. Updated Perplexity API key to: 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
+2. Migrated all paths from OneDrive to Dropbox:
+   - New path: C:\Users\tom\Alphaloopcapital Dropbox\ALC Tech Agents
+3. Created CHRIS_SETUP.txt for Chris Friedman (COO) onboarding
+4. Created LOCAL_WORKTREE_CLOUD_GUIDE.txt explaining git workflows
+5. Created PRIVATE_REPO_PAT_SETUP.txt for private repo transition
+6. Removed junk files (q, debug_test.py, corrupted filename)
+7. Updated all batch scripts and documentation for new paths
+8. Removed emojis from test scripts (test_all_apis.py, test_api_connections.py)
+
+FILES UPDATED:
+--------------
+- src/config/settings.py (ENV_PATH)
+- scripts/test_all_apis.py
+- scripts/test_api_connections.py
+- scripts/TRAIN_MASSIVE.bat
+- scripts/START_LIVE_TRADING.bat
+- scripts/HYDRATE_FULL_UNIVERSE.bat
+- scripts/HYDRATE_QUICK.bat
+- scripts/ingest_research.py
+- README.md
+- FULL_THROTTLE_SETUP.md
+- COMPREHENSIVE_DATA_GUIDE.md
+- MULTI_MACHINE_SETUP.md
+- TERMINAL_COMMANDS.md
+- SETUP_WINDOWS.md
+- SETUP_MAC.md
+- Mac_instructions.md
+- CROSS_PLATFORM_COMMANDS.md
+- UNIFIED_COMMAND_REFERENCE.md
+- API_MIGRATION_SUMMARY.md
+- COMPLETION_SUMMARY.md
+- MAC_TRAINING_GUIDE.md
+- src/agents/software_agent/software_agent.py
+- src/integrations/outlook_client.py
+
+FILES DELETED:
+--------------
+- q (junk less help output)
+- hell -Command Set-Content -Path Get_together.md -Value '' -Force (corrupted)
+- debug_test.py (temporary debug file)
+
+================================================================================
+AGENT ARCHITECTURE OVERVIEW
+================================================================================
+
+TOTAL AGENTS: 93
+
+INVESTMENT DIVISION (Tom Hogan - CIO):
+--------------------------------------
+- Master Agents: HOAGS, GHOST
+- Senior Agents: SCOUT, HUNTER, ORCHESTRATOR, KILLJOY, BOOKMAKER,
+                 STRINGS, AUTHOR, SKILLS, CAPITAL, NOBUS
+- Operational: DATA_AGENT, EXECUTION_AGENT, COMPLIANCE_AGENT,
+              PORTFOLIO_AGENT, RISK_AGENT, SENTIMENT_AGENT,
+              RESEARCH_AGENT, STRATEGY_AGENT
+- Strategy Agents: 34 total (momentum, value, volatility, etc.)
+- Sector Agents: 11 total
+- Security Agents: WHITE_HAT, BLACK_HAT
+- Swarm Agents: 5 dynamically created
+
+OPERATIONS DIVISION (Chris Friedman - COO):
+-------------------------------------------
+- Master Agent: FRIEDS
+- Executive Assistants: KAT (Tom), SHYLA (Chris), MARGOT_ROBBIE, ANNA_KENDRICK
+- Senior Agents: SANTAS_HELPER, CPA, MARKETING, SOFTWARE
+- Sub-agents under SANTAS_HELPER: NAV_SPECIALIST, GL_ACCOUNTANT,
+  PERFORMANCE_ANALYST, INVESTOR_RELATIONS, ADMIN_COORDINATOR
+- Sub-agents under CPA: TAX_JUNIOR, AUDIT_JUNIOR, REPORTING_JUNIOR
+- Sub-agents under SHYLA: COFFEE_BREAK, BEAN_COUNTER
+
+================================================================================
+CURRENT AGENT GRADES (Assessment)
+================================================================================
+
+GRADING SCALE:
+- S+ : Citadel Elite (top 0.1%) - Score 95+
+- S  : Goldman/Renaissance (top 1%) - Score 90-94
+- A+ : Institutional Live - Score 85-89
+- A  : Institutional Paper - Score 80-84
+- B+ : Promising - Score 70-79
+- B  : Acceptable - Score 60-69
+- C  : Probation - Score 50-59
+- D  : Terminate - Score <50
+- F  : Blacklist - Critical failures
+
+ESTIMATED CURRENT STATE (Pre-Training):
+---------------------------------------
+Most agents are currently in B-C range because:
+1. Limited training data ingested
+2. No live market exposure yet
+3. Battle experience metrics at zero
+
+TARGETS FOR END OF WEEK:
+------------------------
+- All Master/Senior agents: B+ minimum
+- All Strategy agents: B minimum
+- All Operational agents: B minimum
+
+TARGETS FOR END OF DECEMBER 2025:
+---------------------------------
+- Master agents (HOAGS, GHOST, FRIEDS): A minimum
+- Senior agents: B+ minimum
+- Strategy agents: B+ average
+- At least 5 agents promoted to Paper trading
+
+TARGETS FOR Q1 2026:
+--------------------
+- 3+ agents at A+ level (live trading ready)
+- Average agent grade: B+
+- KILLJOY fully operational with real risk limits
+
+================================================================================
+FINDINGS FROM CODE REVIEW
+================================================================================
+
+STRENGTHS:
+----------
+1. Comprehensive agent architecture with clear hierarchy
+2. Institutional-grade grading system implemented
+3. Risk management (KILLJOY) has strict limits
+4. Multi-source data ingestion configured
+5. Cross-platform support (Windows + Mac)
+6. Azure SQL database properly configured
+7. 93 agents with well-defined capabilities
+
+AREAS FOR IMPROVEMENT:
+----------------------
+1. Training data needs hydration (run HYDRATE_FULL_UNIVERSE.bat)
+2. Models need overnight training runs
+3. Some duplicate code in dfu/ folder (can be consolidated)
+4. Logging could be more consistent across agents
+5. Test coverage needs expansion
+
+DUPLICATE/REDUNDANT ITEMS:
+--------------------------
+- dfu/ folder contains alternative implementations that exist in src/
+  Recommendation: Keep for reference but don't deploy
+
+CONSOLIDATION COMPLETED:
+------------------------
+- Removed empty/junk files
+- Updated all paths to single Dropbox location
+- Standardized emoji removal in test scripts
+
+================================================================================
+DATA INGESTION PLAN
+================================================================================
+
+IMMEDIATE (Tonight/Tomorrow):
+-----------------------------
+1. Copy API .env file to Dropbox:
+   - Source: Your current API keys
+   - Destination: C:\Users\tom\Alphaloopcapital Dropbox\ALC Tech Agents\API - Dec 2025.env
+
+2. Run Quick Hydration (10-20 minutes):
+   scripts\HYDRATE_QUICK.bat
+
+3. Test API Connections:
+   python scripts/test_all_apis.py
+
+THIS WEEK:
+----------
+1. Run Full Universe Hydration (6-12 hours overnight):
+   scripts\HYDRATE_FULL_UNIVERSE.bat
+
+2. Start Massive Training:
+   scripts\TRAIN_MASSIVE.bat
+
+3. Monitor progress:
+   scripts\CHECK_TRAINING_STATUS.bat
+
+ONGOING:
+--------
+1. Run data collection daily
+2. Train models overnight
+3. Check grades weekly
+4. Promote passing models to paper trading
+
+================================================================================
+TRAINING PLAN
+================================================================================
+
+PHASE 1: Data Foundation (Week 1)
+---------------------------------
+Goal: Full universe data hydrated and stored in Azure SQL
+
+Actions:
+- Run HYDRATE_FULL_UNIVERSE.bat overnight
+- Verify 8,000+ stocks, 2,500+ ETFs, 100+ crypto
+- Confirm Alpha Vantage, Massive.com, FRED connections
+- Ingest research documents to vectorstore
+
+PHASE 2: Model Training (Week 2)
+--------------------------------
+Goal: Train initial models for all strategy types
+
+Actions:
+- Run TRAIN_MASSIVE.bat overnight
+- Train XGBoost, LightGBM, CatBoost ensembles
+- Generate 100+ features per symbol
+- Target: 50+ models passing B grade
+
+PHASE 3: Validation (Week 3)
+----------------------------
+Goal: Validate model performance on out-of-sample data
+
+Actions:
+- Run cross-validation on all trained models
+- Check for overfitting (AUC < 0.70)
+- Verify Sharpe ratio > 1.0
+- Grade all agents using institutional standards
+
+PHASE 4: Paper Trading (Week 4 - January 2026)
+----------------------------------------------
+Goal: Deploy top models to paper trading
+
+Actions:
+- Promote A-grade models to paper trading
+- Monitor IBKR paper account
+- Track real-time performance
+- Compare to backtest metrics
+
+PHASE 5: Live Trading (Q1 2026)
+-------------------------------
+Goal: Deploy validated models to live trading
+
+Requirements:
+- A+ grade minimum
+- 500+ paper trades
+- Sharpe > 1.5
+- Max drawdown < 8%
+- KILLJOY approval
+
+================================================================================
+TERMINAL COMMAND QUICK REFERENCE
+================================================================================
+
+WINDOWS POWERSHELL:
+-------------------
+
+# Navigate to project
+cd "C:\Users\tom\.cursor\worktrees\Alpha-Loop-LLM-1\iwu"
+
+# Activate virtual environment
+.\venv\Scripts\Activate.ps1
+
+# Install dependencies
+pip install -r requirements.txt
+
+# Copy environment file from Dropbox
+Copy-Item "C:\Users\tom\Alphaloopcapital Dropbox\ALC Tech Agents\API - Dec 2025.env" -Destination ".env"
+
+# Test all APIs
+python scripts/test_all_apis.py
+
+# Test database connection
+python scripts/test_db_connection.py
+
+# Run quick data hydration
+scripts\HYDRATE_QUICK.bat
+
+# Run full data hydration (overnight)
+scripts\HYDRATE_FULL_UNIVERSE.bat
+
+# Start training (overnight)
+scripts\TRAIN_MASSIVE.bat
+
+# Check training status
+scripts\CHECK_TRAINING_STATUS.bat
+
+# Check model grades
+scripts\CHECK_MODEL_GRADES.bat
+
+# Start paper trading
+scripts\START_PAPER_TRADING.bat
+
+# Git commands
+git status
+git add -A
+git commit -m "description"
+git push origin [branch-name]
+
+
+MAC TERMINAL:
+-------------
+
+# Navigate to project
+cd ~/Alpha-Loop-LLM/Alpha-Loop-LLM-1/iwu
+
+# Activate virtual environment
+source venv/bin/activate
+
+# Install dependencies
+pip install -r requirements.txt
+
+# Copy environment file from Dropbox
+cp ~/Alphaloopcapital\ Dropbox/ALC\ Tech\ Agents/API\ -\ Dec\ 2025.env .env
+
+# Test all APIs
+python scripts/test_all_apis.py
+
+# Test database connection
+python scripts/test_db_connection.py
+
+# Run data hydration (overnight)
+caffeinate -d python scripts/hydrate_full_universe.py
+
+# Start training (overnight)
+caffeinate -d python src/ml/massive_trainer.py --batch-size 50
+
+# Check model grades
+python scripts/check_model_grades.py
+
+# Start paper trading
+python src/trading/production_algo.py --paper
+
+# Git commands
+git status
+git add -A
+git commit -m "description"
+git push origin [branch-name]
+
+================================================================================
+NEXT IMMEDIATE ACTIONS
+================================================================================
+
+1. UPDATE PERPLEXITY KEY IN .ENV FILE:
+   Open: C:\Users\tom\Alphaloopcapital Dropbox\ALC Tech Agents\API - Dec 2025.env
+   Update line: PERPLEXITY_API_KEY=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
+
+2. TEST ALL APIS:
+   python scripts/test_all_apis.py
+
+3. RUN QUICK HYDRATION:
+   scripts\HYDRATE_QUICK.bat
+
+4. START OVERNIGHT TRAINING:
+   scripts\TRAIN_MASSIVE.bat
+
+5. SHARE WITH CHRIS:
+   - Grant GitHub access to chris@alphaloopcapital.com
+   - Send CHRIS_SETUP.txt
+   - Create chris/ branch for his work
+
+6. MAKE REPO PRIVATE:
+   - Follow PRIVATE_REPO_PAT_SETUP.txt
+   - Generate PAT tokens
+   - Update credential manager
+
+================================================================================
+CONTACT
+================================================================================
+
+Tom Hogan (Founder & CIO)
+Email: tom@alphaloopcapital.com
+
+Chris Friedman (COO)
+Email: chris@alphaloopcapital.com
+
+================================================================================
+END OF SUMMARY
+================================================================================
+
+"By end of 2026, they will know Alpha Loop Capital."
+
+

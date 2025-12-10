@@ -41,7 +41,7 @@ class APITester:
     def __init__(self):
         self.settings = get_settings()
         self.results: Dict[str, Dict[str, any]] = {}
-        self.env_file_path = r"C:\Users\tom\OneDrive\Alpha Loop LLM\API - Dec 2025.env"
+        self.env_file_path = r"C:\Users\tom\Alphaloopcapital Dropbox\ALC Tech Agents\API - Dec 2025.env"
 
     def test_all(self) -> Dict[str, Dict[str, any]]:
         """Test all API connections."""
@@ -369,7 +369,7 @@ class APITester:
                 "anthropic-version": "2023-06-01",
                 "content-type": "application/json",
             }
-            # Minimal test payload - using Claude Haiku for fast testing
+            # Minimal test payload
             payload = {
                 "model": "claude-3-haiku-20240307",
                 "max_tokens": 10,
@@ -408,15 +408,8 @@ class APITester:
             return False, error_msg
 
     def test_perplexity_api(self) -> Tuple[bool, str]:
-        """Test Perplexity API using sonar-deep-research model.
-        
-        Note: sonar-deep-research is a deep research model that conducts exhaustive
-        searches and can take 30+ seconds. For faster testing, consider using
-        sonar-pro or sonar-online models instead.
-        
-        Reference: https://docs.perplexity.ai/getting-started/models/models/sonar-deep-research
-        """
-        logger.info("Testing Perplexity API (sonar-deep-research)...")
+        """Test Perplexity API."""
+        logger.info("Testing Perplexity API...")
         api_key = self.settings.perplexity_api_key
 
         if not api_key:
@@ -434,16 +427,12 @@ class APITester:
                 "Authorization": f"Bearer {api_key}",
                 "Content-Type": "application/json",
             }
-            # sonar-deep-research conducts exhaustive research - use simple query for testing
-            # This model can take 30-60 seconds, so we use a longer timeout
             payload = {
-                "model": "sonar-deep-research",
-                "messages": [{"role": "user", "content": "What is 2+2? Answer briefly."}],
-                "max_tokens": 50,
+                "model": "sonar",
+                "messages": [{"role": "user", "content": "test"}],
+                "max_tokens": 5,
             }
-            # Deep research model requires longer timeout (60 seconds)
-            logger.info("  Note: sonar-deep-research may take 30-60 seconds...")
-            resp = requests.post(url, headers=headers, json=payload, timeout=90)
+            resp = requests.post(url, headers=headers, json=payload, timeout=10)
 
             if resp.status_code == 200:
                 self.results["perplexity"] = {

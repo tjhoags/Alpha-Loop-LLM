@@ -8,11 +8,11 @@ sk-ant-api03-r8xbtYYGDcFO89gOrNoRPWgSszABWoAwfK1yVGNoSpftJfZEUqMWbCX_vw1meMh80sU
 ```
 
 **Update Location:**
-- File: `C:\Users\tom\OneDrive\Alpha Loop LLM\API - Dec 2025.env`
+- File: `C:\Users\tom\Alphaloopcapital Dropbox\ALC Tech Agents\API - Dec 2025.env`
 - Variable: `ANTHROPIC_API_KEY`
 
 **Steps:**
-1. Open the .env file in OneDrive
+1. Open the .env file in Dropbox
 2. Find the line: `ANTHROPIC_API_KEY=...`
 3. Replace with: `ANTHROPIC_API_KEY=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`
 4. Save the file

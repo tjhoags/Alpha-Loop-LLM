@@ -1,236 +1,236 @@
-# 📊 Alpha Loop LLM - Project Status Report
-## Generated: December 10, 2025
+# lpha oop  - roject tatus eport
+## enerated ecember , 
 
 ---
 
-## 🔗 Repository Information
+##  epository nformation
 
-| Item | Details |
+| tem | etails |
 |------|---------|
-| **Repository** | `tjhoags/Alpha-Loop-LLM` |
-| **URL** | https://github.com/tjhoags/Alpha-Loop-LLM |
-| **Local Path (Windows)** | `C:\Users\tom\.cursor\worktrees\Alpha-Loop-LLM-1\sii` |
-| **Local Path (Mac)** | `~/Alpha-Loop-LLM/Alpha-Loop-LLM-1/sii` |
+| **epository** | `tjhoags/lpha-oop-` |
+| **** | https//github.com/tjhoags/lpha-oop- |
+| **ocal ath (indows)** | `serstom.cursorworktreeslpha-oop--sii` |
+| **ocal ath (ac)** | `~/lpha-oop-/lpha-oop--/sii` |
 
-### Branches
+### ranches
 
-| Branch | Description | Status |
+| ranch | escription | tatus |
 |--------|-------------|--------|
-| `main` | Production branch | ✅ Active |
-| `refactor/code-cleanup-dec-2025` | Code cleanup | ✅ In Progress |
-| `cursor/setup-new-trading-algorithm-a1b7` | Trading algo setup | Remote |
+| `main` | roduction branch |  ctive |
+| `refactor/code-cleanup-dec-` | ode cleanup |  n rogress |
+| `cursor/setup-new-trading-algorithm-ab` | rading algo setup | emote |
 
 ---
 
-## 📁 Project Structure
+##  roject tructure
 
 ```
-Alpha-Loop-LLM-1/
-├── sii/                          # Main project directory
-│   ├── src/                      # Source code
-│   │   ├── agents/               # 93 AI agents
-│   │   ├── analysis/             # Market analysis
-│   │   ├── app/                  # Application layer
-│   │   ├── config/               # Configuration
-│   │   ├── core/                 # Core engine
-│   │   ├── data_ingestion/       # Data collection
-│   │   ├── database/             # Database layer
-│   │   ├── integrations/         # External integrations
-│   │   ├── interfaces/           # User interfaces
-│   │   ├── ml/                   # Machine learning
-│   │   ├── nlp/                  # Natural language
-│   │   ├── review/               # Code review (NEW)
-│   │   ├── risk/                 # Risk management
-│   │   ├── signals/              # Signal generation
-│   │   ├── trading/              # Trading execution
-│   │   ├── training/             # Model training
-│   │   └── ui/                   # User interface
-│   ├── scripts/                  # Utility scripts
-│   ├── data/                     # Data files
-│   ├── models/                   # Trained models
-│   └── logs/                     # System logs
-├── bek/, bgi/, bll/, ...         # Additional worktrees
-└── dfu/                          # Development utilities
+lpha-oop--/
+├── sii/                          # ain project directory
+│   ├── src/                      # ource code
+│   │   ├── agents/               #   agents
+│   │   ├── analysis/             # arket analysis
+│   │   ├── app/                  # pplication layer
+│   │   ├── config/               # onfiguration
+│   │   ├── core/                 # ore engine
+│   │   ├── data_ingestion/       # ata collection
+│   │   ├── database/             # atabase layer
+│   │   ├── integrations/         # xternal integrations
+│   │   ├── interfaces/           # ser interfaces
+│   │   ├── ml/                   # achine learning
+│   │   ├── nlp/                  # atural language
+│   │   ├── review/               # ode review ()
+│   │   ├── risk/                 # isk management
+│   │   ├── signals/              # ignal generation
+│   │   ├── trading/              # rading execution
+│   │   ├── training/             # odel training
+│   │   └── ui/                   # ser interface
+│   ├── scripts/                  # tility scripts
+│   ├── data/                     # ata files
+│   ├── models/                   # rained models
+│   └── logs/                     # ystem logs
+├── bek/, bgi/, bll/, ...         # dditional worktrees
+└── dfu/                          # evelopment utilities
 ```
 
 ---
 
-## 📚 Documentation Files
+##  ocumentation iles
 
-### Cross-Platform Guides (Updated)
-| File | Purpose | Status |
+### ross-latform uides (pdated)
+| ile | urpose | tatus |
 |------|---------|--------|
-| `CROSS_PLATFORM_COMMANDS.md` | **NEW** Complete command reference | ✅ Created |
-| `README.md` | Project overview with natural language | ✅ Updated |
-| `TERMINAL_COMMANDS.md` | Quick terminal reference | ✅ Updated |
-| `SETUP_WINDOWS.md` | Windows setup guide | ✅ Updated |
-| `SETUP_MAC.md` | MacBook setup guide | ✅ Updated |
-| `Mac_instructions.md` | Mac-specific instructions | ✅ Existing |
+| `__.md` | **** omplete command reference |  reated |
+| `.md` | roject overview with natural language |  pdated |
+| `_.md` | uick terminal reference |  pdated |
+| `_.md` | indows setup guide |  pdated |
+| `_.md` | acook setup guide |  pdated |
+| `ac_instructions.md` | ac-specific instructions |  xisting |
 
-### Architecture & Operations
-| File | Purpose | Status |
+### rchitecture & perations
+| ile | urpose | tatus |
 |------|---------|--------|
-| `AGENT_ARCHITECTURE.md` | Agent system design | ✅ Existing |
-| `AGENT_RELATIONSHIPS.md` | Agent hierarchy | ✅ Existing |
-| `AGENT_GRADING_GUIDE.md` | Model grading | ✅ Existing |
-| `FULL_THROTTLE_SETUP.md` | Max data ingestion | ✅ Existing |
-| `TRAINING_GUIDE.md` | ML training guide | ✅ Existing |
-| `MULTI_MACHINE_SETUP.md` | Dual machine setup | ✅ Existing |
+| `_.md` | gent system design |  xisting |
+| `_.md` | gent hierarchy |  xisting |
+| `__.md` | odel grading |  xisting |
+| `__.md` | ax data ingestion |  xisting |
+| `_.md` |  training guide |  xisting |
+| `__.md` | ual machine setup |  xisting |
 
 ---
 
-## 🤖 Agent System
+##  gent ystem
 
-### Total Agents: 93
+### otal gents 
 
-| Division | Count | Examples |
+| ivision | ount | xamples |
 |----------|-------|----------|
-| **Master** | 3 | HOAGS, GHOST, FRIEDS |
-| **Senior** | 12 | SCOUT, HUNTER, ORCHESTRATOR, KILLJOY, CPA |
-| **Operational** | 8 | DATA_AGENT, EXECUTION_AGENT, RISK_AGENT |
-| **Strategy** | 34 | Various strategy agents |
-| **Sector** | 11 | Sector-specific agents |
-| **Security** | 2 | WHITE_HAT, BLACK_HAT |
-| **Swarm** | 5 | Swarm coordination |
-| **Executive Assistants** | 4 | KAT, SHYLA, MARGOT, ANNA |
-| **Operations Sub-agents** | 14 | NAV_SPECIALIST, TAX_JUNIOR, etc. |
+| **aster** |  | , ,  |
+| **enior** |  | , , , ,  |
+| **perational** |  | _, _, _ |
+| **trategy** |  | arious strategy agents |
+| **ector** |  | ector-specific agents |
+| **ecurity** |  | _, _ |
+| **warm** |  | warm coordination |
+| **xecutive ssistants** |  | , , ,  |
+| **perations ub-agents** |  | _, _, etc. |
 
 ---
 
-## 🆕 New Features (This Update)
+## 🆕 ew eatures (his pdate)
 
-### 1. Issue Scanner (`src/review/issue_scanner.py`)
-- **Purpose:** Find similar issues across the entire codebase
-- **Integration:** Can be invoked by Cursor agents
-- **Features:**
-  - Pattern-based issue detection
-  - Cross-file similarity matching
-  - Auto-fix suggestions
-  - Report generation
+### . ssue canner (`src/review/issue_scanner.py`)
+- **urpose** ind similar issues across the entire codebase
+- **ntegration** an be invoked by ursor agents
+- **eatures**
+  - attern-based issue detection
+  - ross-file similarity matching
+  - uto-fix suggestions
+  - eport generation
 
-### 2. Code Review Agent (`src/review/code_review_agent.py`)
-- **Purpose:** Automated code review with Cursor integration
-- **Features:**
-  - Review session management
-  - Similar issue detection
-  - Fix proposal generation
-  - Batch fix application
+### . ode eview gent (`src/review/code_review_agent.py`)
+- **urpose** utomated code review with ursor integration
+- **eatures**
+  - eview session management
+  - imilar issue detection
+  - ix proposal generation
+  - atch fix application
 
-### 3. Data Types Module (`src/data_ingestion/data_types.py`)
-- **Purpose:** Consistent type definitions for data ingestion
-- **Types Defined:**
-  - `PriceBar` - OHLCV data
-  - `OptionData` - Options with Greeks
-  - `FundamentalData` - Company fundamentals
-  - `MacroIndicator` - Economic indicators
-- **Validation functions** for DataFrames
+### . ata ypes odule (`src/data_ingestion/data_types.py`)
+- **urpose** onsistent type definitions for data ingestion
+- **ypes efined**
+  - `ricear` -  data
+  - `ptionata` - ptions with reeks
+  - `undamentalata` - ompany fundamentals
+  - `acrondicator` - conomic indicators
+- **alidation functions** for atarames
 
-### 4. Optimized Data Collector (`src/data_ingestion/collector.py`)
-- **Improvements:**
-  - Parallel API calls (ThreadPoolExecutor)
-  - Retry logic with exponential backoff
-  - Type validation
-  - Chunked database inserts
-  - Source normalization
+### . ptimized ata ollector (`src/data_ingestion/collector.py`)
+- **mprovements**
+  - arallel  calls (hreadoolxecutor)
+  - etry logic with exponential backoff
+  - ype validation
+  - hunked database inserts
+  - ource normalization
 
 ---
 
-## 📊 Data Pipeline Status
+##  ata ipeline tatus
 
-### Data Sources
-| Source | Type | Status |
+### ata ources
+| ource | ype | tatus |
 |--------|------|--------|
-| Alpha Vantage | Stocks, Fundamentals | ✅ Configured |
-| Polygon | 1-minute bars | ✅ Configured |
-| Coinbase | Crypto | ✅ Configured |
-| FRED | Macro indicators | ✅ Configured |
-| Massive S3 | Historical backfill | ✅ Configured |
-| SEC EDGAR | Filings | ✅ Configured |
-| IBKR | Trading data | ✅ Configured |
+| lpha antage | tocks, undamentals |  onfigured |
+| olygon | -minute bars |  onfigured |
+| oinbase | rypto |  onfigured |
+|  | acro indicators |  onfigured |
+| assive  | istorical backfill |  onfigured |
+|   | ilings |  onfigured |
+|  | rading data |  onfigured |
 
-### Database
-| Component | Details |
+### atabase
+| omponent | etails |
 |-----------|---------|
-| Server | Azure SQL |
-| Tables | `price_bars`, `macro_indicators`, options tables |
-| Row Count | 3,400+ symbols, 1.4M+ rows |
+| erver | zure  |
+| ables | `price_bars`, `macro_indicators`, options tables |
+| ow ount | ,+ symbols, .+ rows |
 
 ---
 
-## 📋 Pending Changes (Git Status)
+##  ending hanges (it tatus)
 
-### Modified Files (60+)
-- Documentation files
-- Agent implementations
-- Core engine components
-- Data ingestion modules
-- Training scripts
+### odified iles (+)
+- ocumentation files
+- gent implementations
+- ore engine components
+- ata ingestion modules
+- raining scripts
 
-### New Files (Untracked)
-- `CROSS_PLATFORM_COMMANDS.md`
+### ew iles (ntracked)
+- `__.md`
 - `src/review/issue_scanner.py`
 - `src/review/code_review_agent.py`
 - `src/data_ingestion/data_types.py`
-- Multiple new agent directories
-- Integration modules
+- ultiple new agent directories
+- ntegration modules
 
 ---
 
-## ✅ Verification Checklist
+##  erification hecklist
 
-Before deploying:
+efore deploying
 
-- [ ] Virtual environment created
-- [ ] All packages installed (`pip install -r requirements.txt`)
-- [ ] `.env` file copied with correct credentials
-- [ ] Database connection test passed (`python scripts/test_db_connection.py`)
-- [ ] Data collection runs without errors
-- [ ] Model training starts successfully
-- [ ] IBKR TWS/Gateway running (for trading)
+-  ] irtual environment created
+-  ] ll packages installed (`pip install -r requirements.txt`)
+-  ] `.env` file copied with correct credentials
+-  ] atabase connection test passed (`python scripts/test_db_connection.py`)
+-  ] ata collection runs without errors
+-  ] odel training starts successfully
+-  ]  /ateway running (for trading)
 
 ---
 
-## 🚀 Quick Start Commands
+##  uick tart ommands
 
-### Windows
+### indows
 ```powershell
-cd "C:\Users\tom\.cursor\worktrees\Alpha-Loop-LLM-1\sii"
-.\venv\Scripts\Activate.ps1
+cd "serstom.cursorworktreeslpha-oop--sii"
+.venvcriptsctivate.ps
 python scripts/test_db_connection.py
 ```
 
-### Mac
+### ac
 ```bash
-cd ~/Alpha-Loop-LLM/Alpha-Loop-LLM-1/sii
+cd ~/lpha-oop-/lpha-oop--/sii
 source venv/bin/activate
 python scripts/test_db_connection.py
 ```
 
 ---
 
-## 🔧 To Commit Changes
+##  o ommit hanges
 
 ```bash
-# Stage all changes
+# tage all changes
 git add .
 
-# Commit with message
-git commit -m "feat: Add cross-platform commands, issue scanner, and data optimization
+# ommit with message
+git commit -m "feat dd cross-platform commands, issue scanner, and data optimization
 
-- Add CROSS_PLATFORM_COMMANDS.md with natural language instructions
-- Update README.md, TERMINAL_COMMANDS.md with Windows/Mac guides
-- Create issue_scanner.py for similar issue detection
-- Create code_review_agent.py for Cursor integration
-- Add data_types.py for consistent type definitions
-- Refactor collector.py with parallel processing and validation
-- Update all setup guides with natural language explanations"
+- dd __.md with natural language instructions
+- pdate .md, _.md with indows/ac guides
+- reate issue_scanner.py for similar issue detection
+- reate code_review_agent.py for ursor integration
+- dd data_types.py for consistent type definitions
+- efactor collector.py with parallel processing and validation
+- pdate all setup guides with natural language explanations"
 
-# Push to remote
+# ush to remote
 git push origin main
 ```
 
 ---
 
-**Alpha Loop Capital - Institutional-Grade Trading System**
-**Project Status: Active Development**
+**lpha oop apital - nstitutional-rade rading ystem**
+**roject tatus ctive evelopment**
 

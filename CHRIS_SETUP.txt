@@ -1,0 +1,290 @@
+================================================================================
+ALPHA LOOP CAPITAL - SETUP GUIDE FOR CHRIS FRIEDMAN (COO)
+================================================================================
+Author: Tom Hogan | Alpha Loop Capital, LLC
+Date: December 2025
+
+Welcome Chris! This guide will help you set up your development environment
+for the Alpha Loop LLM trading system.
+
+================================================================================
+IMPORTANT RULES - READ FIRST
+================================================================================
+
+1. NEVER commit directly to 'main' or 'origin/main'
+2. ALWAYS create a new branch for your changes
+3. ALWAYS back up your work before making changes
+4. Your primary branch should be: chris/development
+5. Contact Tom before any major structural changes
+
+================================================================================
+PART 1: PREREQUISITES
+================================================================================
+
+SOFTWARE TO INSTALL:
+--------------------
+1. Git for Windows: https://git-scm.com/download/win
+   - During install, select "Git from command line and 3rd-party software"
+   - Select "Use Windows' default console window"
+
+2. Python 3.11+: https://www.python.org/downloads/
+   - Check "Add Python to PATH" during install
+
+3. Visual Studio Code OR Cursor IDE:
+   - VS Code: https://code.visualstudio.com/
+   - Cursor: https://cursor.sh/ (recommended - has AI assistance)
+
+4. ODBC Driver 17 for SQL Server:
+   - Download from Microsoft: search "ODBC Driver 17 SQL Server download"
+
+ACCOUNTS NEEDED:
+----------------
+- GitHub account (you'll be invited to tjhoags/alpha-loop-llm)
+- Access to Alphaloopcapital Dropbox shared folder
+
+================================================================================
+PART 2: GITHUB ACCESS (PRIVATE REPOSITORY)
+================================================================================
+
+The repository tjhoags/alpha-loop-llm is PRIVATE. You need:
+
+1. Accept the GitHub invitation from Tom (sent to chris@alphaloopcapital.com)
+
+2. Generate a Personal Access Token (PAT):
+   a. Go to: https://github.com/settings/tokens
+   b. Click "Generate new token" -> "Generate new token (classic)"
+   c. Settings:
+      - Note: "alpha-loop-llm-access"
+      - Expiration: 90 days
+      - Select scopes: [x] repo (full control)
+   d. Click "Generate token"
+   e. COPY THE TOKEN IMMEDIATELY - you won't see it again!
+
+3. Store your PAT securely:
+   - Save in: C:\Users\chris\Alphaloopcapital Dropbox\ALC Tech Agents\credentials\github_pat.txt
+   - NEVER commit this to git!
+
+================================================================================
+PART 3: CLONE THE REPOSITORY
+================================================================================
+
+WINDOWS (PowerShell):
+---------------------
+# 1. Open PowerShell (right-click Start -> Windows Terminal or PowerShell)
+
+# 2. Navigate to where you want the project
+cd C:\Users\chris
+
+# 3. Clone the repository
+git clone https://github.com/tjhoags/alpha-loop-llm.git Alpha-Loop-LLM
+
+# 4. When prompted:
+#    Username: your-github-username
+#    Password: YOUR_PAT (paste the token, NOT your password)
+
+# 5. Navigate into the project
+cd Alpha-Loop-LLM
+
+================================================================================
+PART 4: SET UP YOUR BRANCH
+================================================================================
+
+CRITICAL: Never work directly on main!
+
+# 1. Create your development branch
+git checkout -b chris/development
+
+# 2. Set upstream for your branch
+git push -u origin chris/development
+
+# 3. Verify you're on your branch
+git branch
+# Should show: * chris/development
+
+================================================================================
+PART 5: PYTHON ENVIRONMENT SETUP
+================================================================================
+
+# 1. Create virtual environment
+python -m venv venv
+
+# 2. Activate it
+.\venv\Scripts\Activate.ps1
+
+# If you get an execution policy error, run:
+Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
+
+# 3. Install dependencies
+pip install -r requirements.txt
+
+================================================================================
+PART 6: ENVIRONMENT FILE SETUP
+================================================================================
+
+The API keys are stored in Dropbox (shared with you):
+
+# Copy the environment file
+Copy-Item "C:\Users\chris\Alphaloopcapital Dropbox\ALC Tech Agents\API - Dec 2025.env" -Destination ".env"
+
+# Or if Dropbox syncs to a different location, find it and copy
+
+================================================================================
+PART 7: VERIFY SETUP
+================================================================================
+
+# 1. Test database connection
+python scripts/test_db_connection.py
+
+# 2. Test all APIs
+python scripts/test_all_apis.py
+
+# Expected output: All services should show SUCCESS or connected
+
+================================================================================
+PART 8: CURSOR IDE SETUP
+================================================================================
+
+If using Cursor IDE (recommended):
+
+1. Open Cursor
+2. File -> Open Folder -> Select C:\Users\chris\Alpha-Loop-LLM
+3. Cursor will detect the Python environment
+4. Open any .py file to verify syntax highlighting works
+5. Use Cmd+K or Ctrl+K for AI assistance
+
+CURSOR AI TIPS:
+- Highlight code and press Ctrl+K to ask questions
+- Use Ctrl+L for chat
+- AI can help explain code, fix bugs, write tests
+
+================================================================================
+PART 9: GIT WORKFLOW FOR CHRIS
+================================================================================
+
+DAILY WORKFLOW:
+---------------
+# 1. Start of day - get latest from main
+git fetch origin
+git checkout main
+git pull origin main
+git checkout chris/development
+git merge main
+
+# 2. Make your changes in Cursor/VS Code
+
+# 3. Check what changed
+git status
+
+# 4. Stage changes
+git add -A
+
+# 5. Commit with descriptive message
+git commit -m "Chris: description of what you changed"
+
+# 6. Push to your branch
+git push origin chris/development
+
+# 7. To merge to main (ask Tom first!):
+#    Create a Pull Request on GitHub
+#    Tom will review and merge
+
+BACKUP BEFORE BIG CHANGES:
+--------------------------
+# Before any major change, create a backup branch
+git checkout -b chris/backup-YYYY-MM-DD
+git push origin chris/backup-YYYY-MM-DD
+git checkout chris/development
+
+================================================================================
+PART 10: KEY FILES AND FOLDERS
+================================================================================
+
+IMPORTANT FILES:
+----------------
+src/config/settings.py      - All configuration (API keys load from here)
+src/agents/                  - Agent code (your focus area for ops agents)
+src/core/                    - Core system components
+scripts/                     - Runnable scripts (.bat for Windows)
+requirements.txt             - Python dependencies
+
+AGENT HIERARCHY:
+----------------
+Your agents (Operations Division):
+- FRIEDS (Master Agent - your primary)
+- SHYLA (Executive Assistant)
+- SANTAS_HELPER, CPA, MARKETING, SOFTWARE (Senior Agents)
+
+Tom's agents (Investment Division):
+- HOAGS, GHOST (Master Agents)
+- SCOUT, HUNTER, KILLJOY, etc.
+
+================================================================================
+PART 11: COMMON COMMANDS REFERENCE
+================================================================================
+
+# Activate virtual environment
+.\venv\Scripts\Activate.ps1
+
+# Run quick data test
+scripts\HYDRATE_QUICK.bat
+
+# Check training status
+scripts\CHECK_TRAINING_STATUS.bat
+
+# Test APIs
+python scripts/test_all_apis.py
+
+# Git status
+git status
+
+# See all branches
+git branch -a
+
+# Switch to main (read-only for you)
+git checkout main
+
+# Switch back to your branch
+git checkout chris/development
+
+================================================================================
+PART 12: TROUBLESHOOTING
+================================================================================
+
+"SCRIPT CANNOT BE LOADED" ERROR:
+Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
+
+"MODULE NOT FOUND" ERROR:
+Make sure venv is activated (you should see (venv) in prompt)
+pip install -r requirements.txt
+
+"AUTHENTICATION FAILED" GIT ERROR:
+- Regenerate your PAT on GitHub
+- Clear cached credentials:
+  cmdkey /delete:git:https://github.com
+
+"DATABASE CONNECTION FAILED":
+- Check you have ODBC Driver 17 installed
+- Verify .env file exists and has correct credentials
+
+================================================================================
+CONTACT
+================================================================================
+
+Tom Hogan (Founder & CIO)
+Email: tom@alphaloopcapital.com
+
+For urgent issues: Call/text Tom directly
+
+================================================================================
+END OF SETUP GUIDE
+================================================================================
+
+Remember: 
+- Always work on chris/development branch
+- Never push to main directly
+- Back up before big changes
+- Ask Tom if unsure about anything
+
+"By end of 2026, they will know Alpha Loop Capital."
+
+

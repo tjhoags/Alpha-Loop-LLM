@@ -1,64 +1,64 @@
-# Windows Setup Instructions
+# indows etup nstructions
 
-> **📚 For complete cross-platform reference, see [`CROSS_PLATFORM_COMMANDS.md`](CROSS_PLATFORM_COMMANDS.md)**
+ ** or complete cross-platform reference, see `__.md`](__.md)**
 
-## Which Terminal to Use?
+## hich erminal to se
 
-**You can use EITHER:**
-1. **Local Windows PowerShell** (Windows + X → Terminal)
-2. **Cursor's Integrated Terminal** (Terminal menu → New Terminal)
+**ou can use **
+. **ocal indows owerhell** (indows +  → erminal)
+. **ursor's ntegrated erminal** (erminal menu → ew erminal)
 
-Both work the same way! Use whichever you prefer.
+oth work the same way! se whichever you prefer.
 
 ---
 
-## Quick Setup (Windows)
+## uick etup (indows)
 
-### Step 1: Open Terminal
-**In Plain English:** "Open a command window where you can type instructions"
+### tep  pen erminal
+**n lain nglish** "pen a command window where you can type instructions"
 
-- **Option A:** Press `Windows + X` → Click "Terminal"
-- **Option B:** In Cursor, press `Ctrl + ~` or go to Terminal → New Terminal
+- **ption ** ress `indows + ` → lick "erminal"
+- **ption ** n ursor, press `trl + ~` or go to erminal → ew erminal
 
-### Step 2: Navigate to Project
-**In Plain English:** "Go to the folder where all the code lives"
+### tep  avigate to roject
+**n lain nglish** "o to the folder where all the code lives"
 
 ```powershell
-cd "C:\Users\tom\.cursor\worktrees\Alpha-Loop-LLM-1\sii"
+cd "serstom.cursorworktreeslpha-oop--sii"
 ```
 
-### Step 3: Set Up Environment
-**In Plain English:** "Create an isolated Python workspace for this project"
+### tep  et p nvironment
+**n lain nglish** "reate an isolated ython workspace for this project"
 
 ```powershell
-# Create virtual environment (one-time setup)
+# reate virtual environment (one-time setup)
 python -m venv venv
 
-# Activate it (do this every time you open a new terminal)
-.\venv\Scripts\Activate.ps1
+# ctivate it (do this every time you open a new terminal)
+.venvcriptsctivate.ps
 
-# If you get an execution policy error, run this once:
-Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
+# f you get an execution policy error, run this once
+et-xecutionolicy -xecutionolicy emoteigned -cope urrentser
 ```
 
-**Success:** You'll see `(venv)` at the start of your prompt
+**uccess** ou'll see `(venv)` at the start of your prompt
 
-### Step 4: Install Packages
-**In Plain English:** "Install all required Python packages"
+### tep  nstall ackages
+**n lain nglish** "nstall all required ython packages"
 
 ```powershell
 pip install -r requirements.txt
 ```
 
-### Step 5: Copy Environment File
-**In Plain English:** "Copy your API keys and database credentials"
+### tep  opy nvironment ile
+**n lain nglish** "opy your  keys and database credentials"
 
 ```powershell
-Copy-Item "C:\Users\tom\OneDrive\Alpha Loop LLM\API - Dec 2025.env" -Destination ".env"
+opy-tem "serstomlphaloopcapital ropbox ech gents - ec .env" -estination ".env"
 ```
 
-### Step 6: Test Database
-**In Plain English:** "Make sure we can connect to the database"
+### tep  est atabase
+**n lain nglish** "ake sure we can connect to the database"
 
 ```powershell
 python scripts/test_db_connection.py
@@ -66,100 +66,100 @@ python scripts/test_db_connection.py
 
 ---
 
-## Start Training (Windows)
+## tart raining (indows)
 
-### Terminal 1 - Data Collection
-**In Plain English:** "Start pulling market data from all sources"
+### erminal  - ata ollection
+**n lain nglish** "tart pulling market data from all sources"
 
 ```powershell
-cd "C:\Users\tom\.cursor\worktrees\Alpha-Loop-LLM-1\sii"
-.\venv\Scripts\Activate.ps1
+cd "serstom.cursorworktreeslpha-oop--sii"
+.venvcriptsctivate.ps
 python src/data_ingestion/collector.py
 ```
 
-### Terminal 2 - Model Training
-**In Plain English:** "Train machine learning models on the collected data"
+### erminal  - odel raining
+**n lain nglish** "rain machine learning models on the collected data"
 
 ```powershell
-cd "C:\Users\tom\.cursor\worktrees\Alpha-Loop-LLM-1\sii"
-.\venv\Scripts\Activate.ps1
+cd "serstom.cursorworktreeslpha-oop--sii"
+.venvcriptsctivate.ps
 python src/ml/train_models.py
 ```
 
-### Terminal 3 - Monitoring
-**In Plain English:** "Watch what the system is doing"
+### erminal  - onitoring
+**n lain nglish** "atch what the system is doing"
 
 ```powershell
-cd "C:\Users\tom\.cursor\worktrees\Alpha-Loop-LLM-1\sii"
-.\venv\Scripts\Activate.ps1
+cd "serstom.cursorworktreeslpha-oop--sii"
+.venvcriptsctivate.ps
 
-# Watch data collection (live updates)
-Get-Content logs\data_collection.log -Tail 50 -Wait
+# atch data collection (live updates)
+et-ontent logsdata_collection.log -ail  -ait
 
-# Check how many models have been trained
-(Get-ChildItem models\*.pkl).Count
+# heck how many models have been trained
+(et-hildtem models*.pkl).ount
 ```
 
 ---
 
-## Morning Trading (9:15 AM ET)
+## orning rading (  )
 
-**In Plain English:** "Start the trading engine before market opens"
+**n lain nglish** "tart the trading engine before market opens"
 
 ```powershell
-cd "C:\Users\tom\.cursor\worktrees\Alpha-Loop-LLM-1\sii"
-.\venv\Scripts\Activate.ps1
+cd "serstom.cursorworktreeslpha-oop--sii"
+.venvcriptsctivate.ps
 python src/trading/execution_engine.py
 ```
 
-**Prerequisites:** IBKR TWS/Gateway must be running (Paper: port 7497)
+**rerequisites**  /ateway must be running (aper port )
 
 ---
 
-## Notes for Windows
+## otes for indows
 
-| Topic | Details |
+| opic | etails |
 |-------|---------|
-| Shell | Use PowerShell (not CMD) |
-| Paths | Use backslashes: `C:\Users\tom\...` |
-| Activate | `.\venv\Scripts\Activate.ps1` |
-| View logs | `Get-Content file -Tail 50` |
-| Live tail | `Get-Content file -Tail 50 -Wait` |
-| File exists | `Test-Path "file"` |
+| hell | se owerhell (not ) |
+| aths | se backslashes `serstom...` |
+| ctivate | `.venvcriptsctivate.ps` |
+| iew logs | `et-ontent file -ail ` |
+| ive tail | `et-ontent file -ail  -ait` |
+| ile exists | `est-ath "file"` |
 
 ---
 
-## Troubleshooting
+## roubleshooting
 
-### "Execution Policy" Error
+### "xecution olicy" rror
 ```powershell
-Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
+et-xecutionolicy -xecutionolicy emoteigned -cope urrentser
 ```
 
-### "Module not found" Error
-Make sure venv is activated (you should see `(venv)` in prompt):
+### "odule not found" rror
+ake sure venv is activated (you should see `(venv)` in prompt)
 ```powershell
-.\venv\Scripts\Activate.ps1
+.venvcriptsctivate.ps
 ```
 
-### Database Connection Fails
-Check that .env file exists and has correct credentials:
+### atabase onnection ails
+heck that .env file exists and has correct credentials
 ```powershell
-Test-Path ".env"
-Get-Content ".env" | Select-String "DB_"
+est-ath ".env"
+et-ontent ".env" | elect-tring "_"
 ```
 
 ---
 
-## Quick Reference
+## uick eference
 
 ```powershell
-# Complete setup in one block (copy-paste)
-cd "C:\Users\tom\.cursor\worktrees\Alpha-Loop-LLM-1\sii"
+# omplete setup in one block (copy-paste)
+cd "serstom.cursorworktreeslpha-oop--sii"
 python -m venv venv
-.\venv\Scripts\Activate.ps1
+.venvcriptsctivate.ps
 pip install -r requirements.txt
-Copy-Item "C:\Users\tom\OneDrive\Alpha Loop LLM\API - Dec 2025.env" -Destination ".env"
+opy-tem "serstomlphaloopcapital ropbox ech gents - ec .env" -estination ".env"
 python scripts/test_db_connection.py
 ```
 

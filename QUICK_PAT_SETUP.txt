@@ -1,0 +1,53 @@
+================================================================================
+QUICK PAT SETUP - REPOSITORY IS NOW PRIVATE
+================================================================================
+
+PAT: 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
+Repository: tjhoags/alpha-loop-llm (PRIVATE)
+
+================================================================================
+FOR TOM - QUICK SETUP
+================================================================================
+
+1. Configure Git:
+   git config --global credential.helper wincred
+
+2. Test:
+   git fetch origin
+   (Enter PAT when prompted)
+
+3. Add to .env file:
+   GITHUB_PAT=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
+   Location: C:\Users\tom\Alphaloopcapital Dropbox\ALC Tech Agents\API - Dec 2025.env
+
+================================================================================
+FOR CHRIS - QUICK SETUP
+================================================================================
+
+1. Configure Git:
+   git config --global credential.helper wincred
+
+2. Clone:
+   cd "C:\Users\tom\Alphaloopcapital Dropbox\ALC Tech Agents"
+   git clone https://github.com/tjhoags/alpha-loop-llm.git
+   
+   When prompted:
+   Username: [your GitHub username]
+   Password: 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
+
+3. Verify:
+   cd alpha-loop-llm
+   git pull origin main
+
+================================================================================
+TROUBLESHOOTING
+================================================================================
+
+If authentication fails:
+1. Verify PAT is correct (no extra spaces)
+2. Check credential helper: git config --global credential.helper
+3. Clear credentials and re-enter PAT
+4. Verify repository access
+
+================================================================================
+

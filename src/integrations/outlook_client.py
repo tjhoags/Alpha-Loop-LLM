@@ -8,7 +8,7 @@ Features:
 - Email sending and management
 - Calendar operations
 - Teams messaging
-- OneDrive file access
+- Dropbox file access
 ================================================================================
 """
 

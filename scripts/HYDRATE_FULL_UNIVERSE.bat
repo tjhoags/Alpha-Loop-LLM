@@ -32,7 +32,7 @@ REM Activate virtual environment
 call venv\Scripts\activate.bat
 
 REM Load environment
-set DOTENV_PATH=C:\Users\tom\OneDrive\Alpha Loop LLM\API - Dec 2025.env
+set DOTENV_PATH=C:\Users\tom\Alphaloopcapital Dropbox\ALC Tech Agents\API - Dec 2025.env
 for /f "usebackq tokens=1,* delims==" %%a in ("%DOTENV_PATH%") do (
     set "%%a=%%b"
 )

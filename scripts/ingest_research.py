@@ -18,7 +18,7 @@ HOW TO USE:
 STEP 1: Configure research paths in your .env file or settings:
 
     research_paths:
-      - "C:/Users/tom/OneDrive/Research"
+      - "C:/Users/tom/Alphaloopcapital Dropbox/ALC Tech Agents/Research"
       - "C:/Users/tom/Dropbox/Trading/Reports"
 
 STEP 2: Run this script:
@@ -105,7 +105,7 @@ def main() -> None:
 
         # Try default locations
         default_paths = [
-            Path.home() / "OneDrive" / "Research",
+            Path.home() / "Alphaloopcapital Dropbox" / "ALC Tech Agents" / "Research",
             Path.home() / "Documents" / "Research",
             PROJECT_ROOT / "data" / "research",
         ]

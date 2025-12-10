@@ -258,7 +258,7 @@ Both machines write to the SAME Azure SQL database, so:
 - Models trained on Mac can be used on Lenovo
 - Copy `models/*.pkl` between machines if needed
 
-To sync models via Dropbox/OneDrive:
+To sync models via Dropbox:
 ```bash
 # Mac: Copy models to sync folder
 cp models/*.pkl ~/Dropbox/ALC_Models/

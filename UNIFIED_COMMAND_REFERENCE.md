@@ -1,717 +1,717 @@
-# UNIFIED COMMAND REFERENCE - Windows & Mac
+#    - indows & ac
 
-## Complete Natural Language Guide for All Operations
+## omplete atural anguage uide for ll perations
 
-This document provides step-by-step instructions in plain English for both Windows (PowerShell) and MacBook Pro (Terminal) users.
-
----
-
-## TABLE OF CONTENTS
-
-1. [Opening Your Terminal](#1-opening-your-terminal)
-2. [Navigating to Project](#2-navigating-to-project)
-3. [Setting Up Environment](#3-setting-up-environment)
-4. [Installing Dependencies](#4-installing-dependencies)
-5. [Copying Configuration Files](#5-copying-configuration-files)
-6. [Testing Database Connection](#6-testing-database-connection)
-7. [Starting Data Collection](#7-starting-data-collection)
-8. [Running Model Training](#8-running-model-training)
-9. [Starting Trading Engine](#9-starting-trading-engine)
-10. [Monitoring & Logs](#10-monitoring--logs)
-11. [Troubleshooting](#11-troubleshooting)
+his document provides step-by-step instructions in plain nglish for both indows (owerhell) and acook ro (erminal) users.
 
 ---
 
-## 1. OPENING YOUR TERMINAL
+##   
 
-### Windows (PowerShell)
-
-**Option A - Windows Terminal (Recommended):**
-1. Press `Windows + X` on your keyboard
-2. Click "Terminal" or "Windows Terminal" from the menu
-3. A blue PowerShell window will open
-
-**Option B - Search:**
-1. Press `Windows key` and type "PowerShell"
-2. Click "Windows PowerShell" or "Windows Terminal"
-
-**Option C - From Cursor IDE:**
-1. Open Cursor
-2. Go to menu: Terminal → New Terminal
-3. Terminal opens at bottom of IDE
-
-### MacBook Pro (Terminal)
-
-**Option A - Spotlight (Fastest):**
-1. Press `Cmd + Space` to open Spotlight
-2. Type "Terminal"
-3. Press `Enter` when Terminal appears
-
-**Option B - Finder:**
-1. Open Finder
-2. Go to Applications → Utilities → Terminal
-3. Double-click Terminal
-
-**Option C - From Cursor IDE:**
-1. Open Cursor
-2. Go to menu: Terminal → New Terminal
-3. Terminal opens at bottom of IDE
+. pening our erminal](#-opening-your-terminal)
+. avigating to roject](#-navigating-to-project)
+. etting p nvironment](#-setting-up-environment)
+. nstalling ependencies](#-installing-dependencies)
+. opying onfiguration iles](#-copying-configuration-files)
+. esting atabase onnection](#-testing-database-connection)
+. tarting ata ollection](#-starting-data-collection)
+. unning odel raining](#-running-model-training)
+. tarting rading ngine](#-starting-trading-engine)
+. onitoring & ogs](#-monitoring--logs)
+. roubleshooting](#-troubleshooting)
 
 ---
 
-## 2. NAVIGATING TO PROJECT
+## .   
 
-### Windows (PowerShell)
+### indows (owerhell)
 
-**Step 1: Change to project directory**
+**ption  - indows erminal (ecommended)**
+. ress `indows + ` on your keyboard
+. lick "erminal" or "indows erminal" from the menu
+.  blue owerhell window will open
+
+**ption  - earch**
+. ress `indows key` and type "owerhell"
+. lick "indows owerhell" or "indows erminal"
+
+**ption  - rom ursor **
+. pen ursor
+. o to menu erminal → ew erminal
+. erminal opens at bottom of 
+
+### acook ro (erminal)
+
+**ption  - potlight (astest)**
+. ress `md + pace` to open potlight
+. ype "erminal"
+. ress `nter` when erminal appears
+
+**ption  - inder**
+. pen inder
+. o to pplications → tilities → erminal
+. ouble-click erminal
+
+**ption  - rom ursor **
+. pen ursor
+. o to menu erminal → ew erminal
+. erminal opens at bottom of 
+
+---
+
+## .   
+
+### indows (owerhell)
+
+**tep  hange to project directory**
 ```powershell
-cd "C:\Users\tom\.cursor\worktrees\Alpha-Loop-LLM-1\gkv"
+cd "serstom.cursorworktreeslpha-oop--gkv"
 ```
 
-**Plain English:** Type `cd` (change directory), then the full path in quotes, then press Enter.
+**lain nglish** ype `cd` (change directory), then the full path in quotes, then press nter.
 
-**Alternative path (if different location):**
+**lternative path (if different location)**
 ```powershell
-cd "C:\Users\tom\Alpha-Loop-LLM\Alpha-Loop-LLM-1"
+cd "serstomlpha-oop-lpha-oop--"
 ```
 
-**Verify you're in the right place:**
+**erify you're in the right place**
 ```powershell
-Get-Location
+et-ocation
 ```
-This shows your current directory. You should see the project path.
+his shows your current directory. ou should see the project path.
 
-### MacBook Pro (Terminal)
+### acook ro (erminal)
 
-**Step 1: Change to project directory**
+**tep  hange to project directory**
 ```bash
-cd ~/Alpha-Loop-LLM/Alpha-Loop-LLM-1/gkv
+cd ~/lpha-oop-/lpha-oop--/gkv
 ```
 
-**Plain English:** Type `cd` (change directory), then `~` (your home folder), then the path, then press Enter.
+**lain nglish** ype `cd` (change directory), then `~` (your home folder), then the path, then press nter.
 
-**Alternative paths:**
+**lternative paths**
 ```bash
-# If project is directly in home folder
-cd ~/Alpha-Loop-LLM-1/gkv
+# f project is directly in home folder
+cd ~/lpha-oop--/gkv
 
-# If project is in Documents
-cd ~/Documents/Alpha-Loop-LLM/gkv
+# f project is in ocuments
+cd ~/ocuments/lpha-oop-/gkv
 ```
 
-**Verify you're in the right place:**
+**erify you're in the right place**
 ```bash
 pwd
 ```
-This prints working directory. You should see the project path.
+his prints working directory. ou should see the project path.
 
 ---
 
-## 3. SETTING UP ENVIRONMENT
+## .   
 
-### Windows (PowerShell)
+### indows (owerhell)
 
-**Step 1: Create virtual environment**
+**tep  reate virtual environment**
 ```powershell
 python -m venv venv
 ```
-**Plain English:** This creates a folder called "venv" that will hold all Python packages separate from your system.
+**lain nglish** his creates a folder called "venv" that will hold all ython packages separate from your system.
 
-**Step 2: Activate the virtual environment**
+**tep  ctivate the virtual environment**
 ```powershell
-.\venv\Scripts\Activate.ps1
+.venvcriptsctivate.ps
 ```
-**Plain English:** This "turns on" the virtual environment. You'll see `(venv)` appear at the start of your prompt.
+**lain nglish** his "turns on" the virtual environment. ou'll see `(venv)` appear at the start of your prompt.
 
-**If you get an execution policy error:**
+**f you get an execution policy error**
 ```powershell
-Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
+et-xecutionolicy -xecutionolicy emoteigned -cope urrentser
 ```
-**Plain English:** This allows PowerShell to run local scripts. Type `Y` and press Enter when asked.
+**lain nglish** his allows owerhell to run local scripts. ype `` and press nter when asked.
 
-**Then try activating again:**
+**hen try activating again**
 ```powershell
-.\venv\Scripts\Activate.ps1
+.venvcriptsctivate.ps
 ```
 
-### MacBook Pro (Terminal)
+### acook ro (erminal)
 
-**Step 1: Create virtual environment**
+**tep  reate virtual environment**
 ```bash
-python3 -m venv venv
+python -m venv venv
 ```
-**Plain English:** Same as Windows - creates isolated Python environment. Note: Mac uses `python3` not `python`.
+**lain nglish** ame as indows - creates isolated ython environment. ote ac uses `python` not `python`.
 
-**Step 2: Activate the virtual environment**
+**tep  ctivate the virtual environment**
 ```bash
 source venv/bin/activate
 ```
-**Plain English:** This activates the environment. You'll see `(venv)` at the start of your prompt.
+**lain nglish** his activates the environment. ou'll see `(venv)` at the start of your prompt.
 
 ---
 
-## 4. INSTALLING DEPENDENCIES
+## .  
 
-### Windows (PowerShell)
+### indows (owerhell)
 
-**Make sure venv is activated first (you should see (venv) in prompt)**
+**ake sure venv is activated first (you should see (venv) in prompt)**
 
-**Step 1: Upgrade pip (optional but recommended)**
+**tep  pgrade pip (optional but recommended)**
 ```powershell
 python -m pip install --upgrade pip
 ```
 
-**Step 2: Install all required packages**
+**tep  nstall all required packages**
 ```powershell
 pip install -r requirements.txt
 ```
-**Plain English:** This reads the requirements.txt file and installs all listed packages. Takes 2-5 minutes.
+**lain nglish** his reads the requirements.txt file and installs all listed packages. akes - minutes.
 
-### MacBook Pro (Terminal)
+### acook ro (erminal)
 
-**Make sure venv is activated first (you should see (venv) in prompt)**
+**ake sure venv is activated first (you should see (venv) in prompt)**
 
-**Step 1: Upgrade pip (optional but recommended)**
+**tep  pgrade pip (optional but recommended)**
 ```bash
-python3 -m pip install --upgrade pip
+python -m pip install --upgrade pip
 ```
 
-**Step 2: Install all required packages**
+**tep  nstall all required packages**
 ```bash
 pip install -r requirements.txt
 ```
-**Plain English:** Same as Windows - installs all required Python packages.
+**lain nglish** ame as indows - installs all required ython packages.
 
 ---
 
-## 5. COPYING CONFIGURATION FILES
+## .   
 
-### Windows (PowerShell)
+### indows (owerhell)
 
-**Step 1: Copy the .env file from OneDrive**
+**tep  opy the .env file from ropbox**
 ```powershell
-Copy-Item "C:\Users\tom\OneDrive\Alpha Loop LLM\API - Dec 2025.env" -Destination ".env"
+opy-tem "serstomlphaloopcapital ropbox ech gents - ec .env" -estination ".env"
 ```
-**Plain English:** This copies your API keys file into the project folder as ".env".
+**lain nglish** his copies your  keys file into the project folder as ".env".
 
-**Verify the file exists:**
+**erify the file exists**
 ```powershell
-Test-Path ".env"
+est-ath ".env"
 ```
-Should return `True`.
+hould return `rue`.
 
-**Alternative - if .env is elsewhere:**
+**lternative - if .env is elsewhere**
 ```powershell
-# From Dropbox
-Copy-Item "C:\Users\tom\Dropbox\API Keys\.env" -Destination ".env"
+# rom ropbox
+opy-tem "serstomropbox eys.env" -estination ".env"
 
-# Or create manually
+# r create manually
 notepad .env
 ```
 
-### MacBook Pro (Terminal)
+### acook ro (erminal)
 
-**Step 1: Copy the .env file from OneDrive**
+**tep  opy the .env file from ropbox**
 ```bash
-cp ~/OneDrive/Alpha\ Loop\ LLM/API\ -\ Dec\ 2025.env .env
+cp ~/lphaloopcapital ropbox/ ech gents/ - ec .env .env
 ```
-**Plain English:** This copies your API keys file. Note the backslashes before spaces in the path.
+**lain nglish** his copies your  keys file. ote the backslashes before spaces in the path.
 
-**Alternative paths:**
+**lternative paths**
 ```bash
-# From Dropbox
-cp ~/Dropbox/API\ Keys/.env .env
+# rom ropbox
+cp ~/ropbox/ eys/.env .env
 
-# From iCloud
-cp ~/Library/Mobile\ Documents/com~apple~CloudDocs/.env .env
+# rom iloud
+cp ~/ibrary/obile ocuments/com~apple~loudocs/.env .env
 
-# Or manually create
+# r manually create
 nano .env
 ```
 
-**Verify the file exists:**
+**erify the file exists**
 ```bash
 ls -la .env
 ```
-Should show the file with its size.
+hould show the file with its size.
 
 ---
 
-## 6. TESTING DATABASE CONNECTION
+## .   
 
-### Windows (PowerShell)
+### indows (owerhell)
 
-**Step 1: Run the test script**
+**tep  un the test script**
 ```powershell
 python scripts/test_db_connection.py
 ```
-**Plain English:** This tests if Python can connect to the Azure SQL database.
+**lain nglish** his tests if ython can connect to the zure  database.
 
-**What to look for:**
-- ✅ "Connection successful" = Good!
-- ❌ "Connection failed" = Check your .env file credentials
+**hat to look for**
+-  "onnection successful"  ood!
+-  "onnection failed"  heck your .env file credentials
 
-### MacBook Pro (Terminal)
+### acook ro (erminal)
 
-**Step 1: Run the test script**
+**tep  un the test script**
 ```bash
 python scripts/test_db_connection.py
 ```
-**Plain English:** Same test - verifies database connectivity from Mac.
+**lain nglish** ame test - verifies database connectivity from ac.
 
 ---
 
-## 7. STARTING DATA COLLECTION
+## .   
 
-### Windows (PowerShell)
+### indows (owerhell)
 
-**Option A: Quick Data Collection (standard)**
+**ption  uick ata ollection (standard)**
 ```powershell
-cd "C:\Users\tom\.cursor\worktrees\Alpha-Loop-LLM-1\gkv"
-.\venv\Scripts\Activate.ps1
+cd "serstom.cursorworktreeslpha-oop--gkv"
+.venvcriptsctivate.ps
 python src/data_ingestion/collector.py
 ```
 
-**Option B: Full Universe Hydration (comprehensive)**
+**ption  ull niverse ydration (comprehensive)**
 ```powershell
-cd "C:\Users\tom\.cursor\worktrees\Alpha-Loop-LLM-1\gkv"
-.\venv\Scripts\Activate.ps1
+cd "serstom.cursorworktreeslpha-oop--gkv"
+.venvcriptsctivate.ps
 python scripts/hydrate_full_universe.py
 ```
 
-**Option C: Alpha Vantage Premium Data**
+**ption  lpha antage remium ata**
 ```powershell
-cd "C:\Users\tom\.cursor\worktrees\Alpha-Loop-LLM-1\gkv"
-.\venv\Scripts\Activate.ps1
+cd "serstom.cursorworktreeslpha-oop--gkv"
+.venvcriptsctivate.ps
 python scripts/hydrate_alpha_vantage.py
 ```
 
-**Option D: Massive S3 Deep Historical Data**
+**ption  assive  eep istorical ata**
 ```powershell
-cd "C:\Users\tom\.cursor\worktrees\Alpha-Loop-LLM-1\gkv"
-.\venv\Scripts\Activate.ps1
+cd "serstom.cursorworktreeslpha-oop--gkv"
+.venvcriptsctivate.ps
 python scripts/hydrate_massive.py
 ```
 
-**Save output to log file:**
+**ave output to log file**
 ```powershell
-python scripts/hydrate_full_universe.py 2>&1 | Tee-Object -FilePath logs/hydration.log
+python scripts/hydrate_full_universe.py & | ee-bject -ileath logs/hydration.log
 ```
 
-### MacBook Pro (Terminal)
+### acook ro (erminal)
 
-**Option A: Quick Data Collection (standard)**
+**ption  uick ata ollection (standard)**
 ```bash
-cd ~/Alpha-Loop-LLM/Alpha-Loop-LLM-1/gkv
+cd ~/lpha-oop-/lpha-oop--/gkv
 source venv/bin/activate
 python src/data_ingestion/collector.py
 ```
 
-**Option B: Full Universe Hydration (comprehensive)**
+**ption  ull niverse ydration (comprehensive)**
 ```bash
-cd ~/Alpha-Loop-LLM/Alpha-Loop-LLM-1/gkv
+cd ~/lpha-oop-/lpha-oop--/gkv
 source venv/bin/activate
 caffeinate -d python scripts/hydrate_full_universe.py
 ```
-**Note:** `caffeinate -d` prevents Mac from sleeping during long operations.
+**ote** `caffeinate -d` prevents ac from sleeping during long operations.
 
-**Option C: Alpha Vantage Premium Data**
+**ption  lpha antage remium ata**
 ```bash
-cd ~/Alpha-Loop-LLM/Alpha-Loop-LLM-1/gkv
+cd ~/lpha-oop-/lpha-oop--/gkv
 source venv/bin/activate
 caffeinate -d python scripts/hydrate_alpha_vantage.py
 ```
 
-**Option D: Massive S3 Deep Historical Data**
+**ption  assive  eep istorical ata**
 ```bash
-cd ~/Alpha-Loop-LLM/Alpha-Loop-LLM-1/gkv
+cd ~/lpha-oop-/lpha-oop--/gkv
 source venv/bin/activate
 caffeinate -d python scripts/hydrate_massive.py
 ```
 
-**Save output to log file:**
+**ave output to log file**
 ```bash
-python scripts/hydrate_full_universe.py 2>&1 | tee logs/hydration.log
+python scripts/hydrate_full_universe.py & | tee logs/hydration.log
 ```
 
 ---
 
-## 8. RUNNING MODEL TRAINING
+## .   
 
-### Windows (PowerShell)
+### indows (owerhell)
 
-**Option A: Standard Training**
+**ption  tandard raining**
 ```powershell
-cd "C:\Users\tom\.cursor\worktrees\Alpha-Loop-LLM-1\gkv"
-.\venv\Scripts\Activate.ps1
+cd "serstom.cursorworktreeslpha-oop--gkv"
+.venvcriptsctivate.ps
 python src/ml/train_models.py
 ```
 
-**Option B: Advanced Overnight Training**
+**ption  dvanced vernight raining**
 ```powershell
-cd "C:\Users\tom\.cursor\worktrees\Alpha-Loop-LLM-1\gkv"
-.\venv\Scripts\Activate.ps1
-python -c "from src.ml.advanced_training import run_overnight_training; run_overnight_training()"
+cd "serstom.cursorworktreeslpha-oop--gkv"
+.venvcriptsctivate.ps
+python -c "from src.ml.advanced_training import run_overnight_training run_overnight_training()"
 ```
 
-**Option C: Massive Parallel Training (Full Universe)**
+**ption  assive arallel raining (ull niverse)**
 ```powershell
-cd "C:\Users\tom\.cursor\worktrees\Alpha-Loop-LLM-1\gkv"
-.\venv\Scripts\Activate.ps1
+cd "serstom.cursorworktreeslpha-oop--gkv"
+.venvcriptsctivate.ps
 python src/ml/massive_trainer.py
 ```
 
-**Option D: Agent Training**
+**ption  gent raining**
 ```powershell
-cd "C:\Users\tom\.cursor\worktrees\Alpha-Loop-LLM-1\gkv"
-.\venv\Scripts\Activate.ps1
+cd "serstom.cursorworktreeslpha-oop--gkv"
+.venvcriptsctivate.ps
 python -m src.training.agent_trainer --all
 ```
 
-**Save training output to log:**
+**ave training output to log**
 ```powershell
-python src/ml/train_models.py 2>&1 | Tee-Object -FilePath logs/training.log
+python src/ml/train_models.py & | ee-bject -ileath logs/training.log
 ```
 
-### MacBook Pro (Terminal)
+### acook ro (erminal)
 
-**Option A: Standard Training**
+**ption  tandard raining**
 ```bash
-cd ~/Alpha-Loop-LLM/Alpha-Loop-LLM-1/gkv
+cd ~/lpha-oop-/lpha-oop--/gkv
 source venv/bin/activate
 caffeinate -d python src/ml/train_models.py
 ```
 
-**Option B: Advanced Overnight Training**
+**ption  dvanced vernight raining**
 ```bash
-cd ~/Alpha-Loop-LLM/Alpha-Loop-LLM-1/gkv
+cd ~/lpha-oop-/lpha-oop--/gkv
 source venv/bin/activate
-caffeinate -d python -c "from src.ml.advanced_training import run_overnight_training; run_overnight_training()"
+caffeinate -d python -c "from src.ml.advanced_training import run_overnight_training run_overnight_training()"
 ```
 
-**Option C: Massive Parallel Training (Full Universe)**
+**ption  assive arallel raining (ull niverse)**
 ```bash
-cd ~/Alpha-Loop-LLM/Alpha-Loop-LLM-1/gkv
+cd ~/lpha-oop-/lpha-oop--/gkv
 source venv/bin/activate
 caffeinate -d python src/ml/massive_trainer.py
 ```
 
-**Option D: Agent Training**
+**ption  gent raining**
 ```bash
-cd ~/Alpha-Loop-LLM/Alpha-Loop-LLM-1/gkv
+cd ~/lpha-oop-/lpha-oop--/gkv
 source venv/bin/activate
 caffeinate -d python -m src.training.agent_trainer --all
 ```
 
-**Save training output to log:**
+**ave training output to log**
 ```bash
-caffeinate -d python src/ml/train_models.py 2>&1 | tee logs/training.log
+caffeinate -d python src/ml/train_models.py & | tee logs/training.log
 ```
 
 ---
 
-## 9. STARTING TRADING ENGINE
+## .   
 
-### Windows (PowerShell)
+### indows (owerhell)
 
-**Step 1: Ensure IBKR TWS or Gateway is running**
-- Paper Trading: Port 7497
-- Live Trading: Port 7496
+**tep  nsure   or ateway is running**
+- aper rading ort 
+- ive rading ort 
 
-**Step 2: Start the trading engine**
+**tep  tart the trading engine**
 ```powershell
-cd "C:\Users\tom\.cursor\worktrees\Alpha-Loop-LLM-1\gkv"
-.\venv\Scripts\Activate.ps1
+cd "serstom.cursorworktreeslpha-oop--gkv"
+.venvcriptsctivate.ps
 python src/trading/execution_engine.py
 ```
 
-### MacBook Pro (Terminal)
+### acook ro (erminal)
 
-**Step 1: Ensure IBKR TWS or Gateway is running**
-- Paper Trading: Port 7497
-- Live Trading: Port 7496
+**tep  nsure   or ateway is running**
+- aper rading ort 
+- ive rading ort 
 
-**Step 2: Start the trading engine**
+**tep  tart the trading engine**
 ```bash
-cd ~/Alpha-Loop-LLM/Alpha-Loop-LLM-1/gkv
+cd ~/lpha-oop-/lpha-oop--/gkv
 source venv/bin/activate
 python src/trading/execution_engine.py
 ```
 
 ---
 
-## 10. MONITORING & LOGS
+## .  & 
 
-### Windows (PowerShell)
+### indows (owerhell)
 
-**View log file (last 50 lines):**
+**iew log file (last  lines)**
 ```powershell
-Get-Content logs\data_collection.log -Tail 50
+et-ontent logsdata_collection.log -ail 
 ```
 
-**Watch log in real-time:**
+**atch log in real-time**
 ```powershell
-Get-Content logs\training.log -Tail 50 -Wait
+et-ontent logstraining.log -ail  -ait
 ```
 
-**Count trained models:**
+**ount trained models**
 ```powershell
-(Get-ChildItem models\*.pkl).Count
+(et-hildtem models*.pkl).ount
 ```
 
-**List all models with timestamps:**
+**ist all models with timestamps**
 ```powershell
-Get-ChildItem models\*.pkl | Sort-Object LastWriteTime -Descending | Select-Object Name, LastWriteTime
+et-hildtem models*.pkl | ort-bject astriteime -escending | elect-bject ame, astriteime
 ```
 
-**Check database row count:**
+**heck database row count**
 ```powershell
-python -c "from src.database.connection import get_engine; from sqlalchemy import text; engine = get_engine(); result = engine.execute(text('SELECT COUNT(*) FROM price_bars')); print(f'Rows: {result.fetchone()[0]:,}')"
+python -c "from src.database.connection import get_engine from sqlalchemy import text engine  get_engine() result  engine.execute(text(' (*)  price_bars')) print(f'ows {result.fetchone()],}')"
 ```
 
-**Run model dashboard:**
+**un model dashboard**
 ```powershell
 python scripts/model_dashboard.py
 ```
 
-### MacBook Pro (Terminal)
+### acook ro (erminal)
 
-**View log file (last 50 lines):**
+**iew log file (last  lines)**
 ```bash
-tail -50 logs/data_collection.log
+tail - logs/data_collection.log
 ```
 
-**Watch log in real-time:**
+**atch log in real-time**
 ```bash
 tail -f logs/training.log
 ```
 
-**Count trained models:**
+**ount trained models**
 ```bash
-ls models/*.pkl 2>/dev/null | wc -l
+ls models/*.pkl /dev/null | wc -l
 ```
 
-**List all models with timestamps:**
+**ist all models with timestamps**
 ```bash
 ls -lt models/*.pkl
 ```
 
-**Check database row count:**
+**heck database row count**
 ```bash
-python -c "from src.database.connection import get_engine; from sqlalchemy import text; engine = get_engine(); result = engine.execute(text('SELECT COUNT(*) FROM price_bars')); print(f'Rows: {result.fetchone()[0]:,}')"
+python -c "from src.database.connection import get_engine from sqlalchemy import text engine  get_engine() result  engine.execute(text(' (*)  price_bars')) print(f'ows {result.fetchone()],}')"
 ```
 
-**Run model dashboard:**
+**un model dashboard**
 ```bash
 python scripts/model_dashboard.py
 ```
 
 ---
 
-## 11. TROUBLESHOOTING
+## . 
 
-### Common Issues - Windows
+### ommon ssues - indows
 
-**Issue: "python is not recognized"**
+**ssue "python is not recognized"**
 ```powershell
-# Solution 1: Use full path
-C:\Python311\python.exe -m venv venv
+# olution  se full path
+ythonpython.exe -m venv venv
 
-# Solution 2: Add Python to PATH
-# Search "Environment Variables" in Windows
-# Edit PATH to include Python installation folder
+# olution  dd ython to 
+# earch "nvironment ariables" in indows
+# dit  to include ython installation folder
 ```
 
-**Issue: "Execution policy" error**
+**ssue "xecution policy" error**
 ```powershell
-Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
+et-xecutionolicy -xecutionolicy emoteigned -cope urrentser
 ```
 
-**Issue: "Module not found"**
+**ssue "odule not found"**
 ```powershell
-# Make sure venv is activated
-.\venv\Scripts\Activate.ps1
-# Reinstall requirements
+# ake sure venv is activated
+.venvcriptsctivate.ps
+# einstall requirements
 pip install -r requirements.txt
 ```
 
-**Issue: Database connection fails**
+**ssue atabase connection fails**
 ```powershell
-# Check .env file exists
-Test-Path ".env"
-# View .env contents (careful with secrets!)
-Get-Content ".env" | Select-String "SQL"
+# heck .env file exists
+est-ath ".env"
+# iew .env contents (careful with secrets!)
+et-ontent ".env" | elect-tring ""
 ```
 
-### Common Issues - Mac
+### ommon ssues - ac
 
-**Issue: "python: command not found"**
+**ssue "python command not found"**
 ```bash
-# Use python3 instead
-python3 -m venv venv
-python3 src/ml/train_models.py
+# se python instead
+python -m venv venv
+python src/ml/train_models.py
 ```
 
-**Issue: "Permission denied" on scripts**
+**ssue "ermission denied" on scripts**
 ```bash
 chmod +x scripts/*.sh
 chmod +x scripts/*.py
 ```
 
-**Issue: "Module not found"**
+**ssue "odule not found"**
 ```bash
-# Make sure venv is activated
+# ake sure venv is activated
 source venv/bin/activate
-# Reinstall requirements
+# einstall requirements
 pip install -r requirements.txt
 ```
 
-**Issue: Mac goes to sleep during training**
+**ssue ac goes to sleep during training**
 ```bash
-# Prevent display sleep
+# revent display sleep
 caffeinate -d python src/ml/train_models.py
 
-# Prevent all sleep
+# revent all sleep
 caffeinate -i python src/ml/train_models.py
 ```
 
-**Issue: ODBC Driver not found on Mac**
+**ssue  river not found on ac**
 ```bash
-# Install Microsoft ODBC Driver
-brew tap microsoft/mssql-release https://github.com/Microsoft/homebrew-mssql-release
+# nstall icrosoft  river
+brew tap microsoft/mssql-release https//github.com/icrosoft/homebrew-mssql-release
 brew update
-ACCEPT_EULA=Y brew install msodbcsql17
+_ brew install msodbcsql
 ```
 
 ---
 
-## QUICK REFERENCE CHEAT SHEET
+##    
 
-### One-Liner Setup Commands
+### ne-iner etup ommands
 
-**Windows - Complete Setup:**
+**indows - omplete etup**
 ```powershell
-cd "C:\Users\tom\.cursor\worktrees\Alpha-Loop-LLM-1\gkv"; python -m venv venv; .\venv\Scripts\Activate.ps1; pip install -r requirements.txt; Copy-Item "C:\Users\tom\OneDrive\Alpha Loop LLM\API - Dec 2025.env" -Destination ".env"; python scripts/test_db_connection.py
+cd "serstom.cursorworktreeslpha-oop--gkv" python -m venv venv .venvcriptsctivate.ps pip install -r requirements.txt opy-tem "serstomlphaloopcapital ropbox ech gents - ec .env" -estination ".env" python scripts/test_db_connection.py
 ```
 
-**Mac - Complete Setup:**
+**ac - omplete etup**
 ```bash
-cd ~/Alpha-Loop-LLM/Alpha-Loop-LLM-1/gkv && python3 -m venv venv && source venv/bin/activate && pip install -r requirements.txt && cp ~/OneDrive/Alpha\ Loop\ LLM/API\ -\ Dec\ 2025.env .env && python scripts/test_db_connection.py
+cd ~/lpha-oop-/lpha-oop--/gkv && python -m venv venv && source venv/bin/activate && pip install -r requirements.txt && cp ~/lphaloopcapital ropbox/ ech gents/ - ec .env .env && python scripts/test_db_connection.py
 ```
 
-### One-Liner Training Commands
+### ne-iner raining ommands
 
-**Windows - Full Overnight Training:**
+**indows - ull vernight raining**
 ```powershell
-cd "C:\Users\tom\.cursor\worktrees\Alpha-Loop-LLM-1\gkv"; .\venv\Scripts\Activate.ps1; python scripts/hydrate_full_universe.py 2>&1 | Tee-Object logs/hydration.log
+cd "serstom.cursorworktreeslpha-oop--gkv" .venvcriptsctivate.ps python scripts/hydrate_full_universe.py & | ee-bject logs/hydration.log
 ```
 
-**Mac - Full Overnight Training:**
+**ac - ull vernight raining**
 ```bash
-cd ~/Alpha-Loop-LLM/Alpha-Loop-LLM-1/gkv && source venv/bin/activate && caffeinate -d python scripts/hydrate_full_universe.py 2>&1 | tee logs/hydration.log
+cd ~/lpha-oop-/lpha-oop--/gkv && source venv/bin/activate && caffeinate -d python scripts/hydrate_full_universe.py & | tee logs/hydration.log
 ```
 
 ---
 
-## DUAL-MACHINE WORKFLOW
+## - 
 
-### Recommended Setup for Overnight Training
+### ecommended etup for vernight raining
 
-**Windows PC (Primary):**
-- Terminal 1: Data Hydration
-- Terminal 2: Model Training
-- Terminal 3: Monitoring Dashboard
+**indows  (rimary)**
+- erminal  ata ydration
+- erminal  odel raining
+- erminal  onitoring ashboard
 
-**MacBook Pro (Secondary):**
-- Terminal 1: Research Ingestion
-- Terminal 2: Sentiment Analysis
-- Terminal 3: Backup Training
+**acook ro (econdary)**
+- erminal  esearch ngestion
+- erminal  entiment nalysis
+- erminal  ackup raining
 
-### Windows Terminals (Open 3)
+### indows erminals (pen )
 
-**Terminal 1 - Data Hydration:**
+**erminal  - ata ydration**
 ```powershell
-cd "C:\Users\tom\.cursor\worktrees\Alpha-Loop-LLM-1\gkv"
-.\venv\Scripts\Activate.ps1
-python scripts/hydrate_full_universe.py 2>&1 | Tee-Object logs/hydration.log
+cd "serstom.cursorworktreeslpha-oop--gkv"
+.venvcriptsctivate.ps
+python scripts/hydrate_full_universe.py & | ee-bject logs/hydration.log
 ```
 
-**Terminal 2 - Model Training:**
+**erminal  - odel raining**
 ```powershell
-cd "C:\Users\tom\.cursor\worktrees\Alpha-Loop-LLM-1\gkv"
-.\venv\Scripts\Activate.ps1
-python -c "from src.ml.advanced_training import run_overnight_training; run_overnight_training()" 2>&1 | Tee-Object logs/training.log
+cd "serstom.cursorworktreeslpha-oop--gkv"
+.venvcriptsctivate.ps
+python -c "from src.ml.advanced_training import run_overnight_training run_overnight_training()" & | ee-bject logs/training.log
 ```
 
-**Terminal 3 - Monitoring:**
+**erminal  - onitoring**
 ```powershell
-cd "C:\Users\tom\.cursor\worktrees\Alpha-Loop-LLM-1\gkv"
-.\venv\Scripts\Activate.ps1
+cd "serstom.cursorworktreeslpha-oop--gkv"
+.venvcriptsctivate.ps
 python scripts/model_dashboard.py
 ```
 
-### Mac Terminals (Open 3)
+### ac erminals (pen )
 
-**Terminal 1 - Research Ingestion:**
+**erminal  - esearch ngestion**
 ```bash
-cd ~/Alpha-Loop-LLM/Alpha-Loop-LLM-1/gkv
+cd ~/lpha-oop-/lpha-oop--/gkv
 source venv/bin/activate
-caffeinate -d python scripts/ingest_research.py 2>&1 | tee logs/research.log
+caffeinate -d python scripts/ingest_research.py & | tee logs/research.log
 ```
 
-**Terminal 2 - Backup Training:**
+**erminal  - ackup raining**
 ```bash
-cd ~/Alpha-Loop-LLM/Alpha-Loop-LLM-1/gkv
+cd ~/lpha-oop-/lpha-oop--/gkv
 source venv/bin/activate
-caffeinate -d python src/ml/train_models.py 2>&1 | tee logs/training_mac.log
+caffeinate -d python src/ml/train_models.py & | tee logs/training_mac.log
 ```
 
-**Terminal 3 - Monitoring:**
+**erminal  - onitoring**
 ```bash
-cd ~/Alpha-Loop-LLM/Alpha-Loop-LLM-1/gkv
+cd ~/lpha-oop-/lpha-oop--/gkv
 source venv/bin/activate
-watch -n 30 'ls -la models/*.pkl | wc -l'
+watch -n  'ls -la models/*.pkl | wc -l'
 ```
 
 ---
 
-## KEEP MACHINES AWAKE OVERNIGHT
+##    
 
-### Windows
+### indows
 
-**Via PowerShell:**
+**ia owerhell**
 ```powershell
-# Prevent sleep when plugged in
-powercfg /change standby-timeout-ac 0
+# revent sleep when plugged in
+powercfg /change standby-timeout-ac 
 
-# Check current settings
+# heck current settings
 powercfg /query
 ```
 
-**Via Settings:**
-1. Windows Settings → System → Power & battery
-2. Set "Screen timeout" to Never when plugged in
-3. Set "Sleep" to Never when plugged in
+**ia ettings**
+. indows ettings → ystem → ower & battery
+. et "creen timeout" to ever when plugged in
+. et "leep" to ever when plugged in
 
-### MacBook Pro
+### acook ro
 
-**Prevent sleep during training:**
+**revent sleep during training**
 ```bash
 caffeinate -d python src/ml/train_models.py
 ```
 
-**Prevent sleep indefinitely (background):**
+**revent sleep indefinitely (background)**
 ```bash
 caffeinate -d &
 ```
 
-**Via System Settings:**
-1. System Settings → Battery → Options
-2. Turn ON "Prevent automatic sleeping when display is off"
+**ia ystem ettings**
+. ystem ettings → attery → ptions
+. urn  "revent automatic sleeping when display is off"
 
 ---
 
-**Built for Alpha Loop Capital - Institutional Grade Trading System**
+**uilt for lpha oop apital - nstitutional rade rading ystem**
 
-*This document provides complete natural language instructions for operating the system on both Windows and Mac platforms.*
+*his document provides complete natural language instructions for operating the system on both indows and ac platforms.*
 

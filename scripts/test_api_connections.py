@@ -275,14 +275,7 @@ def test_anthropic_api() -> dict:
 
 
 def test_perplexity_api() -> dict:
-    """Test Perplexity API connection.
-    
-    Available models:
-    - sonar: Fast general model for quick queries
-    - sonar-pro: Enhanced model with better reasoning
-    - sonar-deep-research: Expert-level research (takes minutes, searches 100+ sources)
-      Docs: https://docs.perplexity.ai/getting-started/models/models/sonar-deep-research
-    """
+    """Test Perplexity API connection."""
     settings = get_settings()
     result = {"name": "Perplexity", "status": "unknown", "message": "", "latency_ms": 0}
 
@@ -298,22 +291,21 @@ def test_perplexity_api() -> dict:
             "Authorization": f"Bearer {settings.perplexity_api_key}",
             "Content-Type": "application/json",
         }
-        # Using sonar for fast connection test
-        # For research tasks, use sonar-deep-research (takes minutes)
         resp = requests.post(
             url,
             headers=headers,
             json={
                 "model": "sonar",
-                "messages": [{"role": "user", "content": "What is 2+2?"}],
+                "messages": [{"role": "user", "content": "test"}],
+                "max_tokens": 5,
             },
-            timeout=30,
+            timeout=15,
         )
         latency = (time.time() - start) * 1000
 
         if resp.status_code == 200:
             result["status"] = "success"
-            result["message"] = "Connected - sonar model (deep-research available)"
+            result["message"] = "Connected - API key valid"
         elif resp.status_code == 401:
             result["status"] = "error"
             result["message"] = "Invalid API key"
@@ -469,7 +461,7 @@ def main():
     if error > 0:
         print("\n⚠️  Some APIs failed - check your .env file!")
         print(f"   Expected location: {settings.base_dir / '.env'}")
-        print(f"   Or OneDrive: C:\\Users\\tom\\OneDrive\\Alpha Loop LLM\\API - Dec 2025.env")
+        print(f"   Or Dropbox: C:\\Users\\tom\\Alphaloopcapital Dropbox\\ALC Tech Agents\\API - Dec 2025.env")
         return 1
 
     print("\n✓ All configured APIs are working!")

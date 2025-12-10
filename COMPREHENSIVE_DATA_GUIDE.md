@@ -1,314 +1,314 @@
-# COMPREHENSIVE DATA COLLECTION GUIDE
-## Alpha Loop Capital - Institutional-Grade Data Pipeline
+#    
+## lpha oop apital - nstitutional-rade ata ipeline
 
-**Last Updated:** December 2024  
-**Status:** PRODUCTION READY - Full Throttle Mode
-
----
-
-## 🎯 OVERVIEW
-
-This system pulls **ALL** historical data from your premium Alpha Vantage S3 subscription:
-- ✅ **Stocks** (Equities) - 5 years of 1-minute bars
-- ✅ **Indices** (SPY, QQQ, IWM, DIA, VIX) - 5 years
-- ✅ **Currencies** (EURUSD, GBPUSD, USDJPY, etc.) - 5 years
-- ✅ **Options** (with Greeks: Delta, Gamma, Theta, Vega, IV) - 1 year
-- ✅ **Crypto** (BTC-USD, ETH-USD) - Coinbase
-- ✅ **Macro** (FRED: Fed Funds, CPI, Unemployment, VIX, Liquidity)
-- ✅ **Advanced Fundamentals** (EV/EBITDA, FCF Yield, ROIC, Altman Z-Score, Piotroski F-Score)
+**ast pdated** ecember   
+**tatus**   - ull hrottle ode
 
 ---
 
-## 🚀 QUICK START (Windows)
+## 
 
-### Step 1: Terminal Setup
+his system pulls **** historical data from your premium lpha antage  subscription
+- **tocks** (quities) -  years of -minute bars
+- **ndices** (, , , , ) -  years
+- **urrencies** (, , , etc.) -  years
+-  **ptions** (with reeks elta, amma, heta, ega, ) -  year
+-  **rypto** (-, -) - oinbase
+-  **acro** ( ed unds, , nemployment, , iquidity)
+-  **dvanced undamentals** (/,  ield, , ltman -core, iotroski -core)
+
+---
+
+##    (indows)
+
+### tep  erminal etup
 ```powershell
-cd "C:\Users\tom\Alpha-Loop-LLM\Alpha-Loop-LLM-1"
+cd "serstomlpha-oop-lpha-oop--"
 python -m venv venv
-.\venv\Scripts\Activate.ps1
+.venvcriptsctivate.ps
 pip install -r requirements.txt
-Copy-Item "C:\Users\tom\OneDrive\Alpha Loop LLM\API - Dec 2025.env" -Destination ".env"
+opy-tem "serstomlphaloopcapital ropbox ech gents - ec .env" -estination ".env"
 python scripts/test_db_connection.py
 ```
 
-### Step 2: Start Overnight Data Collection
+### tep  tart vernight ata ollection
 ```powershell
-# Terminal 1 - Data Collection (ALL ASSET CLASSES)
+# erminal  - ata ollection (  )
 python src/data_ingestion/collector.py
 ```
 
-**This will collect:**
-- Equities from Alpha Vantage S3 (Massive) + Polygon + AV API
-- Indices from Alpha Vantage S3
-- Currencies from Alpha Vantage S3
-- Options with Greeks from Alpha Vantage S3
-- Crypto from Coinbase
-- Macro from FRED
-- Advanced Fundamentals from Alpha Vantage
+**his will collect**
+- quities from lpha antage  (assive) + olygon +  
+- ndices from lpha antage 
+- urrencies from lpha antage 
+- ptions with reeks from lpha antage 
+- rypto from oinbase
+- acro from 
+- dvanced undamentals from lpha antage
 
-### Step 3: Start Model Training (Parallel Terminal)
+### tep  tart odel raining (arallel erminal)
 ```powershell
-# Terminal 2 - Model Training
+# erminal  - odel raining
 python src/ml/train_models.py
 ```
 
 ---
 
-## 🚀 QUICK START (Mac)
+##    (ac)
 
-### Step 1: Terminal Setup
+### tep  erminal etup
 ```bash
-cd ~/Alpha-Loop-LLM/Alpha-Loop-LLM-1
-python3 -m venv venv
+cd ~/lpha-oop-/lpha-oop--
+python -m venv venv
 source venv/bin/activate
 pip install -r requirements.txt
-cp ~/OneDrive/Alpha\ Loop\ LLM/API\ -\ Dec\ 2025.env .env
+cp ~/lphaloopcapital ropbox/ ech gents/ - ec .env .env
 python scripts/test_db_connection.py
 ```
 
-### Step 2: Start Overnight Data Collection
+### tep  tart vernight ata ollection
 ```bash
-# Terminal 1 - Data Collection
+# erminal  - ata ollection
 caffeinate -d python src/data_ingestion/collector.py
 ```
 
-### Step 3: Start Model Training
+### tep  tart odel raining
 ```bash
-# Terminal 2 - Model Training
+# erminal  - odel raining
 caffeinate -d python src/ml/train_models.py
 ```
 
 ---
 
-## 📊 DATA SOURCES & COVERAGE
+##    & 
 
-### 1. EQUITIES (Stocks)
-**Sources:**
-- **Alpha Vantage S3 (Massive)** - Primary source, 5 years of 1-minute bars
-- **Polygon API** - 2 years of 1-minute bars
-- **Alpha Vantage API** - Recent high-resolution data
+### .  (tocks)
+**ources**
+- **lpha antage  (assive)** - rimary source,  years of -minute bars
+- **olygon ** -  years of -minute bars
+- **lpha antage ** - ecent high-resolution data
 
-**Symbols:** Configured in `src/config/settings.py` → `target_symbols`
-- Default: SPY, QQQ, IWM, DIA, AAPL, MSFT, NVDA, AMD, GOOGL, META, TSLA, AMZN
+**ymbols** onfigured in `src/config/settings.py` → `target_symbols`
+- efault , , , , , , , , , , , 
 
-**Storage:** `price_bars` table in SQL
-
----
-
-### 2. INDICES
-**Source:** Alpha Vantage S3 (Massive)
-
-**Symbols:** SPY, QQQ, IWM, DIA, VIX
-
-**Storage:** `price_bars` table
+**torage** `price_bars` table in 
 
 ---
 
-### 3. CURRENCIES/FOREX
-**Source:** Alpha Vantage S3 (Massive)
+### . 
+**ource** lpha antage  (assive)
 
-**Pairs:** EURUSD, GBPUSD, USDJPY, AUDUSD, USDCAD
+**ymbols** , , , , 
 
-**Storage:** `price_bars` table
-
----
-
-### 4. OPTIONS (with Greeks)
-**Source:** Alpha Vantage S3 (Massive)
-
-**Greeks Included:**
-- **Delta** - Price sensitivity to underlying
-- **Gamma** - Delta sensitivity (convexity)
-- **Theta** - Time decay
-- **Vega** - Volatility sensitivity
-- **IV** - Implied Volatility
-
-**Storage:** `options_bars` table
-
-**Note:** Options data is HUGE. System limits to top 10 underlying symbols by default.
+**torage** `price_bars` table
 
 ---
 
-### 5. CRYPTO
-**Source:** Coinbase Pro API
+### . /
+**ource** lpha antage  (assive)
 
-**Symbols:** BTC-USD, ETH-USD
+**airs** , , , , 
 
-**Storage:** `price_bars` table
-
----
-
-### 6. MACRO INDICATORS
-**Source:** FRED (Federal Reserve Economic Data)
-
-**Indicators:**
-- **FEDFUNDS** - Federal Funds Rate
-- **CPIAUCSL** - Consumer Price Index
-- **UNRATE** - Unemployment Rate
-- **VIXCLS** - VIX (Volatility Index)
-- **DGS10** - 10-Year Treasury Yield
-- **T10Y2Y** - 10Y-2Y Yield Curve
-- **WALCL** - Fed Total Assets (Liquidity)
-- **WTREGEN** - Treasury General Account
-- **RRPONTSYD** - Overnight Reverse Repo
-
-**Storage:** `macro_indicators` table
+**torage** `price_bars` table
 
 ---
 
-### 7. ADVANCED FUNDAMENTALS
-**Source:** Alpha Vantage API
+### .  (with reeks)
+**ource** lpha antage  (assive)
 
-**Metrics Computed:**
+**reeks ncluded**
+- **elta** - rice sensitivity to underlying
+- **amma** - elta sensitivity (convexity)
+- **heta** - ime decay
+- **ega** - olatility sensitivity
+- **** - mplied olatility
 
-**Valuation:**
-- EV/EBITDA, EV/Sales, EV/FCF
-- P/E, PEG, P/B, P/S
-- FCF Yield, FCF Margin
+**torage** `options_bars` table
 
-**Profitability:**
-- ROIC, ROE, ROA
-- Gross Margin, Net Margin, Operating Margin
-- CROCI (Cash Return on Capital Invested)
-
-**Leverage & Solvency:**
-- Debt/Equity, Debt/Assets
-- Interest Coverage
-- Current Ratio, Quick Ratio
-
-**Efficiency:**
-- Asset Turnover
-- Inventory Turnover
-- Receivables Turnover
-
-**Risk Metrics:**
-- **Altman Z-Score** - Bankruptcy risk (Z < 1.8 = high risk)
-- **Piotroski F-Score** - Financial strength (0-9, higher = better)
-- **Quality Score** - Composite quality metric (0-1)
-
-**Operating Leverage:**
-- Operating Leverage ratio
-
-**Storage:** `fundamentals` table
+**ote** ptions data is . ystem limits to top  underlying symbols by default.
 
 ---
 
-## 🔬 QUANT METRICS IN FEATURE ENGINEERING
+### . 
+**ource** oinbase ro 
 
-The system computes **institutional-grade quant metrics** for ML training:
+**ymbols** -, -
 
-### Value at Risk (VaR)
-- **VaR 95%** - 95% confidence level
-- **VaR 99%** - 99% confidence level
-- **CVaR (Expected Shortfall)** - Average of tail losses
-
-### Tail Risk
-- **Skewness** - Asymmetry of returns
-- **Kurtosis** - Fat tails (extreme events)
-- **Tail Risk Proxy** - Probability of extreme moves (> 2 std dev)
-
-### Convexity
-- **Convexity Proxy** - Second derivative of returns (acceleration)
-- **Return Acceleration** - Rate of change of returns
-
-### Drawdown Metrics
-- **Drawdown** - Current drawdown from peak
-- **Max Drawdown** - Maximum drawdown in rolling window
-
-### Risk-Adjusted Returns
-- **Sharpe Proxy** - Return / Volatility
-- **Sortino Proxy** - Return / Downside Deviation
+**torage** `price_bars` table
 
 ---
 
-## 📈 FEATURE ENGINEERING (100+ Features)
+### .  
+**ource**  (ederal eserve conomic ata)
 
-### Technical Indicators (50+)
-- Returns (1, 5, 10, 20 periods)
-- Log Returns
-- Volatility (10, 20, 50 windows)
-- RSI (7, 14)
-- Stochastic Oscillator
-- Williams %R
-- CCI
-- EMAs (5, 10, 20, 50)
-- MACD
-- ADX
-- Bollinger Bands
-- ATR
-- Keltner Channel
-- OBV
-- VWAP
-- Volume Z-score
+**ndicators**
+- **** - ederal unds ate
+- **** - onsumer rice ndex
+- **** - nemployment ate
+- **** -  (olatility ndex)
+- **** - -ear reasury ield
+- **** - - ield urve
+- **** - ed otal ssets (iquidity)
+- **** - reasury eneral ccount
+- **** - vernight everse epo
 
-### Quant Metrics (20+)
-- VaR (95%, 99%)
-- CVaR
-- Skewness
-- Kurtosis
-- Tail Risk
-- Convexity
-- Drawdown
-- Max Drawdown
-- Sharpe Proxy
-- Sortino Proxy
-
-### Market Microstructure (10+)
-- Spread Proxy
-- Amihud Illiquidity
-- Price Impact
-
-### Pattern Detection (10+)
-- Doji Candles
-- Gap Up/Down
-- Higher High / Lower Low
+**torage** `macro_indicators` table
 
 ---
 
-## 🗄️ SQL DATABASE SCHEMA
+### .  
+**ource** lpha antage 
 
-### `price_bars` Table
-Stores all price data (equities, indices, currencies, crypto)
+**etrics omputed**
 
-**Columns:**
-- `symbol` (VARCHAR)
-- `timestamp` (DATETIME)
-- `open` (FLOAT)
-- `high` (FLOAT)
-- `low` (FLOAT)
-- `close` (FLOAT)
-- `volume` (FLOAT)
-- `source` (VARCHAR) - 'alpha_vantage_s3', 'polygon', 'coinbase', etc.
+**aluation**
+- /, /ales, /
+- /, , /, /
+-  ield,  argin
 
-### `options_bars` Table
-Stores options data with Greeks
+**rofitability**
+- , , 
+- ross argin, et argin, perating argin
+-  (ash eturn on apital nvested)
 
-**Columns:**
-- `symbol` (VARCHAR) - Option ticker
-- `underlying` (VARCHAR) - Underlying stock
-- `timestamp` (DATETIME)
+**everage & olvency**
+- ebt/quity, ebt/ssets
+- nterest overage
+- urrent atio, uick atio
+
+**fficiency**
+- sset urnover
+- nventory urnover
+- eceivables urnover
+
+**isk etrics**
+- **ltman -core** - ankruptcy risk (  .  high risk)
+- **iotroski -core** - inancial strength (-, higher  better)
+- **uality core** - omposite quality metric (-)
+
+**perating everage**
+- perating everage ratio
+
+**torage** `fundamentals` table
+
+---
+
+##      
+
+he system computes **institutional-grade quant metrics** for  training
+
+### alue at isk (a)
+- **a %** - % confidence level
+- **a %** - % confidence level
+- **a (xpected hortfall)** - verage of tail losses
+
+### ail isk
+- **kewness** - symmetry of returns
+- **urtosis** - at tails (extreme events)
+- **ail isk roxy** - robability of extreme moves (  std dev)
+
+### onvexity
+- **onvexity roxy** - econd derivative of returns (acceleration)
+- **eturn cceleration** - ate of change of returns
+
+### rawdown etrics
+- **rawdown** - urrent drawdown from peak
+- **ax rawdown** - aximum drawdown in rolling window
+
+### isk-djusted eturns
+- **harpe roxy** - eturn / olatility
+- **ortino roxy** - eturn / ownside eviation
+
+---
+
+##    (+ eatures)
+
+### echnical ndicators (+)
+- eturns (, , ,  periods)
+- og eturns
+- olatility (, ,  windows)
+-  (, )
+- tochastic scillator
+- illiams %
+- 
+- s (, , , )
+- 
+- 
+- ollinger ands
+- 
+- eltner hannel
+- 
+- 
+- olume -score
+
+### uant etrics (+)
+- a (%, %)
+- a
+- kewness
+- urtosis
+- ail isk
+- onvexity
+- rawdown
+- ax rawdown
+- harpe roxy
+- ortino roxy
+
+### arket icrostructure (+)
+- pread roxy
+- mihud lliquidity
+- rice mpact
+
+### attern etection (+)
+- oji andles
+- ap p/own
+- igher igh / ower ow
+
+---
+
+## ️   
+
+### `price_bars` able
+tores all price data (equities, indices, currencies, crypto)
+
+**olumns**
+- `symbol` ()
+- `timestamp` ()
+- `open` ()
+- `high` ()
+- `low` ()
+- `close` ()
+- `volume` ()
+- `source` () - 'alpha_vantage_s', 'polygon', 'coinbase', etc.
+
+### `options_bars` able
+tores options data with reeks
+
+**olumns**
+- `symbol` () - ption ticker
+- `underlying` () - nderlying stock
+- `timestamp` ()
 - `open`, `high`, `low`, `close`, `volume`
-- `delta`, `gamma`, `theta`, `vega` (FLOAT)
-- `iv` (FLOAT) - Implied Volatility
-- `strike` (FLOAT)
-- `expiry` (DATETIME)
-- `source` (VARCHAR)
+- `delta`, `gamma`, `theta`, `vega` ()
+- `iv` () - mplied olatility
+- `strike` ()
+- `expiry` ()
+- `source` ()
 
-### `macro_indicators` Table
-Stores FRED macro data
+### `macro_indicators` able
+tores  macro data
 
-**Columns:**
-- `symbol` (VARCHAR) - Series ID (e.g., 'FEDFUNDS')
-- `timestamp` (DATETIME)
-- `value` (FLOAT)
-- `source` (VARCHAR) - 'fred'
+**olumns**
+- `symbol` () - eries  (e.g., '')
+- `timestamp` ()
+- `value` ()
+- `source` () - 'fred'
 
-### `fundamentals` Table
-Stores advanced fundamental metrics
+### `fundamentals` able
+tores advanced fundamental metrics
 
-**Columns:**
-- `symbol` (VARCHAR)
-- `timestamp` (DATETIME)
+**olumns**
+- `symbol` ()
+- `timestamp` ()
 - `ev`, `ev_ebitda`, `ev_sales`, `ev_fcf`
 - `fcf`, `fcf_yield`, `fcf_margin`
 - `roic`, `roe`, `roa`
@@ -325,117 +325,117 @@ Stores advanced fundamental metrics
 
 ---
 
-## ⚙️ CONFIGURATION
+## ️ 
 
-### Environment Variables (.env)
+### nvironment ariables (.env)
 
-**Database:**
+**atabase**
 ```
-SQL_SERVER=alc-sql-server.database.windows.net
-SQL_DB=alc_market_data
-DB_USERNAME=your_username
-DB_PASSWORD=your_password
-```
-
-**APIs:**
-```
-ALPHA_VANTAGE_API_KEY=your_key
-POLYGON_API_KEY=your_key
-MASSIVE_ACCESS_KEY=your_s3_key
-MASSIVE_SECRET_KEY=your_s3_secret
-COINBASE_API_KEY=your_key
-FRED_API_KEY=your_key
+_alc-sql-server.database.windows.net
+_alc_market_data
+_your_username
+_your_password
 ```
 
-**Trading:**
+**s**
 ```
-IBKR_HOST=127.0.0.1
-IBKR_PORT=7497  # 7497=Paper, 7496=Live
-IBKR_CLIENT_ID=1
-```
-
----
-
-## 🔄 CONTINUOUS DATA COLLECTION
-
-The collector runs **endlessly** by default, collecting data every 5 minutes:
-
-```python
-# In src/config/settings.py
-data_collection_forever: bool = True
-data_collection_interval_minutes: int = 5
+___your_key
+__your_key
+__your_s_key
+__your_s_secret
+__your_key
+__your_key
 ```
 
-To run once and exit:
-```python
-data_collection_forever: bool = False
+**rading**
+```
+_...
+_  # aper, ive
+__
 ```
 
 ---
 
-## 📊 MONITORING
+##    
 
-### View Logs (Windows)
+he collector runs **endlessly** by default, collecting data every  minutes
+
+```python
+# n src/config/settings.py
+data_collection_forever bool  rue
+data_collection_interval_minutes int  
+```
+
+o run once and exit
+```python
+data_collection_forever bool  alse
+```
+
+---
+
+##  
+
+### iew ogs (indows)
 ```powershell
-Get-Content logs\data_collection.log -Tail 50
-Get-Content logs\model_training.log -Tail 50
+et-ontent logsdata_collection.log -ail 
+et-ontent logsmodel_training.log -ail 
 ```
 
-### View Logs (Mac)
+### iew ogs (ac)
 ```bash
 tail -f logs/data_collection.log
 tail -f logs/model_training.log
 ```
 
-### Check Database
+### heck atabase
 ```python
 python scripts/test_db_connection.py
 ```
 
 ---
 
-## 🎯 SUCCESS CRITERIA
+##   
 
-You'll know everything is working when:
+ou'll know everything is working when
 
-1. ✅ Data collection logs show "COLLECTING EQUITIES...", "COLLECTING INDICES...", etc.
-2. ✅ Logs show row counts for each asset class
-3. ✅ SQL database has data in `price_bars`, `options_bars`, `macro_indicators`, `fundamentals`
-4. ✅ Model training logs show "Training XGBoost...", "Training LightGBM..."
-5. ✅ `models/` folder has `.pkl` files after training
-
----
-
-## 🚨 TROUBLESHOOTING
-
-### "Massive S3 credentials not found"
-→ Add `MASSIVE_ACCESS_KEY` and `MASSIVE_SECRET_KEY` to `.env`
-
-### "No equity files found in S3"
-→ Check S3 credentials and bucket access
-
-### "Database connection fails"
-→ Verify SQL credentials in `.env` and test with `python scripts/test_db_connection.py`
-
-### "Options collection failed"
-→ Options data is huge. System limits to top 10 symbols. Adjust in `collector.py` if needed.
-
-### "Mac goes to sleep"
-→ Use `caffeinate -d` before running scripts
+.  ata collection logs show " ...", " ...", etc.
+.  ogs show row counts for each asset class
+.   database has data in `price_bars`, `options_bars`, `macro_indicators`, `fundamentals`
+.  odel training logs show "raining oost...", "raining ight..."
+.  `models/` folder has `.pkl` files after training
 
 ---
 
-## 📚 NEXT STEPS
+##  
 
-1. **Run data collection overnight** - Let it pull 5 years of history
-2. **Train models** - Models will use all 100+ features including quant metrics
-3. **Monitor logs** - Ensure all asset classes are collecting
-4. **Check SQL** - Verify data is being stored correctly
-5. **Start trading** - At 9:15 AM, run `python src/trading/execution_engine.py`
+### "assive  credentials not found"
+→ dd `__` and `__` to `.env`
+
+### "o equity files found in "
+→ heck  credentials and bucket access
+
+### "atabase connection fails"
+→ erify  credentials in `.env` and test with `python scripts/test_db_connection.py`
+
+### "ptions collection failed"
+→ ptions data is huge. ystem limits to top  symbols. djust in `collector.py` if needed.
+
+### "ac goes to sleep"
+→ se `caffeinate -d` before running scripts
 
 ---
 
-**Built for Alpha Loop Capital - Institutional-Grade Trading System**
+##   
 
-**This is the COMPREHENSIVE, PRODUCTION-READY version with ALL data sources**
+. **un data collection overnight** - et it pull  years of history
+. **rain models** - odels will use all + features including quant metrics
+. **onitor logs** - nsure all asset classes are collecting
+. **heck ** - erify data is being stored correctly
+. **tart trading** - t  , run `python src/trading/execution_engine.py`
+
+---
+
+**uilt for lpha oop apital - nstitutional-rade rading ystem**
+
+**his is the , - version with  data sources**
 

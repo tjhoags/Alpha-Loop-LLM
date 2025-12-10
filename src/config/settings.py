@@ -7,8 +7,9 @@ from dotenv import load_dotenv
 from pydantic import Field, field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
-# Load .env from your OneDrive location FIRST
-ENV_PATH = r"C:\Users\tom\OneDrive\Alpha Loop LLM\API - Dec 2025.env"
+# Load .env from Dropbox shared location FIRST
+# This path is accessible by both Tom and Chris via Dropbox sync
+ENV_PATH = r"C:\Users\tom\Alphaloopcapital Dropbox\ALC Tech Agents\API - Dec 2025.env"
 if os.path.exists(ENV_PATH):
     load_dotenv(ENV_PATH, override=True)
 else:
@@ -40,8 +41,8 @@ class Settings(BaseSettings):
     # DATA APIS - Using os.getenv since dotenv is loaded above
     # ==========================================================================
     alpha_vantage_api_key: str = Field(default_factory=lambda: os.getenv("ALPHAVANTAGE_API_KEY", ""))
-    # Massive.com (formerly Polygon.io) - API key for REST and WebSocket
-    massive_api_key: str = Field(default_factory=lambda: os.getenv("MASSIVE_API_KEY", ""))
+    # Massive.com (rebranded from Polygon.io) - API key for REST and WebSocket
+    massive_api_key: str = Field(default_factory=lambda: os.getenv("PolygonIO_API_KEY", ""))
     massive_access_key: str = Field(default_factory=lambda: os.getenv("MASSIVE_ACCESS_KEY", ""))
     massive_secret_key: str = Field(default_factory=lambda: os.getenv("MASSIVE_SECRET_KEY", ""))
     massive_endpoint_url: str = Field(default_factory=lambda: os.getenv("MASSIVE_ENDPOINT_URL", "https://files.massive.com"))
