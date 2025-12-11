@@ -1,405 +1,266 @@
 # Alpha Loop LLM - Institutional-Grade Algorithmic Trading System
 
-[![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
-[![License](https://img.shields.io/badge/license-Proprietary-red.svg)](LICENSE)
+**Version 2.0** | Alpha Loop Capital, LLC
 
-**Alpha Loop Capital, LLC** - Mission-Critical Production Trading System
-
----
-
-## 🎯 Overview
-
-This is the **production-ready, institutional-grade** version of the Alpha Loop algorithmic trading system. Built for:
-
-- **Overnight training** - Run ML models while you sleep
-- **Market open execution** - Execute trades by 9:30 AM ET
-- **Multi-machine support** - Windows + MacBook Pro simultaneous operation
-- **83+ AI agents** - Coordinated via ACA (Agent Creating Agents) architecture
+A sophisticated, production-ready algorithmic trading system designed for overnight training and market-open execution. Built with institutional-grade risk management, multi-source data ingestion, and ensemble ML models.
 
 ---
 
-## 📚 Documentation
+## Quick Start
 
-| Document | Description |
-|----------|-------------|
-| **[COMPLETE_COMMAND_REFERENCE.md](COMPLETE_COMMAND_REFERENCE.md)** | Complete natural language guide for all commands |
-| [SETUP_WINDOWS.md](SETUP_WINDOWS.md) | Windows-specific setup details |
-| [SETUP_MAC.md](SETUP_MAC.md) | MacBook-specific setup details |
-| [DUAL_MACHINE_TRAINING.md](DUAL_MACHINE_TRAINING.md) | Running on both machines simultaneously |
-| [TERMINAL_COMMANDS.md](TERMINAL_COMMANDS.md) | Quick terminal command reference |
-| [COMPREHENSIVE_DATA_GUIDE.md](COMPREHENSIVE_DATA_GUIDE.md) | Maximum data ingestion guide |
-| [TRAINING_GUIDE.md](TRAINING_GUIDE.md) | ML model training details |
+### Prerequisites
+- Python 3.10+
+- ODBC Driver 17 for SQL Server
+- Interactive Brokers TWS/Gateway (for live trading)
 
----
-
-## 🚀 Quick Start
-
-### Step 1: Open Your Terminal
-
-<details>
-<summary><b>Windows (PowerShell)</b></summary>
-
-**In Plain English:** "Open a command window where you can type instructions"
-
-1. Press `Windows + X` on your keyboard
-2. Click "Terminal" or "Windows PowerShell"
-3. A window opens with a prompt like `PS C:\Users\tom>`
-
-**Or in Cursor IDE:** Press `Ctrl + ~` or go to Terminal → New Terminal
-</details>
-
-<details>
-<summary><b>MacBook Pro (Terminal)</b></summary>
-
-**In Plain English:** "Open a command window where you can type instructions"
-
-1. Press `Cmd + Space` to open Spotlight
-2. Type "Terminal" and press Enter
-3. A window opens with a prompt like `tom@MacBook-Pro ~ %`
-
-**Or in Cursor IDE:** Press `Cmd + ~` or go to Terminal → New Terminal
-</details>
-
----
-
-### Step 2: Navigate to Project
-
-<details>
-<summary><b>Windows (PowerShell)</b></summary>
-
-**In Plain English:** "Go to the folder where all the code lives"
-
-```powershell
-# Type this and press Enter
-cd "C:\Users\tom\.cursor\worktrees\Alpha-Loop-LLM-1\upy"
-
-# Verify you're in the right place
-dir
-```
-</details>
-
-<details>
-<summary><b>MacBook Pro (Terminal)</b></summary>
-
-**In Plain English:** "Go to the folder where all the code lives"
+### Installation
 
 ```bash
-# Type this and press Enter
-cd ~/Alpha-Loop-LLM/Alpha-Loop-LLM-1/upy
+# Clone the repository
+git clone https://github.com/tjhoags/alpha-loop-llm.git
+cd alpha-loop-llm
 
-# Verify you're in the right place
-ls
-```
-</details>
-
----
-
-### Step 3: Set Up Virtual Environment
-
-<details>
-<summary><b>Windows (PowerShell)</b></summary>
-
-**In Plain English:** "Create an isolated Python workspace for this project"
-
-```powershell
-# Create the virtual environment (one-time)
+# Create virtual environment
 python -m venv venv
 
-# Activate it (do this every time you open a new terminal)
+# Activate (Windows PowerShell)
 .\venv\Scripts\Activate.ps1
 
-# If you get an "execution policy" error, run this first:
-Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
-```
-
-**Success:** You'll see `(venv)` at the start of your prompt
-</details>
-
-<details>
-<summary><b>MacBook Pro (Terminal)</b></summary>
-
-**In Plain English:** "Create an isolated Python workspace for this project"
-
-```bash
-# Create the virtual environment (one-time)
-python3 -m venv venv
-
-# Activate it (do this every time you open a new terminal)
+# Activate (Mac/Linux)
 source venv/bin/activate
-```
 
-**Success:** You'll see `(venv)` at the start of your prompt
-</details>
-
----
-
-### Step 4: Install Dependencies
-
-```bash
+# Install dependencies
 pip install -r requirements.txt
 ```
 
-Or install with development tools:
+### Configuration
+
+Copy your environment file with API keys:
+```bash
+# Windows
+Copy-Item "path/to/your/.env" -Destination ".env"
+
+# Mac/Linux
+cp path/to/your/.env .env
+```
+
+### Running the System
 
 ```bash
-pip install -e ".[dev]"
-```
-
----
-
-### Step 5: Configure Environment
-
-<details>
-<summary><b>Windows (PowerShell)</b></summary>
-
-**In Plain English:** "Copy your API keys and database credentials to the project"
-
-```powershell
-Copy-Item "C:\Users\tom\Alphaloopcapital Dropbox\ALC Tech Agents\API - Dec 2025.env" -Destination ".env"
-```
-</details>
-
-<details>
-<summary><b>MacBook Pro (Terminal)</b></summary>
-
-**In Plain English:** "Copy your API keys and database credentials to the project"
-
-```bash
-cp ~/Alphaloopcapital\ Dropbox/ALC\ Tech\ Agents/API\ -\ Dec\ 2025.env .env
-```
-</details>
-
----
-
-### Step 6: Test Database Connection
-
-```bash
-python scripts/test_db_connection.py
-```
-
----
-
-## 🔄 Daily Operations
-
-### 🌙 Night (10 PM) - Start Data Collection
-
-**In Plain English:** "Start pulling market data from all sources"
-
-<details>
-<summary><b>Windows (PowerShell)</b></summary>
-
-```powershell
-cd "C:\Users\tom\.cursor\worktrees\Alpha-Loop-LLM-1\upy"
-.\venv\Scripts\Activate.ps1
+# Start data collection
 python src/data_ingestion/collector.py
-```
-</details>
 
-<details>
-<summary><b>MacBook Pro (Terminal)</b></summary>
-
-```bash
-cd ~/Alpha-Loop-LLM/Alpha-Loop-LLM-1/upy
-source venv/bin/activate
-caffeinate -d python src/data_ingestion/collector.py
-```
-**Note:** `caffeinate -d` prevents your Mac from sleeping
-</details>
-
-### 🌙 Night (10 PM) - Model Training
-
-**In Plain English:** "Train machine learning models on the collected data"
-
-<details>
-<summary><b>Windows (PowerShell)</b></summary>
-
-```powershell
+# Train models
 python src/ml/train_models.py
-```
-</details>
 
-<details>
-<summary><b>MacBook Pro (Terminal)</b></summary>
-
-```bash
-caffeinate -d python src/ml/train_models.py
-```
-</details>
-
-**Leave both running overnight!**
-
----
-
-### ☀️ Morning (9:30 AM ET) - Start Trading
-
-**In Plain English:** "Start the trading engine that will execute trades at market open"
-
-```bash
+# Start trading engine (paper mode by default)
 python src/trading/execution_engine.py
 ```
 
-**Prerequisites:** TWS/Gateway running (paper port 7497, live port 7496)
-
 ---
 
-## 📊 Monitoring
-
-### View Logs
-
-<details>
-<summary><b>Windows (PowerShell)</b></summary>
-
-```powershell
-# Watch data collection (live updates)
-Get-Content logs\data_collection.log -Tail 50 -Wait
-
-# Watch model training (live updates)
-Get-Content logs\model_training.log -Tail 50 -Wait
-
-# Watch trading engine (live updates)
-Get-Content logs\trading_engine.log -Tail 50 -Wait
-
-# Check how many models have been trained
-(Get-ChildItem models\*.pkl).Count
-```
-</details>
-
-<details>
-<summary><b>MacBook Pro (Terminal)</b></summary>
-
-```bash
-# Watch data collection (live updates)
-tail -f logs/data_collection.log
-
-# Watch model training (live updates)
-tail -f logs/model_training.log
-
-# Watch trading engine (live updates)
-tail -f logs/trading_engine.log
-
-# Check how many models have been trained
-ls models/*.pkl | wc -l
-```
-</details>
-
----
-
-## 🏗️ System Architecture
+## Architecture
 
 ```
 alpha-loop-llm/
 ├── src/
-│   ├── agents/          # 83+ AI agents (HOAGS, GHOST, etc.)
-│   ├── config/          # Configuration management (Pydantic)
-│   ├── core/            # ACA engine, base classes, utilities
-│   ├── data_ingestion/  # Multi-source data collection
-│   ├── database/        # Azure SQL Server integration
-│   ├── ml/              # ML models & feature engineering
-│   ├── trading/         # Execution engine & order management
-│   ├── risk/            # Risk management & position sizing
-│   ├── signals/         # Signal generation modules
-│   └── training/        # Agent training utilities
-├── scripts/             # Utility scripts & helpers
-├── models/              # Trained model files (.pkl)
-├── data/                # Market data storage
-├── logs/                # System logs
-├── tests/               # Test suite
-├── .env                 # API keys (NOT COMMITTED)
-├── pyproject.toml       # Python project config
-└── requirements.txt     # Python dependencies
+│   ├── agents/              # 93 specialized trading agents
+│   │   ├── master/          # Master-tier agents (HOAGS, GHOST, FRIEDS)
+│   │   ├── senior/          # Senior agents (10)
+│   │   ├── specialized/     # Strategy agents (34)
+│   │   ├── sectors/         # Sector specialists (11)
+│   │   └── swarm/           # Agent swarm coordination
+│   ├── config/              # Pydantic configuration management
+│   ├── core/                # Base classes, learning engine, grading
+│   ├── data_ingestion/      # Multi-source data collection
+│   ├── database/            # Azure SQL Server integration
+│   ├── integrations/        # External service clients
+│   ├── ml/                  # Machine learning models & training
+│   ├── nlp/                 # NLP sentiment & document analysis
+│   ├── risk/                # Risk management & position sizing
+│   ├── signals/             # Signal generators (15+ types)
+│   ├── trading/             # Execution engine & IBKR integration
+│   └── training/            # Agent training orchestration
+├── scripts/                 # Utility scripts
+├── tests/                   # Test suite
+├── data/                    # Market data storage
+├── models/                  # Trained model files (.pkl)
+└── logs/                    # System logs
 ```
 
 ---
 
-## ⚡ Key Features
+## Key Features
 
-### Advanced ML Pipeline
-- **50+ Features:** Price, technical indicators, volume, volatility, momentum, microstructure
-- **Ensemble Models:** XGBoost, LightGBM, CatBoost
-- **Time-Series CV:** No data leakage
-- **Model Versioning:** Timestamped saves
+### Multi-Agent Architecture
+- **93 specialized agents** organized by tier (Master → Senior → Strategy → Sector)
+- **Agent Creating Agents (ACA)** - Dynamic agent generation based on capability gaps
+- **Cross-machine learning synchronization** via Azure storage
+- **Regime-aware adaptation** - Automatic strategy adjustment based on market conditions
 
-### Risk Management
-- **Kelly Criterion:** Position sizing with confidence weighting
-- **Daily Loss Limits:** 2% max daily loss
-- **Drawdown Protection:** 5% max drawdown
-- **Position Limits:** Max 10 positions, 10% per position
+### Machine Learning Pipeline
+- **100+ engineered features** (price, volume, volatility, momentum, microstructure)
+- **Ensemble models**: XGBoost, LightGBM, CatBoost
+- **Time-series cross-validation** with no data leakage
+- **Continuous model retraining** every hour
 
 ### Data Infrastructure
-- **Multi-Source:** Alpha Vantage, Polygon.io, Coinbase
-- **Azure SQL:** Centralized data storage
-- **Retry Logic:** Exponential backoff
-- **Rate Limiting:** Automatic handling
+- **Multi-source ingestion**: Polygon, Alpha Vantage, Coinbase, FRED
+- **Azure SQL Server** for centralized storage
+- **Parallel API collection** with automatic rate limiting
+- **Real-time and historical data support**
+
+### Risk Management
+- **Kelly Criterion** position sizing with confidence weighting
+- **Daily loss limits**: 2% max daily drawdown
+- **Portfolio limits**: Max 10 positions, 10% per position
+- **Automatic kill switches** for extreme conditions
 
 ### Trading Execution
-- **Interactive Brokers:** Full integration
-- **Paper Trading:** Safe testing (Port 7497)
-- **Order Management:** Market orders with fill tracking
-- **Real-Time Signals:** ML-based with confidence
-
-### Agent System (ACA)
-- **83+ Specialized Agents** across Investment & Operations divisions
-- **Master Agents:** HOAGS (Tom), GHOST (Autonomous), FRIEDS (Chris)
-- **Agent Creating Agents:** System can propose new agents for capability gaps
-- **Cross-Machine Learning:** Merge training from multiple machines
+- **Interactive Brokers** integration (TWS/Gateway)
+- **Paper trading mode** (Port 7497) for safe testing
+- **Live trading mode** (Port 7496) for production
+- **Order tracking** with fill confirmation
 
 ---
 
-## ❓ Troubleshooting
+## Agent Hierarchy
 
-### "Module not found"
-→ Activate venv: `.\venv\Scripts\Activate.ps1` (Windows) or `source venv/bin/activate` (Mac)
+| Tier | Examples | Count | Authority |
+|------|----------|-------|-----------|
+| **Master** | HOAGS, GHOST, FRIEDS | 3 | Strategic decisions, ACA approval |
+| **Senior** | SCOUT, HUNTER, ORCHESTRATOR | 10 | Domain expertise |
+| **Operational** | DATA_AGENT, EXECUTION_AGENT | 8 | System operations |
+| **Strategy** | MOMENTUM, VALUE, ARBITRAGE | 34 | Trading strategies |
+| **Sector** | TECH, HEALTHCARE, ENERGY | 11 | Sector analysis |
+| **Support** | SWARM agents | 5+ | Coordination |
 
-### "Execution policy error" (Windows)
-→ Run: `Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser`
+---
+
+## Platform Commands
+
+### Windows (PowerShell)
+
+```powershell
+# Navigate to project
+cd "C:\path\to\alpha-loop-llm"
+
+# Activate environment
+.\venv\Scripts\Activate.ps1
+
+# Data collection
+python src/data_ingestion/collector.py
+
+# Model training
+python src/ml/train_models.py
+
+# Start trading
+python src/trading/execution_engine.py
+
+# Check logs
+Get-Content logs/data_collection.log -Tail 50 -Wait
+```
+
+### Mac/Linux
+
+```bash
+# Navigate to project
+cd ~/alpha-loop-llm
+
+# Activate environment
+source venv/bin/activate
+
+# Data collection (with caffeinate to prevent sleep)
+caffeinate -d python src/data_ingestion/collector.py
+
+# Model training
+caffeinate -d python src/ml/train_models.py
+
+# Start trading
+python src/trading/execution_engine.py
+
+# Check logs
+tail -f logs/data_collection.log
+```
+
+---
+
+## Configuration Options
+
+Key environment variables (in `.env`):
+
+| Variable | Description | Default |
+|----------|-------------|---------|
+| `SQL_SERVER` | Azure SQL server address | Required |
+| `SQL_DB` | Database name | `alc_market_data` |
+| `DB_USERNAME` | Database username | Required |
+| `DB_PASSWORD` | Database password | Required |
+| `ALPHAVANTAGE_API_KEY` | Alpha Vantage API key | Required |
+| `PolygonIO_API_KEY` | Polygon.io API key | Required |
+| `COINBASE_API_KEY` | Coinbase API key | Optional |
+| `FRED_DATA_API` | FRED API key | Optional |
+| `IBKR_PORT` | IBKR port (7497=paper, 7496=live) | `7497` |
+
+---
+
+## Documentation
+
+| Document | Description |
+|----------|-------------|
+| `SETUP_WINDOWS.md` | Windows setup guide |
+| `SETUP_MAC.md` | Mac setup guide |
+| `DUAL_MACHINE_TRAINING.md` | Multi-machine training |
+| `AGENT_ARCHITECTURE.md` | Agent system documentation |
+| `TRAINING_GUIDE.md` | ML training details |
+| `PAT_SETUP_INSTRUCTIONS.md` | GitHub PAT setup |
+
+---
+
+## Troubleshooting
+
+### Module not found
+```bash
+# Ensure venv is activated
+.\venv\Scripts\Activate.ps1  # Windows
+source venv/bin/activate      # Mac
+```
 
 ### Database connection fails
-→ Check `.env` file has correct SQL credentials
+- Check `.env` file has correct Azure SQL credentials
+- Ensure ODBC Driver 17 is installed
 
-### "No models found"
-→ Make sure model training completed (check `models/` folder)
+### No models found
+- Run `python src/ml/train_models.py` first
+- Check `models/` directory for `.pkl` files
 
-### API rate limits
-→ System handles automatically with retries
-
-### Mac goes to sleep
-→ Use `caffeinate -d python src/ml/train_models.py`
+### IBKR connection issues
+- Ensure TWS/Gateway is running
+- Check correct port (7497 for paper, 7496 for live)
+- Verify API connections are enabled in TWS settings
 
 ---
 
-## ✅ Pre-Trading Checklist
+## Security Notes
 
-Before starting trading:
-- [ ] Virtual environment created and activated
+- **NEVER commit `.env` file** - contains API keys
+- **Default to paper trading** (port 7497) when testing
+- **Review risk limits** before live trading
+- **Monitor logs** regularly during operation
+
+---
+
+## Daily Checklist
+
+- [ ] Virtual environment activated
 - [ ] All packages installed
-- [ ] `.env` file copied to project folder
-- [ ] Database connection test passed
-- [ ] Data collection ran overnight
+- [ ] `.env` file configured
+- [ ] Database connection verified
+- [ ] Data collection running overnight
 - [ ] Models trained (check `models/` folder)
-- [ ] Trading engine starts without errors
+- [ ] IBKR TWS/Gateway running (for trading)
 
 ---
 
-## 🎯 Success Indicators
+**Built for Alpha Loop Capital - Institutional-Grade Trading**
 
-You'll know everything is working when:
-
-1. Data collection logs show "Collecting data for..." messages
-2. Model training logs show "Training XGBoost...", "Training LightGBM..." messages
-3. `models/` folder has `.pkl` files after training completes
-4. Trading engine logs show "Loaded X models" when starting
-5. Trading engine shows "Starting trading engine" at 9:30 AM ET
-
----
-
-## 📞 Support
-
-For issues or questions:
-- **Tom Hogan** - Founder & CIO - tom@alphaloopcapital.com
-- **Chris Friedman** - COO - chris@alphaloopcapital.com
-
----
-
-**Built for Alpha Loop Capital - Institutional-Grade Trading System**
-
-*Version 2.0.0 - December 2025*
+*"By end of 2026, they will know Alpha Loop Capital."*
