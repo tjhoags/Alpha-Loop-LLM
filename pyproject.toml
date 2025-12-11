@@ -3,7 +3,7 @@ requires = ["setuptools>=68.0", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "alpha-loop-llm"
+name = "alc-newco"
 version = "2.0.0"
 description = "Alpha Loop Capital - Institutional-Grade Algorithmic Trading System"
 readme = "README.md"

@@ -2,7 +2,7 @@
 
 ## Overview
 
-The `tjhoags/alpha-loop-llm` repository is **private**. This guide covers:
+The `tjhoags/alc-newco` repository is **private**. This guide covers:
 1. Creating a Personal Access Token (PAT)
 2. Configuring Git for authentication
 3. Managing collaborator access
@@ -21,7 +21,7 @@ The `tjhoags/alpha-loop-llm` repository is **private**. This guide covers:
 1. Go to [GitHub Token Settings](https://github.com/settings/tokens)
 2. Click **Generate new token** → **Generate new token (classic)**
 3. Configure:
-   - **Note**: `alpha-loop-llm-dev`
+   - **Note**: `alc-newco-dev`
    - **Expiration**: 90 days (recommended)
    - **Scopes**:
      - ✅ `repo` (Full control of private repositories)
@@ -111,7 +111,7 @@ export GITHUB_TOKEN="ghp_your_token_here"
 
 ### Adding Collaborators
 
-1. Go to [Repository Access Settings](https://github.com/tjhoags/alpha-loop-llm/settings/access)
+1. Go to [Repository Access Settings](https://github.com/tjhoags/alc-newco/settings/access)
 2. Click **Add people**
 3. Enter GitHub username or email
 4. Select permission:
@@ -125,7 +125,7 @@ Each collaborator needs their own PAT:
 1. Accept invitation email
 2. Generate personal PAT (Step 1)
 3. Configure git credentials (Step 2)
-4. Clone: `git clone https://github.com/tjhoags/alpha-loop-llm.git`
+4. Clone: `git clone https://github.com/tjhoags/alc-newco.git`
 
 ---
 

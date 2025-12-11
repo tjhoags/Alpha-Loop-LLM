@@ -17,8 +17,8 @@ A sophisticated, production-ready algorithmic trading system designed for overni
 
 ```bash
 # Clone the repository
-git clone https://github.com/tjhoags/alpha-loop-llm.git
-cd alpha-loop-llm
+git clone https://github.com/tjhoags/alc-newco.git
+cd alc-newco
 
 # Create virtual environment
 python -m venv venv
@@ -62,7 +62,7 @@ python src/trading/execution_engine.py
 ## Architecture
 
 ```
-alpha-loop-llm/
+alc-newco/
 ├── src/
 │   ├── agents/              # 93 specialized trading agents
 │   │   ├── master/          # Master-tier agents (HOAGS, GHOST, FRIEDS)
@@ -143,7 +143,7 @@ alpha-loop-llm/
 
 ```powershell
 # Navigate to project
-cd "C:\path\to\alpha-loop-llm"
+cd "C:\path\to\alc-newco"
 
 # Activate environment
 .\venv\Scripts\Activate.ps1
@@ -165,7 +165,7 @@ Get-Content logs/data_collection.log -Tail 50 -Wait
 
 ```bash
 # Navigate to project
-cd ~/alpha-loop-llm
+cd ~/alc-newco
 
 # Activate environment
 source venv/bin/activate
