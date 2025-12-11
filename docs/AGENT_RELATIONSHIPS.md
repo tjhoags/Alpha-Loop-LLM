@@ -138,15 +138,15 @@ INVESTMENT DOMAIN TOTAL: 72 agents
                          +-------------+
                          |   FRIEDS    |
                          | (Authority) |
-                         +------+------+
+                         +------+------+ 
                                 |
      +--------------------------+---------------------------+
-     |         |                |                |          |
-     v         v                v                v          v
-+---------+ +-------+ +---------------+ +---------------+ +-------+
-| SHYLA   | | GHOST | | SANTAS_HELPER | |     CPA       | | NOBUS |
-|(Exec EA)| |(Shared)| | (Fund Ops)    | | (Tax/Audit)   | |(Intel)|
-+---------+ +-------+ +-------+-------+ +-------+-------+ +-------+
+     |         |                |                |          |          |
+     v         v                v                v          v          v
++---------+ +-------+ +---------------+ +---------------+ +-------+ +-------------+
+| SHYLA   | | GHOST | | SANTAS_HELPER | |     CPA       | | NOBUS | | BUSINESS_DEV|
+|(Exec EA)| |(Shared)| | (Fund Ops)    | | (Tax/Audit)   | |(Intel)| | (Adv BD)    |
++---------+ +-------+ +-------+-------+ +-------+-------+ +-------+ +-------------+
      |                        |                 |
 +----+----+           +-------+-------+   +-----+-----+
 |         |           |   |   |   |   |   |     |     |
@@ -158,8 +158,9 @@ SHARED WITH INVESTMENT DOMAIN:
   • GHOST - Autonomous coordinator, workflow, learning synthesis
   • ORCHESTRATOR - Task routing, creative problem-solving
   • NOBUS - Intelligence edge, information advantage
+  • BUSINESS_DEV - Surfaces markets; coordinates funding with HOAGS
 
-OPERATIONS DOMAIN TOTAL: 16 agents (3 shared with Investment)
+OPERATIONS DOMAIN TOTAL: 17 agents (4 shared with Investment)
 ```
 
 ### Operations Agent List
@@ -173,6 +174,7 @@ OPERATIONS DOMAIN TOTAL: 16 agents (3 shared with Investment)
 | 1 | NOBUS | FRIEDS + HOAGS | Shared - Intelligence |
 | 2 | SANTAS_HELPER | FRIEDS | Fund Operations Lead |
 | 2 | CPA | FRIEDS | Tax & Audit Lead |
+| 2 | BUSINESS_DEV | FRIEDS + HOAGS | Advanced BD; market gaps & GTM |
 | 3 | COFFEE_BREAK | SHYLA | Schedule & Breaks |
 | 3 | BEAN_COUNTER | SHYLA | Expenses & Time |
 | 3 | NAV_SPECIALIST | SANTAS_HELPER | Daily NAV |
