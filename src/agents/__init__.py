@@ -21,12 +21,12 @@ AGENT BREAKDOWN:
   - Security: 2
   - Swarm: 5
 
-- Operations Domain: 11 agents
+- Operations Domain: 12 agents
   - Master (FRIEDS): 1
-  - Senior (SANTAS_HELPER, CPA): 2
-  - Sub-agents: 8
+  - Senior (SANTAS_HELPER, CPA, MARKETING, SOFTWARE, BUSINESS_DEV): 5
+  - Sub-agents: 10
 
-TOTAL: 83 agents
+TOTAL: 94 agents
 
 AUTHORITATIVE AGENT LOCATIONS:
 - Master agents: hoags_agent/, ghost_agent/, operations/frieds_agent.py
@@ -70,15 +70,16 @@ from src.agents.cpa_agent.tax_rules_engine import (
 )
 from src.agents.marketing_agent.marketing_agent import MarketingAgent, get_marketing
 from src.agents.software_agent.software_agent import SoftwareAgent, get_software
+from src.agents.business_dev_agent.business_dev_agent import BusinessDevAgent, get_business_dev
 
 # =============================================================================
 # CONSTANTS
 # =============================================================================
 
 # Total agent count
-# Includes: KAT, SHYLA, MARGOT_ROBBIE, ANNA_KENDRICK, MARKETING, SOFTWARE
-# and their sub-agents (COFFEE_BREAK, BEAN_COUNTER for SHYLA)
-TOTAL_AGENTS = 93
+# Includes: KAT, SHYLA, MARGOT_ROBBIE, ANNA_KENDRICK, MARKETING, SOFTWARE,
+# BUSINESS_DEV and their sub-agents (COFFEE_BREAK, BEAN_COUNTER for SHYLA)
+TOTAL_AGENTS = 94
 
 # Division constants
 INVESTMENT_DIVISION = "INVESTMENT"
@@ -144,7 +145,7 @@ HIERARCHY = {
             "chris": ["SHYLA"],       # Chris's EA (reports to FRIEDS)
             "shared": ["MARGOT_ROBBIE", "ANNA_KENDRICK"],  # Co-EAs
         },
-        "senior": ["SANTAS_HELPER", "CPA", "MARKETING", "SOFTWARE"],
+        "senior": ["SANTAS_HELPER", "CPA", "MARKETING", "SOFTWARE", "BUSINESS_DEV"],
         "shared_with_investment": ["GHOST", "ORCHESTRATOR", "NOBUS"],
         "sub_agents": {
             "KAT": [],  # Security: READ-ONLY by default
@@ -192,6 +193,8 @@ __all__ = [
     "get_marketing",
     "SoftwareAgent",
     "get_software",
+    "BusinessDevAgent",
+    "get_business_dev",
     # Tax Rules Engine
     "TaxRulesDatabase",
     "TaxAnalysisEngine",

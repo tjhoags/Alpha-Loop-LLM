@@ -1,33 +1,41 @@
-# AGENT RELATIONSHIPS - QUICK REFERENCE
+# AGENT RELATIONSHIPS - QUICK REFERENCE (Iteration Note)
 
-## COMPLETE ORG CHART
+- Chris Friedman/FRIEDS operations branch paused for this iteration.
+- CTO **Johnny O'Connor** oversees all technical agents.
+- CMO **Albie Monzo** oversees business/marketing/consulting ideas.
+- **Tom Hogan** retains final product decision.
+
+## ITERATION ORG SNAPSHOT
+
+- **Tom Hogan (Founder & CIO):** Final product decisions.
+- **Johnny O'Connor (CTO):** All technical agents and execution.
+- **Albie Monzo (CMO):** All business/marketing/consulting ideas.
 
 ```
-                    TOM HOGAN                    CHRIS FRIEDMAN
-               (Founder & CIO)                  (COO)
-                        |                              |
+                   TOM HOGAN
+              (Founder & CIO)
+                        |
                         +---------- OWNERS -----------+
                                      |
          +---------------------------+---------------------------+
          |                           |                           |
          v                           v                           v
-    +---------+               +-----------+               +---------+
-    |  HOAGS  |<-- Partner -->|   GHOST   |<-- Partner -->| FRIEDS  |
-    |(Tom's   |               |(Shared    |               |(Chris's |
-    | Auth)   |               | Autonomy) |               | Auth)   |
-    +---------+               +-----------+               +---------+
-         |                           |                           |
-    INVESTMENT                  COORDINATES               OPERATIONS
-      DOMAIN                    BOTH DOMAINS                 DOMAIN
-         |                                                       |
-         v                                                       v
-+------------------+                                   +------------------+
-| SENIOR AGENTS    |                                   | SANTAS_   CPA    |
-| SCOUT   HUNTER   |                                   | HELPER           |
-| KILLJOY BOOKMAKER|                                   |    |       |     |
-| STRINGS AUTHOR   |                                   |  5 Team  3 Jr   |
-| SKILLS  CAPITAL  |                                   |  Members Accts  |
-| NOBUS            |                                   +------------------+
+    +---------+               +-----------+               +-----------+
+    |  HOAGS  |<-- Partner -->|   GHOST   |               |  ALBIE    |
+    |(Authority|              |(Shared    |               | (CMO)     |
+    | / CIO)   |              | Autonomy) |               +-----------+
+    +---------+               +-----------+                       |
+         |                           |                             v
+  TECH DOMAIN (JOHNNY CTO)      COORDINATES                BIZ/MKTG DOMAIN
+         |                      BOTH DOMAINS                     (CMO)
+         v
++------------------+
+| SENIOR AGENTS    |
+| SCOUT   HUNTER   |
+| KILLJOY BOOKMAKER|
+| STRINGS AUTHOR   |
+| SKILLS  CAPITAL  |
+| NOBUS            |
 +------------------+
          |
          v
@@ -138,15 +146,15 @@ INVESTMENT DOMAIN TOTAL: 72 agents
                          +-------------+
                          |   FRIEDS    |
                          | (Authority) |
-                         +------+------+
+                         +------+------+ 
                                 |
      +--------------------------+---------------------------+
-     |         |                |                |          |
-     v         v                v                v          v
-+---------+ +-------+ +---------------+ +---------------+ +-------+
-| SHYLA   | | GHOST | | SANTAS_HELPER | |     CPA       | | NOBUS |
-|(Exec EA)| |(Shared)| | (Fund Ops)    | | (Tax/Audit)   | |(Intel)|
-+---------+ +-------+ +-------+-------+ +-------+-------+ +-------+
+     |         |                |                |          |          |
+     v         v                v                v          v          v
++---------+ +-------+ +---------------+ +---------------+ +-------+ +-------------+
+| SHYLA   | | GHOST | | SANTAS_HELPER | |     CPA       | | NOBUS | | BUSINESS_DEV|
+|(Exec EA)| |(Shared)| | (Fund Ops)    | | (Tax/Audit)   | |(Intel)| | (Adv BD)    |
++---------+ +-------+ +-------+-------+ +-------+-------+ +-------+ +-------------+
      |                        |                 |
 +----+----+           +-------+-------+   +-----+-----+
 |         |           |   |   |   |   |   |     |     |
@@ -158,8 +166,9 @@ SHARED WITH INVESTMENT DOMAIN:
   • GHOST - Autonomous coordinator, workflow, learning synthesis
   • ORCHESTRATOR - Task routing, creative problem-solving
   • NOBUS - Intelligence edge, information advantage
+  • BUSINESS_DEV - Surfaces markets; coordinates funding with HOAGS
 
-OPERATIONS DOMAIN TOTAL: 16 agents (3 shared with Investment)
+OPERATIONS DOMAIN TOTAL: 17 agents (4 shared with Investment)
 ```
 
 ### Operations Agent List
@@ -173,6 +182,7 @@ OPERATIONS DOMAIN TOTAL: 16 agents (3 shared with Investment)
 | 1 | NOBUS | FRIEDS + HOAGS | Shared - Intelligence |
 | 2 | SANTAS_HELPER | FRIEDS | Fund Operations Lead |
 | 2 | CPA | FRIEDS | Tax & Audit Lead |
+| 2 | BUSINESS_DEV | FRIEDS + HOAGS | Advanced BD; market gaps & GTM |
 | 3 | COFFEE_BREAK | SHYLA | Schedule & Breaks |
 | 3 | BEAN_COUNTER | SHYLA | Expenses & Time |
 | 3 | NAV_SPECIALIST | SANTAS_HELPER | Daily NAV |

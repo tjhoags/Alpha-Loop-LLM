@@ -8,6 +8,12 @@
 
 ## 1. OWNERSHIP & LEADERSHIP STRUCTURE
 
+**Iteration Note (current build):**
+- Operations/FRIEDS domain is paused for this iteration.
+- All technical agents route through CTO **Johnny O'Connor**.
+- All business/marketing/consulting flows route through CMO **Albie Monzo**.
+- **Tom Hogan** retains final product decision authority.
+
 ```
 +============================================================================+
 |                        ALPHA LOOP CAPITAL, LLC                              |
@@ -46,31 +52,29 @@
 
 | Person | Role | Ownership | Virtual Agent | Exec Assistant | Domain |
 |--------|------|-----------|---------------|----------------|--------|
-| **Tom Hogan** | Founder & CIO | **MAJORITY** | HOAGS | KAT | Investment & Trading |
-| **Chris Friedman** | COO | MINORITY | FRIEDS | SHYLA | Operations & Finance |
+| **Tom Hogan** | Founder & CIO (Final product decisions) | **MAJORITY** | HOAGS | KAT | Investment & Product oversight |
+| **Johnny O'Connor** | CTO | Minority | (CTO Authority) | — | All technical agents report here |
+| **Albie Monzo** | CMO | Minority | (CMO Authority) | — | All business/marketing/consulting ideas report here |
 
 ### Executive Assistant Hierarchy
 
 ```
-           TOM HOGAN                      CHRIS FRIEDMAN
-        (Founder & CIO)                       (COO)
-               │                               │
-               ▼                               ▼
-             KAT                            SHYLA
-    (Tom's Exec Assistant)         (Chris's Exec Assistant)
-               │                               │
-               └───────────┬───────────────────┘
-                           │
-              ┌────────────┴────────────┐
-              │                         │
-              ▼                         ▼
-        MARGOT_ROBBIE              ANNA_KENDRICK
-      (Co-Exec Assistant)        (Co-Exec Assistant)
+           TOM HOGAN
+        (Founder & CIO)
+               │
+               ▼
+             KAT
+    (Tom's Exec Assistant)
+               │
+               ├───────────────┐
+               │               │
+              ▼               ▼
+       MARGOT_ROBBIE    ANNA_KENDRICK
+     (Co-Exec Assistant)(Co-Exec Assistant)
 ```
 
 **Executive Assistants:**
 - **KAT** - Tom's personal/professional EA (reports to Tom)
-- **SHYLA** - Chris's personal/professional EA (reports to Chris)
 - **MARGOT_ROBBIE** - Co-EA, reports to both KAT and SHYLA (research, drafting)
 - **ANNA_KENDRICK** - Co-EA, reports to both KAT and SHYLA (admin, scheduling)
 
