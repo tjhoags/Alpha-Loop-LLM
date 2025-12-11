@@ -1,28 +1,50 @@
-pandas
-numpy
-requests
-pydantic
-python-dotenv
-sqlalchemy
-pyodbc
-loguru
-tenacity
-ta
-scikit-learn
-xgboost
-lightgbm
-catboost
-joblib
-tqdm
-ib-insync
-sentence-transformers
-faiss-cpu
-pypdf
-python-docx
-transformers
-torch
-boto3
-fredapi
-scipy
-dropbox
-openpyxl
+# Alpha Loop Capital - Production Dependencies
+# ============================================
+# Last Updated: December 2025
+
+# Core Data & Config
+pandas>=2.0.0
+numpy>=1.24.0
+requests>=2.31.0
+pydantic>=2.0.0
+pydantic-settings>=2.0.0
+python-dotenv>=1.0.0
+
+# Database
+sqlalchemy>=2.0.0
+pyodbc>=5.0.0
+
+# Logging & Utilities
+loguru>=0.7.0
+tenacity>=8.2.0
+tqdm>=4.66.0
+joblib>=1.3.0
+scipy>=1.11.0
+
+# Technical Analysis
+ta>=0.11.0
+
+# Machine Learning
+scikit-learn>=1.3.0
+xgboost>=2.0.0
+lightgbm>=4.0.0
+catboost>=1.2.0
+
+# Trading
+ib-insync>=0.9.86
+
+# NLP & Embeddings
+sentence-transformers>=2.2.0
+faiss-cpu>=1.7.0
+transformers>=4.35.0
+torch>=2.0.0
+
+# Document Processing
+pypdf>=3.0.0
+python-docx>=1.0.0
+openpyxl>=3.1.0
+
+# Cloud & APIs
+boto3>=1.33.0
+fredapi>=0.5.0
+dropbox>=11.36.0

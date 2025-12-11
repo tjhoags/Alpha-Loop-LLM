@@ -1,462 +1,246 @@
-# lpha oop  - lgorithmic rading ystem
+# Alpha Loop Capital - Algorithmic Trading System
 
-## ission ritical roduction rading ystem
+[![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
+[![License](https://img.shields.io/badge/license-Proprietary-red.svg)](LICENSE)
 
-**his is the ,  version** (`tjhoags/alpha-loop-llm`) built from lessons learned in
-- `/alc-algo` (original version)
-- `/alc-algo-clean` (cleaned up version)
-- ultiple iterations and improvements
+## Mission-Critical Production Trading System
 
-his is a **sophisticated, institutional-grade algorithmic trading system** designed to run overnight training and execute trades by market open (  ).
-
----
-
-##  
-
-| ocument | escription |
-|----------|-------------|
-| **`__.md`** |  omplete natural language guide for  commands |
-| `_.md` | indows-specific setup details |
-| `_.md` | acook-specific setup details |
-| `__.md` | unning on both machines simultaneously |
-| `_.md` | uick terminal command reference |
-| `__.md` | aximum data ingestion guide |
-| `_.md` |  model training details |
+**Alpha Loop LLM** is an institutional-grade algorithmic trading system designed for:
+- **Overnight training** of ML models on market data
+- **Real-time signal generation** at market open
+- **Automated execution** via Interactive Brokers
+- **Multi-agent orchestration** for comprehensive market analysis
 
 ---
 
-##  
+## Quick Start
 
-### tep  pen our erminal
+### Prerequisites
+- Python 3.10+
+- Interactive Brokers TWS/Gateway (for live trading)
+- API keys for data providers (Polygon, Alpha Vantage, FRED)
 
-details
-summarybindows (owerhell)/b/summary
-
-**n lain nglish** "pen a command window where you can type instructions"
-
-. ress `indows + ` on your keyboard
-. lick "erminal" or "indows owerhell"
-.  window opens with a prompt like ` serstom`
-
-**r in ursor ** ress `trl + ~` or go to erminal → ew erminal
-/details
-
-details
-summarybacook ro (erminal)/b/summary
-
-**n lain nglish** "pen a command window where you can type instructions"
-
-. ress `md + pace` to open potlight
-. ype "erminal" and press nter
-.  window opens with a prompt like `tomacook-ro ~ %`
-
-**r in ursor ** ress `md + ~` or go to erminal → ew erminal
-/details
-
----
-
-### tep  avigate to roject
-
-details
-summarybindows (owerhell)/b/summary
-
-**n lain nglish** "o to the folder where all the code lives"
-
-```powershell
-# ype this and press nter
-cd "serstom.cursorworktreeslpha-oop--sii"
-
-# erify you're in the right place
-dir
-```
-/details
-
-details
-summarybacook ro (erminal)/b/summary
-
-**n lain nglish** "o to the folder where all the code lives"
+### Installation
 
 ```bash
-# ype this and press nter
-cd ~/lpha-oop-/lpha-oop--/sii
+# Clone repository
+git clone https://github.com/tjhoags/alpha-loop-llm.git
+cd alpha-loop-llm/hfc
 
-# erify you're in the right place
-ls
-```
-/details
-
----
-
-### tep  et p irtual nvironment
-
-details
-summarybindows (owerhell)/b/summary
-
-**n lain nglish** "reate an isolated ython workspace for this project"
-
-```powershell
-# reate the virtual environment (one-time)
+# Create virtual environment
 python -m venv venv
 
-# ctivate it (do this every time you open a new terminal)
-.venvcriptsctivate.ps
+# Activate (Windows PowerShell)
+.\venv\Scripts\Activate.ps1
 
-# f you get an "execution policy" error, run this first
-et-xecutionolicy -xecutionolicy emoteigned -cope urrentser
-```
-
-**uccess** ou'll see `(venv)` at the start of your prompt
-/details
-
-details
-summarybacook ro (erminal)/b/summary
-
-**n lain nglish** "reate an isolated ython workspace for this project"
-
-```bash
-# reate the virtual environment (one-time)
-python -m venv venv
-
-# ctivate it (do this every time you open a new terminal)
+# Activate (Mac/Linux)
 source venv/bin/activate
-```
 
-**uccess** ou'll see `(venv)` at the start of your prompt
-/details
-
----
-
-### tep  nstall ependencies
-
-details
-summarybindows (owerhell)/b/summary
-
-**n lain nglish** "nstall all the required ython packages"
-
-```powershell
+# Install dependencies
 pip install -r requirements.txt
 ```
-/details
 
-details
-summarybacook ro (erminal)/b/summary
+### Configuration
 
-**n lain nglish** "nstall all the required ython packages"
+Copy environment variables to the project:
 
-```bash
-pip install -r requirements.txt
-```
-/details
-
----
-
-### tep  onfigure nvironment
-
-details
-summarybindows (owerhell)/b/summary
-
-**n lain nglish** "opy your  keys and database credentials to the project"
-
+**Windows:**
 ```powershell
-opy-tem "serstomlphaloopcapital ropbox ech gents - ec .env" -estination ".env"
+Copy-Item "C:\Users\tom\Alphaloopcapital Dropbox\ALC Tech Agents\API - Dec 2025.env" -Destination ".env"
 ```
-/details
 
-details
-summarybacook ro (erminal)/b/summary
-
-**n lain nglish** "opy your  keys and database credentials to the project"
-
+**Mac:**
 ```bash
-cp ~/lphaloopcapital ropbox/ ech gents/ - ec .env .env
+cp ~/Alphaloopcapital\ Dropbox/ALC\ Tech\ Agents/API\ -\ Dec\ 2025.env .env
 ```
-/details
 
----
-
-### tep  est atabase onnection
-
-details
-summarybindows (owerhell)/b/summary
-
-**n lain nglish** "ake sure we can connect to the database"
-
-```powershell
-python scripts/test_db_connection.py
-```
-/details
-
-details
-summarybacook ro (erminal)/b/summary
-
-**n lain nglish** "ake sure we can connect to the database"
+### Test Database Connection
 
 ```bash
 python scripts/test_db_connection.py
 ```
-/details
 
 ---
 
-##   
+## Daily Operations
 
-### ull ommand eference ee `__.md`](__.md)
-
-### unning on oth achines
-
-ee `__.md` for running on indows + acook simultaneously.
-
----
-
-##  
-
-### erminal  ata ollection
-
-**n lain nglish** "tart pulling market data from all sources"
-
-details
-summarybindows (owerhell)/b/summary
-
-```powershell
-cd "serstom.cursorworktreeslpha-oop--sii"
-.venvcriptsctivate.ps
+### Terminal 1: Data Collection
+```bash
 python src/data_ingestion/collector.py
 ```
-/details
 
-details
-summarybacook ro (erminal)/b/summary
-
+### Terminal 2: Model Training
 ```bash
-cd ~/lpha-oop-/lpha-oop--/sii
-source venv/bin/activate
-caffeinate -d python src/data_ingestion/collector.py
-```
-**ote** `caffeinate -d` prevents your ac from sleeping
-/details
-
-### erminal  odel raining
-
-**n lain nglish** "rain machine learning models on the collected data"
-
-details
-summarybindows (owerhell)/b/summary
-
-```powershell
-cd "serstom.cursorworktreeslpha-oop--sii"
-.venvcriptsctivate.ps
 python src/ml/train_models.py
 ```
-/details
 
-details
-summarybacook ro (erminal)/b/summary
-
+### Terminal 3: Trading Engine (6:30 AM ET)
 ```bash
-cd ~/lpha-oop-/lpha-oop--/sii
-source venv/bin/activate
-caffeinate -d python src/ml/train_models.py
-```
-/details
-
-**eave both running overnight!**
-
----
-
-##  (  ) - tart rading
-
-**n lain nglish** "tart the trading engine that will execute trades at market open"
-
-details
-summarybindows (owerhell)/b/summary
-
-```powershell
-cd "serstom.cursorworktreeslpha-oop--sii"
-.venvcriptsctivate.ps
 python src/trading/execution_engine.py
 ```
-/details
 
-details
-summarybacook ro (erminal)/b/summary
-
-```bash
-cd ~/lpha-oop-/lpha-oop--/sii
-source venv/bin/activate
-python src/trading/execution_engine.py
-```
-/details
-
-**rerequisites**  /ateway running (paper port , live port )
+**Note:** Use `caffeinate -d` on Mac to prevent sleep during overnight operations.
 
 ---
 
-##  
-
-### iew ogs
-
-**n lain nglish** "atch what the system is doing in real-time"
-
-details
-summarybindows (owerhell)/b/summary
-
-```powershell
-# atch data collection (live updates)
-et-ontent logsdata_collection.log -ail  -ait
-
-# atch model training (live updates)
-et-ontent logsmodel_training.log -ail  -ait
-
-# atch trading engine (live updates)
-et-ontent logstrading_engine.log -ail  -ait
-
-# heck how many models have been trained
-(et-hildtem models*.pkl).ount
-```
-/details
-
-details
-summarybacook ro (erminal)/b/summary
-
-```bash
-# atch data collection (live updates)
-tail -f logs/data_collection.log
-
-# atch model training (live updates)
-tail -f logs/model_training.log
-
-# atch trading engine (live updates)
-tail -f logs/trading_engine.log
-
-# heck how many models have been trained
-ls models/*.pkl | wc -l
-```
-/details
-
----
-
-## ystem rchitecture
+## Project Structure
 
 ```
 alpha-loop-llm/
 ├── src/
-│   ├── config/          # onfiguration management (ydantic)
-│   ├── data_ingestion/  # ulti-source data collection
-│   ├── database/        # zure  erver integration
-│   ├── ml/              #  models & feature engineering
-│   ├── trading/         # xecution engine & order management
-│   ├── risk/            # isk management & position sizing
-│   └── monitoring/      # ogging and alerts
-├── scripts/             # tility scripts & helpers
-├── models/              # rained model files (.pkl)
-├── data/                # arket data storage
-├── logs/                # ystem logs
-├── .env                 #  keys (  )
-└── requirements.txt     # ython dependencies
+│   ├── agents/           # 93 specialized trading agents
+│   │   ├── hoags_agent/  # Master investment authority
+│   │   ├── ghost_agent/  # Autonomous coordinator
+│   │   ├── senior/       # Senior operational agents
+│   │   ├── specialized/  # Strategy-specific agents
+│   │   └── sectors/      # Sector-focused agents
+│   ├── config/           # Configuration (Pydantic settings)
+│   ├── core/             # Agent base classes & orchestration
+│   ├── data_ingestion/   # Multi-source data collection
+│   ├── database/         # Azure SQL Server integration
+│   ├── ml/               # ML models & feature engineering
+│   ├── trading/          # Execution engine & order management
+│   ├── risk/             # Risk management & position sizing
+│   └── signals/          # Signal generation & aggregation
+├── scripts/              # Utility scripts & batch files
+├── models/               # Trained model files (.pkl)
+├── data/                 # Market data storage
+├── logs/                 # System logs
+└── tests/                # Test suite
 ```
 
 ---
 
-## - 
+## Key Features
 
-### dvanced  ipeline
-- **+ eatures** rice, technical indicators, volume, volatility, momentum, microstructure
-- **nsemble odels** oost, ight, atoost
-- **ime-eries ** o data leakage
-- **odel ersioning** imestamped saves
+### ML Pipeline
+- **30+ Features**: Price, volume, volatility, momentum, microstructure
+- **Ensemble Models**: XGBoost, LightGBM, CatBoost
+- **Time-Series CV**: No data leakage, walk-forward validation
+- **Model Versioning**: Timestamped saves with metadata
 
-### isk anagement
-- **elly riterion** osition sizing with confidence weighting
-- **aily oss imits** % max daily loss
-- **rawdown rotection** % max drawdown
-- **osition imits** ax  positions, % per position
+### Risk Management
+- **Kelly Criterion**: Position sizing with confidence weighting
+- **Daily Loss Limits**: 2% maximum daily loss
+- **Drawdown Protection**: 5% maximum drawdown
+- **Position Limits**: Max 10 positions, 10% per position
 
-### ata nfrastructure
-- **ulti-ource** lpha antage, olygon, oinbase
-- **zure ** entralized data storage
-- **etry ogic** xponential backoff
-- **ate imiting** utomatic handling
+### Data Infrastructure
+- **Multi-Source**: Polygon, Alpha Vantage, Coinbase, FRED
+- **Azure SQL**: Centralized cloud database
+- **Retry Logic**: Exponential backoff for API failures
+- **Rate Limiting**: Automatic handling
 
-### rading xecution
-- **nteractive rokers** ull integration
-- **aper rading** afe testing (_)
-- **rder anagement** arket orders with fill tracking
-- **eal-ime ignals** -based with confidence
-
----
-
-## 
-
-- **`_.md`** - omplete indows setup guide
-- **`_.md`** - omplete acook setup guide
-- **`__.md`** - unning on both machines
-- **`_.md`** - tep-by-step action items
-- **`_.md`** - etailed terminal commands
-- **`_.md`** - uick reference
-- **`_.md`** - omplete setup guide
-- **`.md`** - onfirms this is the new repo
-- **`__.md`** - eature checklist
+### Trading Execution
+- **IBKR Integration**: Full Interactive Brokers support
+- **Paper Trading**: Safe testing on port 7497
+- **Live Trading**: Real execution on port 7496
+- **Order Management**: Market orders with fill tracking
 
 ---
 
-## 
+## Agent Architecture
 
-### "odule not found"
-→ ctivate venv `.venvcriptsctivate.ps` (indows) or `source venv/bin/activate` (ac)
+### Ownership Structure
+| Owner | Role | Authority Agent |
+|-------|------|-----------------|
+| Tom Hogan | Founder & CIO | HOAGS |
+| Chris Friedman | COO | FRIEDS |
 
-### "xecution policy error" (indows)
-→ un `et-xecutionolicy -xecutionolicy emoteigned -cope urrentser`
+### Agent Hierarchy
+- **Master Agents (3)**: HOAGS, GHOST, FRIEDS
+- **Senior Agents (10)**: SCOUT, HUNTER, ORCHESTRATOR, KILLJOY, etc.
+- **Operational Agents (8)**: Data, Execution, Compliance, Portfolio, etc.
+- **Strategy Agents (34)**: Momentum, Value, Arbitrage, etc.
+- **Sector Agents (11)**: Tech, Healthcare, Energy, etc.
 
-### atabase connection fails
-→ heck `.env` file has correct  credentials
-
-### "o models found"
-→ ake sure model training completed (check `models/` folder)
-
-###  rate limits
-→ ystem handles automatically with retries
-
-### ac goes to sleep
-→ se `caffeinate -d python src/ml/train_models.py`
+**Total: 93 Specialized Agents**
 
 ---
 
-##  
+## Commands Reference
 
-. **ever commit `.env` file** - ontains  keys
-. **est in paper trading first** - _ is paper trading
-. **onitor logs** - heck `logs/` folder for errors
-. **tart data collection early** - eeds time to gather historical data
-. **eep machines awake** - se caffeinate on ac, power settings on indows
+### Using Make (Recommended)
+```bash
+make install      # Install dependencies
+make collect      # Run data collection
+make train        # Run model training
+make trade        # Start trading (simulation)
+make lint         # Run code linters
+make test         # Run test suite
+```
 
----
+### Direct Python Commands
+```bash
+# Data Collection
+python src/data_ingestion/collector.py
 
-##  
+# Model Training
+python src/ml/train_models.py
 
-efore starting trading
--  ] irtual environment created and activated
--  ] ll packages installed
--  ] `.env` file copied to project folder
--  ] atabase connection test passed
--  ] ata collection ran overnight
--  ] odels trained (check `models/` folder)
--  ] rading engine starts without errors
+# Trading Engine
+python src/trading/execution_engine.py
 
----
-
-##  
-
-ou'll know everything is working when
-
-. ata collection logs show "ollecting data for..." messages
-. odel training logs show "raining oost...", "raining ight..." messages
-. `models/` folder has `.pkl` files after training completes
-. rading engine logs show "oaded  models" when starting
-. rading engine shows "tarting trading engine" at  
+# Model Dashboard
+python scripts/model_dashboard.py
+```
 
 ---
 
-**uilt for lpha oop apital - nstitutional rade rading ystem**
+## Documentation
 
-**his is the , - version**
+| Document | Description |
+|----------|-------------|
+| `SETUP_WINDOWS.md` | Windows-specific setup |
+| `SETUP_MAC.md` | MacBook-specific setup |
+| `DUAL_MACHINE_TRAINING.md` | Running on both machines |
+| `TRAINING_GUIDE.md` | ML model training details |
+| `COMPREHENSIVE_DATA_GUIDE.md` | Maximum data ingestion |
 
+---
+
+## Troubleshooting
+
+### "Module not found"
+→ Activate virtual environment first
+
+### "Execution policy error" (Windows)
+```powershell
+Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
+```
+
+### Database connection fails
+→ Check `.env` file has correct credentials
+
+### "No models found"
+→ Ensure model training completed (check `models/` folder)
+
+### Mac goes to sleep
+→ Use `caffeinate -d python script.py`
+
+---
+
+## Security
+
+- **Never commit `.env` file** - Contains API keys
+- **Test in paper trading first** - Port 7497 is safe
+- **Monitor logs** - Check `logs/` folder for errors
+- **Rotate API keys** - Every 90 days recommended
+
+---
+
+## Pre-Trading Checklist
+
+- [ ] Virtual environment activated
+- [ ] All packages installed
+- [ ] `.env` file configured
+- [ ] Database connection tested
+- [ ] Data collection ran overnight
+- [ ] Models trained (check `models/`)
+- [ ] Trading engine starts without errors
+
+---
+
+**Built for Alpha Loop Capital | Institutional-Grade Algorithmic Trading**
+
+*Author: Tom Hogan | © 2025 Alpha Loop Capital, LLC*
